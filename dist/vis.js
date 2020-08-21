@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-07-24
+ * @date    2020-08-21
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7644,43 +7644,75 @@ return /******/ (function(modules) { // webpackBootstrap
    * @returns {*}
    */
   exports.drawPoint = function (x, y, groupTemplate, JSONcontainer, svgContainer, labelObj) {
-    var point;
+    var points = [];
     var v = { x: x - 0.5 * groupTemplate.size, y: y - 0.5 * groupTemplate.size };
     switch (groupTemplate.style) {
       case 'circle':
-        point = exports.getSVGElement('circle', JSONcontainer, svgContainer);
-        point.setAttributeNS(null, "cx", x);
-        point.setAttributeNS(null, "cy", y);
-        point.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
+        var circle = exports.getSVGElement('circle', JSONcontainer, svgContainer);
+        circle.setAttributeNS(null, "cx", x);
+        circle.setAttributeNS(null, "cy", y);
+        circle.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
+        points.push(circle);
         break;
       case 'square':
-        point = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-        point.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
-        point.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
-        point.setAttributeNS(null, "width", groupTemplate.size);
-        point.setAttributeNS(null, "height", groupTemplate.size);
+        var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
+        rect.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
+        rect.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
+        rect.setAttributeNS(null, "width", groupTemplate.size);
+        rect.setAttributeNS(null, "height", groupTemplate.size);
+        points.push(rect);
         break;
       case 'triangle-up':
-        point = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        point.setAttributeNS(null, "points", v.x + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
+        var polygonup = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygonup.setAttributeNS(null, "points", v.x + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
+        points.push(polygonup);
         break;
       case 'triangle-down':
-        point = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        point.setAttributeNS(null, "points", v.x + ',' + v.y + ' ' + (v.x + groupTemplate.size) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
+        var polygondown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygondown.setAttributeNS(null, "points", v.x + ',' + v.y + ' ' + (v.x + groupTemplate.size) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
+        points.push(polygondown);
+        break;
+      case 'arrow-avg':
+        console.log('groupTemplate: ', groupTemplate.props);
+        var xOffset = 1; // This make the arrow more large.
+        var yOffsetTop = 30; // This bring the top arrow, to top.
+        var yOffsetBottom = 30; // This push the bottom arrow to down
+        var lineHeight = 10;
+
+        var tLeftPoint = v.x - xOffset + ',' + (v.y - yOffsetTop);
+        var tRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y - yOffsetTop);
+        var tBottomPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffsetTop) + groupTemplate.size);
+        var tLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffsetTop) + lineHeight + groupTemplate.size);
+
+        var bLeftPoint = v.x - xOffset + ',' + (v.y + yOffsetBottom + groupTemplate.size);
+        var bRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y + yOffsetBottom + groupTemplate.size);
+        var bTopPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffsetBottom));
+        var bLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffsetBottom) - lineHeight);
+
+        var polygonavg1 = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygonavg1.setAttributeNS(null, 'points', tLeftPoint + ' ' + tBottomPoint + ' ' + tLinePoint + ' ' + tBottomPoint + ' ' + tRightPoint);
+
+        var cross = exports.getSVGElement('path', JSONcontainer, svgContainer);
+        cross.setAttributeNS(null, 'd', 'M ' + v.x + ',' + v.y + ' L ' + v.x + ',' + (v.y + 100));
+        cross.setAttributeNS(null, "stroke", 'black');
+        cross.setAttributeNS(null, "stroke-width", '5');
+
+        var polygonavg2 = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygonavg2.setAttributeNS(null, "points", bLeftPoint + ' ' + bTopPoint + ' ' + bLinePoint + ' ' + bTopPoint + ' ' + bRightPoint);
+
+        points.push(polygonavg1);
+        points.push(cross);
+        points.push(polygonavg2);
         break;
       case 'rectangle':
-        point = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-        point.setAttributeNS(null, "x", x - 0.5 * groupTemplate.width);
-        point.setAttributeNS(null, "y", y - 0.5 * groupTemplate.height);
-        point.setAttributeNS(null, "width", groupTemplate.width);
-        point.setAttributeNS(null, "height", groupTemplate.height);
+        var rectangle = exports.getSVGElement('rect', JSONcontainer, svgContainer);
+        rectangle.setAttributeNS(null, "x", x - 0.5 * groupTemplate.width);
+        rectangle.setAttributeNS(null, "y", y - 0.5 * groupTemplate.height);
+        rectangle.setAttributeNS(null, "width", groupTemplate.width);
+        rectangle.setAttributeNS(null, "height", groupTemplate.height);
+        points.push(rectangle);
         break;
     }
-
-    if (groupTemplate.styles !== undefined) {
-      point.setAttributeNS(null, "style", groupTemplate.styles);
-    }
-    point.setAttributeNS(null, "class", groupTemplate.className + " vis-point");
     //handle label
 
 
@@ -7701,15 +7733,23 @@ return /******/ (function(modules) { // webpackBootstrap
         label.setAttributeNS(null, "class", labelObj.className + " vis-label");
       }
 
-      if (labelObj.tooltip) {
-        point.setAttributeNS(null, "tooltip", labelObj.tooltip);
-      }
-
       label.setAttributeNS(null, "x", x);
       label.setAttributeNS(null, "y", y);
     }
 
-    return point;
+    points.forEach(function (point) {
+      if (groupTemplate.styles !== undefined) {
+        point.setAttributeNS(null, "style", groupTemplate.styles);
+      }
+
+      point.setAttributeNS(null, "class", groupTemplate.className + " vis-point");
+
+      if (labelObj && labelObj.tooltip) {
+        point.setAttributeNS(null, "tooltip", labelObj.tooltip);
+      }
+    });
+
+    return points;
   };
 
   /**
@@ -17862,9 +17902,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
       /*
        Copyright (c) 2011 Andrei Mackenzie
-        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
 
     }, {
@@ -28889,6 +28929,7 @@ return /******/ (function(modules) { // webpackBootstrap
         size: group.options.drawPoints.size / scale,
         width: group.options.drawPoints.width,
         height: group.options.drawPoints.height,
+        props: group.group.props,
         className: group.className
       };
       DOMutil.drawPoint(x + 0.5 * barWidth + offset, y + fillHeight - bar1Height - 1, groupTemplate, framework.svgElements, framework.svg);
@@ -29137,6 +29178,7 @@ return /******/ (function(modules) { // webpackBootstrap
     offset = offset || 0;
     var callback = getCallback(framework, group);
 
+    console.log('x outra vez');
     for (var i = 0; i < dataset.length; i++) {
       if (!callback) {
         // draw the point the simple way.
@@ -29173,6 +29215,7 @@ return /******/ (function(modules) { // webpackBootstrap
       size: callbackResult.size || group.options.drawPoints.size,
       height: callbackResult.height || group.options.drawPoints.height,
       width: callbackResult.width || group.options.drawPoints.width,
+      props: callbackResult.props || group.group.props,
       className: callbackResult.className || group.className
     };
   }
@@ -29250,6 +29293,7 @@ return /******/ (function(modules) { // webpackBootstrap
           }
       }
 
+      console.log('x');
       if (group.options.drawPoints.enabled == true) {
           var groupTemplate = {
               style: group.options.drawPoints.style,
@@ -29257,6 +29301,7 @@ return /******/ (function(modules) { // webpackBootstrap
               size: group.options.drawPoints.size,
               height: group.options.drawPoints.height,
               width: group.options.drawPoints.width,
+              props: group.group.props,
               className: group.className
           };
           DOMutil.drawPoint(x + 0.5 * iconWidth, y, groupTemplate, framework.svgElements, framework.svg);
@@ -29768,7 +29813,7 @@ return /******/ (function(modules) { // webpackBootstrap
       enabled: { boolean: boolean },
       onRender: { 'function': 'function' },
       size: { number: number },
-      style: { string: ['square', 'circle'] }, // square, circle
+      style: { string: ['square', 'circle', 'triangle-up', 'triangle-down', 'arrow-avg'] }, // square, circle
       __type__: { object: object, boolean: boolean, 'function': 'function' }
     },
     dataAxis: {
