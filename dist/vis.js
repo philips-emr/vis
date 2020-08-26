@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-08-21
+ * @date    2020-08-25
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7643,8 +7643,9 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param labelObj
    * @returns {*}
    */
-  exports.drawPoint = function (x, y, groupTemplate, JSONcontainer, svgContainer, labelObj) {
+  exports.drawPoint = function (x, y, groupTemplate, JSONcontainer, svgContainer, labelObj, props) {
     var points = [];
+    console.log('groupTemplate: ', groupTemplate);
     var v = { x: x - 0.5 * groupTemplate.size, y: y - 0.5 * groupTemplate.size };
     switch (groupTemplate.style) {
       case 'circle':
@@ -7673,32 +7674,47 @@ return /******/ (function(modules) { // webpackBootstrap
         points.push(polygondown);
         break;
       case 'arrow-avg':
-        console.log('groupTemplate: ', groupTemplate.props);
+
+        var average = 0;
+
+        if (props) {
+          average = props.max - props.min;
+        }
+
+        var minLineHeight = 0;
+        var minOffset = 5;
+        var lineHeight = minLineHeight + average;
         var xOffset = 1; // This make the arrow more large.
-        var yOffsetTop = 30; // This bring the top arrow, to top.
-        var yOffsetBottom = 30; // This push the bottom arrow to down
-        var lineHeight = 10;
+        var yOffset = minLineHeight * 2 + average + minOffset;
 
-        var tLeftPoint = v.x - xOffset + ',' + (v.y - yOffsetTop);
-        var tRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y - yOffsetTop);
-        var tBottomPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffsetTop) + groupTemplate.size);
-        var tLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffsetTop) + lineHeight + groupTemplate.size);
+        var tLeftPoint = v.x - xOffset + ',' + (v.y - yOffset);
+        var tRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y - yOffset);
+        var tBottomPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffset) + groupTemplate.size);
+        var tLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y - (2 + yOffset) + lineHeight + groupTemplate.size);
 
-        var bLeftPoint = v.x - xOffset + ',' + (v.y + yOffsetBottom + groupTemplate.size);
-        var bRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y + yOffsetBottom + groupTemplate.size);
-        var bTopPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffsetBottom));
-        var bLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffsetBottom) - lineHeight);
+        var bLeftPoint = v.x - xOffset + ',' + (v.y + yOffset + groupTemplate.size);
+        var bRightPoint = v.x + groupTemplate.size + xOffset + ',' + (v.y + yOffset + groupTemplate.size);
+        var bTopPoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffset));
+        var bLinePoint = v.x + groupTemplate.size * 0.5 + ',' + (v.y + (2 + yOffset) - lineHeight);
 
         var polygonavg1 = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
         polygonavg1.setAttributeNS(null, 'points', tLeftPoint + ' ' + tBottomPoint + ' ' + tLinePoint + ' ' + tBottomPoint + ' ' + tRightPoint);
+        var crossSize = 6;
+        var initialX = v.x;
+        var initialY = v.y;
+        var verticalX = initialX + crossSize / 2;
+        var verticalY = initialY + crossSize;
+        var horizontalY = initialY + crossSize / 2;
+        var horizontalX = initialX + crossSize;
+
+        var verticalLine = 'M ' + verticalX + ',' + initialY + ' L ' + verticalX + ',' + verticalY;
+        var horizontalLine = 'M ' + initialX + ',' + horizontalY + ' L ' + horizontalX + ',' + horizontalY;
 
         var cross = exports.getSVGElement('path', JSONcontainer, svgContainer);
-        cross.setAttributeNS(null, 'd', 'M ' + v.x + ',' + v.y + ' L ' + v.x + ',' + (v.y + 100));
-        cross.setAttributeNS(null, "stroke", 'black');
-        cross.setAttributeNS(null, "stroke-width", '5');
+        cross.setAttributeNS(null, 'd', verticalLine + ' ' + horizontalLine);
 
         var polygonavg2 = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        polygonavg2.setAttributeNS(null, "points", bLeftPoint + ' ' + bTopPoint + ' ' + bLinePoint + ' ' + bTopPoint + ' ' + bRightPoint);
+        polygonavg2.setAttributeNS(null, 'points', bLeftPoint + ' ' + bTopPoint + ' ' + bLinePoint + ' ' + bTopPoint + ' ' + bRightPoint);
 
         points.push(polygonavg1);
         points.push(cross);
@@ -13160,6 +13176,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var clientY = event.center ? event.center.y : event.clientY;
     var x = clientX - util.getAbsoluteLeft(this.dom.centerContainer);
     var y = clientY - util.getAbsoluteTop(this.dom.centerContainer);
+    console.log();
 
     var item = this.itemSet.itemFromTarget(event);
     var group = this.itemSet.groupFromTarget(event);
@@ -13193,6 +13210,7 @@ return /******/ (function(modules) { // webpackBootstrap
       event: event,
       item: item ? item.id : null,
       group: group ? group.groupId : null,
+      props: { a: '1' },
       what: what,
       pageX: event.srcEvent ? event.srcEvent.pageX : event.pageX,
       pageY: event.srcEvent ? event.srcEvent.pageY : event.pageY,
@@ -27331,6 +27349,21 @@ return /******/ (function(modules) { // webpackBootstrap
         extended.orginalY = item.y; //real Y
         extended.y = Number(item.y);
 
+        // Properties of items
+        if (item.props) {
+          extended.props = item.props;
+        }
+        if (item.data) {
+          extended.data = item.data;
+          if (this.groups[groupId] && this.groups[groupId].group.type === 'arrow-avg') {
+            var g = this.groups[groupId];
+            var y = g.group.props.average;
+
+            extended.orginalY = y; //real Y
+            extended.y = Number(y);
+          }
+        }
+
         var index = groupsContent[groupId].length - groupCounts[groupId]--;
         groupsContent[groupId][index] = extended;
       }
@@ -27524,6 +27557,7 @@ return /******/ (function(modules) { // webpackBootstrap
               below = group;
             }
           }
+          this._ajustYAccordingGroup(groupsData[groupIds[i]], group);
           this._convertYcoordinates(groupsData[groupIds[i]], group);
         }
 
@@ -27588,6 +27622,20 @@ return /******/ (function(modules) { // webpackBootstrap
     // cleanup unused svg elements
     DOMutil.cleanupElements(this.svgElements);
     return false;
+  };
+
+  LineGraph.prototype._ajustYAccordingGroup = function (datapoints, group) {
+    var props = void 0;
+
+    if (group.group.props) {
+      props = group.group.props;
+    }
+
+    if (group.group.type === 'arrow-avg') {
+      datapoints.map(function (d) {
+        return d.y = props.average;
+      });
+    }
   };
 
   LineGraph.prototype._stack = function (data, subData) {
@@ -27738,7 +27786,7 @@ return /******/ (function(modules) { // webpackBootstrap
               combinedDataRight = combinedDataRight.concat(group.getItems());
             }
           } else {
-            groupRanges[groupIds[i]] = group.getYRange(groupData, groupIds[i]);
+            groupRanges[groupIds[i]] = group.getYRange(groupData, groupIds[i], group);
           }
         }
       }
@@ -28253,12 +28301,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
     //Override range with manual options:
     var autoScaleEnd = true;
-    if (customRange.max != undefined) {
+    if (customRange.max != undefined && !Number.isNaN(customRange.max)) {
       this.range.end = customRange.max;
       autoScaleEnd = false;
     }
     var autoScaleStart = true;
-    if (customRange.min != undefined) {
+    if (customRange.min != undefined && !Number.isNaN(customRange.min)) {
       this.range.start = customRange.min;
       autoScaleStart = false;
     }
@@ -28599,6 +28647,8 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   DataScale.prototype.getLines = function (data) {
+    var _this = this;
+
     var lines = [];
 
     if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && data !== null && data.hasOwnProperty('values') && data.values.length) {
@@ -28613,7 +28663,14 @@ return /******/ (function(modules) { // webpackBootstrap
       for (var i = this._start + bottomOffset; this._end - i > 0.00001; i += step) {
         if (i != this._start) {
           //Skip the bottom line
-          lines.push({ major: this.is_major(i), y: this.convertValue(i), val: this.formatValue(i) });
+          var key = lines.findIndex(function (l) {
+            return l.val === _this.formatValue(i);
+          });
+          if (key < 0) {
+            lines.push({ major: this.is_major(i), y: this.convertValue(i), val: this.formatValue(i) });
+            continue;
+          }
+          lines[key].y = this.convertValue(i);
         }
       }
     }
@@ -28877,12 +28934,22 @@ return /******/ (function(modules) { // webpackBootstrap
     return { icon: framework.svg, label: this.content, orientation: this.options.yAxisOrientation };
   };
 
-  GraphGroup.prototype.getYRange = function (groupData) {
+  GraphGroup.prototype.getYRange = function (groupData, groupId, group) {
     var yMin = groupData[0].y;
     var yMax = groupData[0].y;
-    for (var j = 0; j < groupData.length; j++) {
-      yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
-      yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
+
+    if (group.options.drawPoints && group.options.drawPoints.style === 'arrow-avg' || group.style.drawPoints && group.style.drawPoints.style === 'arrow-avg') {
+      var values = [];
+      groupData.map(function (d) {
+        return values.push(d.data.max, d.data.min);
+      });
+      yMin = Math.min.apply(Math, values);
+      yMax = Math.max.apply(Math, values);
+    } else {
+      for (var j = 0; j < groupData.length; j++) {
+        yMin = yMin > groupData[j].y ? groupData[j].y : yMin;
+        yMax = yMax < groupData[j].y ? groupData[j].y : yMax;
+      }
     }
     return { min: yMin, max: yMax, yAxisOrientation: this.options.yAxisOrientation };
   };
@@ -29162,6 +29229,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
   var DOMutil = __webpack_require__(7);
+  var LineGraph = __webpack_require__(49);
 
   function Points(groupId, options) {}
 
@@ -29176,17 +29244,17 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Points.draw = function (dataset, group, framework, offset) {
     offset = offset || 0;
+
     var callback = getCallback(framework, group);
 
-    console.log('x outra vez');
     for (var i = 0; i < dataset.length; i++) {
       if (!callback) {
         // draw the point the simple way.
-        DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group), framework.svgElements, framework.svg, dataset[i].label);
+        DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group), framework.svgElements, framework.svg, dataset[i].label, dataset[i].data);
       } else {
         var callbackResult = callback(dataset[i], group); // result might be true, false or an object
         if (callbackResult === true || (typeof callbackResult === 'undefined' ? 'undefined' : _typeof(callbackResult)) === 'object') {
-          DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group, callbackResult), framework.svgElements, framework.svg, dataset[i].label);
+          DOMutil.drawPoint(dataset[i].screen_x + offset, dataset[i].screen_y, getGroupTemplate(group, callbackResult), framework.svgElements, framework.svg, dataset[i].label, dataset[i].data);
         }
       }
     }
@@ -29240,7 +29308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-  "use strict";
+  'use strict';
 
   var DOMutil = __webpack_require__(7);
 
@@ -29265,6 +29333,9 @@ return /******/ (function(modules) { // webpackBootstrap
   Line.drawIcon = function (group, x, y, iconWidth, iconHeight, framework) {
       var fillHeight = iconHeight * 0.5;
       var path, fillPath;
+      if (group.group.options && group.group.options.drawPoints && group.group.options.drawPoints.style && group.group.options.drawPoints.style === 'arrow-avg') {
+          y = group.group.props.average;
+      }
 
       var outline = DOMutil.getSVGElement("rect", framework.svgElements, framework.svg);
       outline.setAttributeNS(null, "x", x);
@@ -29293,7 +29364,6 @@ return /******/ (function(modules) { // webpackBootstrap
           }
       }
 
-      console.log('x');
       if (group.options.drawPoints.enabled == true) {
           var groupTemplate = {
               style: group.options.drawPoints.style,
@@ -29304,6 +29374,7 @@ return /******/ (function(modules) { // webpackBootstrap
               props: group.group.props,
               className: group.className
           };
+
           DOMutil.drawPoint(x + 0.5 * iconWidth, y, groupTemplate, framework.svgElements, framework.svg);
       }
   };
@@ -29440,12 +29511,14 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Line._catmullRom = function (data, group) {
       var alpha = group.options.interpolation.alpha;
+
       if (alpha == 0 || alpha === undefined) {
           return this._catmullRomUniform(data);
       } else {
           var p0, p1, p2, p3, bp1, bp2, d1, d2, d3, A, B, N, M;
           var d3powA, d2powA, d3pow2A, d2pow2A, d1pow2A, d1powA;
           var d = [];
+
           d.push([Math.round(data[0].screen_x), Math.round(data[0].screen_y)]);
           var length = data.length;
           for (var i = 0; i < length - 1; i++) {
@@ -29956,7 +30029,7 @@ return /******/ (function(modules) { // webpackBootstrap
       drawPoints: {
         enabled: true,
         size: [6, 2, 30, 1],
-        style: ['square', 'circle'] // square, circle
+        style: ['square', 'circle', 'arrow-avg'] // square, circle
       },
       dataAxis: {
         showMinorLabels: true,
@@ -45693,6 +45766,7 @@ return /******/ (function(modules) { // webpackBootstrap
         __type__: { object: object, string: string }
       },
       group: { string: string, number: number, 'undefined': 'undefined' },
+      props: { min: number, max: number },
       hidden: { boolean: boolean },
       icon: {
         face: { string: string },
