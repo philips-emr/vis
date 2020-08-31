@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-08-25
+ * @date    2020-08-28
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7645,7 +7645,6 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   exports.drawPoint = function (x, y, groupTemplate, JSONcontainer, svgContainer, labelObj, props) {
     var points = [];
-    console.log('groupTemplate: ', groupTemplate);
     var v = { x: x - 0.5 * groupTemplate.size, y: y - 0.5 * groupTemplate.size };
     switch (groupTemplate.style) {
       case 'circle':
@@ -27986,9 +27985,12 @@ return /******/ (function(modules) { // webpackBootstrap
       showMinorLines: true,
       showMajorLabels: true,
       icons: false,
+      linesOffsetY: 0,
+      extraLineWidth: 0,
       majorLinesOffset: 7,
       minorLinesOffset: 4,
       labelOffsetX: 10,
+      linesOffsetX: 0,
       labelOffsetY: 2,
       iconWidth: 20,
       width: '40px',
@@ -28085,7 +28087,7 @@ return /******/ (function(modules) { // webpackBootstrap
       if (this.options.orientation != options.orientation && options.orientation !== undefined) {
         redraw = true;
       }
-      var fields = ['orientation', 'showMinorLabels', 'showMinorLines', 'showMajorLabels', 'icons', 'majorLinesOffset', 'minorLinesOffset', 'labelOffsetX', 'labelOffsetY', 'iconWidth', 'width', 'visible', 'data', 'left', 'right', 'alignZeros'];
+      var fields = ['orientation', 'showMinorLabels', 'showMinorLines', 'showMajorLabels', 'icons', 'linesOffsetY', 'linesOffsetX', 'extraLineWidth', 'majorLinesOffset', 'minorLinesOffset', 'labelOffsetX', 'labelOffsetY', 'iconWidth', 'width', 'visible', 'data', 'left', 'right', 'alignZeros'];
       util.selectiveDeepExtend(fields, this.options, options);
 
       this.minWidth = Number(('' + this.options.width).replace("px", ""));
@@ -28247,9 +28249,9 @@ return /******/ (function(modules) { // webpackBootstrap
       props.minorLabelHeight = showMinorLabels ? props.minorCharHeight : 0;
       props.majorLabelHeight = showMajorLabels ? props.majorCharHeight : 0;
 
-      props.minorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.minorLinesOffset;
+      props.minorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.minorLinesOffset + this.options.extraLineWidth;
       props.minorLineHeight = 1;
-      props.majorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.majorLinesOffset;
+      props.majorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.majorLinesOffset + this.options.extraLineWidth;
       props.majorLineHeight = 1;
 
       //  take frame offline while updating (is almost twice as fast)
@@ -28324,19 +28326,32 @@ return /******/ (function(modules) { // webpackBootstrap
     lines.forEach(function (line) {
       var y = line.y;
       var isMajor = line.major;
+      var isMiddle = line.middle;
+      var labelClass = 'vis-y-axis';
+      var lineClass = 'vis-grid vis-horizontal';
+      if (isMiddle) {
+        labelClass += ' vis-label-middle';
+        lineClass += ' vis-line-middle';
+      }
       if (_this.options['showMinorLabels'] && isMajor === false) {
-        _this._redrawLabel(y - 2, line.val, orientation, 'vis-y-axis vis-minor', _this.props.minorCharHeight);
+        labelClass += ' vis-minor';
+        _this._redrawLabel(y - 2, line.val, orientation, labelClass, _this.props.minorCharHeight);
       }
       if (isMajor) {
         if (y >= 0) {
-          _this._redrawLabel(y - 2, line.val, orientation, 'vis-y-axis vis-major', _this.props.majorCharHeight);
+          labelClass += ' vis-major';
+          _this._redrawLabel(y - 2, line.val, orientation, labelClass, _this.props.majorCharHeight);
         }
       }
+
       if (_this.master === true) {
+        var linesOffset = _this.options.linesOffsetY;
         if (isMajor) {
-          _this._redrawLine(y, orientation, 'vis-grid vis-horizontal vis-major', _this.options.majorLinesOffset, _this.props.majorLineWidth);
+          lineClass += ' vis-major';
+          _this._redrawLine(y + linesOffset, orientation, lineClass, _this.options.majorLinesOffset, _this.props.majorLineWidth);
         } else if (_this.options['showMinorLines']) {
-          _this._redrawLine(y, orientation, 'vis-grid vis-horizontal vis-minor', _this.options.minorLinesOffset, _this.props.minorLineWidth);
+          lineClass += ' vis-minor';
+          _this._redrawLine(y + linesOffset, orientation, lineClass, _this.options.minorLinesOffset, _this.props.minorLineWidth);
         }
       }
     });
@@ -28667,7 +28682,12 @@ return /******/ (function(modules) { // webpackBootstrap
             return l.val === _this.formatValue(i);
           });
           if (key < 0) {
-            lines.push({ major: this.is_major(i), y: this.convertValue(i), val: this.formatValue(i) });
+            lines.push({
+              major: this.is_major(i),
+              y: this.convertValue(i),
+              middle: i % 2,
+              val: this.formatValue(i)
+            });
             continue;
           }
           lines[key].y = this.convertValue(i);
@@ -28938,7 +28958,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var yMin = groupData[0].y;
     var yMax = groupData[0].y;
 
-    if (group.options.drawPoints && group.options.drawPoints.style === 'arrow-avg' || group.style.drawPoints && group.style.drawPoints.style === 'arrow-avg') {
+    if (group.options.drawPoints && group.options.drawPoints.style === 'arrow-avg' || group.style && group.style.drawPoints && group.style.drawPoints.style === 'arrow-avg') {
       var values = [];
       groupData.map(function (d) {
         return values.push(d.data.max, d.data.min);
@@ -29890,6 +29910,10 @@ return /******/ (function(modules) { // webpackBootstrap
       __type__: { object: object, boolean: boolean, 'function': 'function' }
     },
     dataAxis: {
+      extraLineWidth: { number: number },
+      labelOffsetY: { number: number },
+      linesOffsetY: { number: number },
+      linesOffsetX: { number: number },
       showMinorLabels: { boolean: boolean },
       showMajorLabels: { boolean: boolean },
       showMinorLines: { boolean: boolean },
