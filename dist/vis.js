@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-08-28
+ * @date    2020-08-31
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -29914,6 +29914,8 @@ return /******/ (function(modules) { // webpackBootstrap
       labelOffsetY: { number: number },
       linesOffsetY: { number: number },
       linesOffsetX: { number: number },
+      minorLinesOffset: { number: number },
+      majorLinesOffset: { number: number },
       showMinorLabels: { boolean: boolean },
       showMajorLabels: { boolean: boolean },
       showMinorLines: { boolean: boolean },
@@ -30056,6 +30058,7 @@ return /******/ (function(modules) { // webpackBootstrap
         style: ['square', 'circle', 'arrow-avg'] // square, circle
       },
       dataAxis: {
+        minorLinesOffset: 0,
         showMinorLabels: true,
         showMinorLines: true,
         showMajorLabels: true,
