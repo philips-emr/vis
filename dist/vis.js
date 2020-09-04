@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-08-31
+ * @date    2020-09-02
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -27376,29 +27376,65 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
 
-      //Update legendas, style and axis
-      for (var groupId in groupsContent) {
-        if (groupsContent.hasOwnProperty(groupId)) {
-          if (groupsContent[groupId].length == 0) {
-            if (this.groups.hasOwnProperty(groupId)) {
-              this._removeGroup(groupId);
-            }
-          } else {
-            var group = undefined;
+      var toTest = true;
+
+      if (toTest) {
+        var groupsData = this.groupsData._data || [];
+        for (var _groupId in groupsData) {
+          if (groupsData.hasOwnProperty(_groupId)) {
+            var _group = undefined;
             if (this.groupsData != undefined) {
-              group = this.groupsData.get(groupId);
+              _group = this.groupsData.get(_groupId);
             }
-            if (group == undefined) {
-              group = { id: groupId, content: this.options.defaultGroup + groupId };
+            if (_group == undefined) {
+              _group = { id: _groupId, content: this.options.defaultGroup + _groupId };
             }
-            this._updateGroup(group, groupId);
-            this.groups[groupId].setItems(groupsContent[groupId]);
+            this._updateGroup(_group, _groupId);
+            this.groups[_groupId].setItems(groupsContent[_groupId]);
+          }
+        }
+        this._calculateHeights();
+      } else {
+        //Update legendas, style and axis
+        for (var groupId in groupsContent) {
+          if (groupsContent.hasOwnProperty(groupId)) {
+            if (groupsContent[groupId].length == 0) {
+              if (this.groups.hasOwnProperty(groupId)) {
+                this._removeGroup(groupId);
+              }
+            } else {
+              var group = undefined;
+              if (this.groupsData != undefined) {
+                group = this.groupsData.get(groupId);
+              }
+              if (group == undefined) {
+                group = { id: groupId, content: this.options.defaultGroup + groupId };
+              }
+              this._updateGroup(group, groupId);
+              this.groups[groupId].setItems(groupsContent[groupId]);
+            }
           }
         }
       }
       this.forceGraphUpdate = true;
       this.body.emitter.emit("_change", { queue: true });
     }
+  };
+
+  LineGraph.prototype._calculateHeights = function () {
+    var totalHeight = 0;
+
+    this.groupsData.forEach(function (d) {
+      // console.log('d: ', d);
+      totalHeight += d.rowHeightId[d.className];
+    });
+
+    // console.log('totalHeight: ', totalHeight);
+    // console.log('groups: ', this.groupsData);
+    this.options.height = totalHeight;
+    this.options.graphHeight = totalHeight;
+    // console.log('options: ', this.options)
+    this.setOptions(this.options);
   };
 
   /**
