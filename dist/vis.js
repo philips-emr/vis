@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2020-09-02
+ * @date    2020-09-10
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -13175,7 +13175,6 @@ return /******/ (function(modules) { // webpackBootstrap
     var clientY = event.center ? event.center.y : event.clientY;
     var x = clientX - util.getAbsoluteLeft(this.dom.centerContainer);
     var y = clientY - util.getAbsoluteTop(this.dom.centerContainer);
-    console.log();
 
     var item = this.itemSet.itemFromTarget(event);
     var group = this.itemSet.groupFromTarget(event);
@@ -27376,46 +27375,21 @@ return /******/ (function(modules) { // webpackBootstrap
         }
       }
 
-      var toTest = true;
-
-      if (toTest) {
-        var groupsData = this.groupsData._data || [];
-        for (var _groupId in groupsData) {
-          if (groupsData.hasOwnProperty(_groupId)) {
-            var _group = undefined;
-            if (this.groupsData != undefined) {
-              _group = this.groupsData.get(_groupId);
-            }
-            if (_group == undefined) {
-              _group = { id: _groupId, content: this.options.defaultGroup + _groupId };
-            }
-            this._updateGroup(_group, _groupId);
-            this.groups[_groupId].setItems(groupsContent[_groupId]);
+      var groupsData = this.groupsData._data || [];
+      for (var _groupId in groupsData) {
+        if (groupsData.hasOwnProperty(_groupId)) {
+          var group = undefined;
+          if (this.groupsData != undefined) {
+            group = this.groupsData.get(_groupId);
           }
-        }
-        this._calculateHeights();
-      } else {
-        //Update legendas, style and axis
-        for (var groupId in groupsContent) {
-          if (groupsContent.hasOwnProperty(groupId)) {
-            if (groupsContent[groupId].length == 0) {
-              if (this.groups.hasOwnProperty(groupId)) {
-                this._removeGroup(groupId);
-              }
-            } else {
-              var group = undefined;
-              if (this.groupsData != undefined) {
-                group = this.groupsData.get(groupId);
-              }
-              if (group == undefined) {
-                group = { id: groupId, content: this.options.defaultGroup + groupId };
-              }
-              this._updateGroup(group, groupId);
-              this.groups[groupId].setItems(groupsContent[groupId]);
-            }
+          if (group == undefined) {
+            group = { id: _groupId, content: this.options.defaultGroup + _groupId };
           }
+          this._updateGroup(group, _groupId);
+          this.groups[_groupId].setItems(groupsContent[_groupId]);
         }
       }
+      this._calculateHeights();
       this.forceGraphUpdate = true;
       this.body.emitter.emit("_change", { queue: true });
     }
@@ -27425,15 +27399,11 @@ return /******/ (function(modules) { // webpackBootstrap
     var totalHeight = 0;
 
     this.groupsData.forEach(function (d) {
-      // console.log('d: ', d);
       totalHeight += d.rowHeightId[d.className];
     });
 
-    // console.log('totalHeight: ', totalHeight);
-    // console.log('groups: ', this.groupsData);
     this.options.height = totalHeight;
     this.options.graphHeight = totalHeight;
-    // console.log('options: ', this.options)
     this.setOptions(this.options);
   };
 
@@ -45829,6 +45799,8 @@ return /******/ (function(modules) { // webpackBootstrap
         __type__: { object: object, string: string }
       },
       group: { string: string, number: number, 'undefined': 'undefined' },
+      maxValue: { number: number },
+      minValue: { number: number },
       props: { min: number, max: number },
       hidden: { boolean: boolean },
       icon: {
