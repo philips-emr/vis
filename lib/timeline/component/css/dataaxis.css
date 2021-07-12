@@ -14,6 +14,9 @@
   border-color: #bfbfbf;
 }
 
+.vis-data-axis {
+  position: relative;
+}
 
 .vis-data-axis .vis-y-axis.vis-major {
   width: 100%;
@@ -89,6 +92,10 @@
   transform: rotate(90deg);
 }
 
+.vis-data-axis .vis-y-axis.vis-timeline-chart-y-axis{
+  position: absolute;
+}
+
 .vis-legend {
   background-color: rgba(247, 252, 255, 0.65);
   padding: 5px;
@@ -100,4 +107,28 @@
   /*font-size: 10px;*/
   white-space: nowrap;
   display: inline-block
+}
+
+.vis-data-axis {
+  position: relative;
+}
+
+.vis-data-axis .vis-y-axis.vis-timeline-chart-y-axis{
+  position: aboslute;
+}
+
+.summary-content.vis-timeline-chart .vis-panel.vis-left .vis-content .vis-data-axis.hovered {
+  background-color: #F2F2F2 !important;
+}
+
+.vis-point.opaque{
+  opacity: 0.3;
+}
+
+path.opaque {
+  stroke-opacity: 0.3;
+}
+
+.vis-panel.vis-left .vis-content .vis-data-axis .cell.hovered {
+  background-color: #F2F2F2 !important;
 }

@@ -39,6 +39,10 @@
   position: relative;
 }
 
+.vis-panel.vis-left .vis-content {
+  display: flex;
+}
+
 .vis-panel .vis-shadow {
   position: absolute;
   width: 100%;

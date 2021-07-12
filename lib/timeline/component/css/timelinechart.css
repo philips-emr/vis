@@ -37,7 +37,3 @@
 .vis-timeline-chart .vis-horizontal .vis-timeline-chart-background.hovered {
   background-color: #F2F2F2 !important;
 }
-
-.vis-timeline-chart.summary-chart-visualization .vis-data-axis {
-  visibility: hidden;
-}
