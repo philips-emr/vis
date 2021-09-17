@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-09-10
+ * @date    2021-09-17
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -24930,12 +24930,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // calculate when gap === 0 (fit)
     if (group.options.gap == 0) {
-      var _dateStart = new Date(group.start);
       var _dateElement = new Date(this.data.start);
       var _dateElementEnd = new Date(this.data.end);
       var index = 0;
       var indexEnd = 0;
-      var itemHours = null;
+
       // if the hours difference comes negative it calculates with one more day
       var diffNegative = function diffNegative(dateStart, dateEnd) {
         var diffFunction = dateStart.diff(dateEnd);
@@ -24944,25 +24943,9 @@ return /******/ (function(modules) { // webpackBootstrap
       };
       // scrolls through the items in the settingbar
       Object.values(elementHeaderWidth.children).forEach(function (item) {
-        var itemCurrentSplit = item.querySelector('.item-label').innerText.split(':');
-        var hours = itemCurrentSplit[0];
-        var minutes = itemCurrentSplit[1];
-        var diff = 0;
-        if (itemHours) {
-          //calculete difference de hours,
-          diff = moment().hours(hours).minutes(minutes).diff(itemHours);
-          //if diferrence negative, add one more day
-          if (diff < 1) {
-            diff = diffNegative(moment().add(1, 'day').hours(hours).minutes(minutes), itemHours);
-          }
-        }
-        //checks for shorter start times and adds the corresponding index
-        if (_dateStart < _dateElement || _dateStart < _dateElementEnd) {
-          _dateStart = new Date(_dateStart.getTime() + diff);
-          if (_dateStart < _dateElement) index++;
-          if (_dateStart < _dateElementEnd) indexEnd++;
-        }
-        itemHours = moment().hours(hours).minutes(minutes);
+        var _currentDateItem = item.__time.toDate();
+        if (_dateElement > _currentDateItem) index++;
+        if (_dateElementEnd > _currentDateItem) indexEnd++;
       });
 
       //multiplies the index with the width of the settingbar item and adds half more width to align correctly
@@ -25534,7 +25517,8 @@ return /******/ (function(modules) { // webpackBootstrap
     var start = util.convert(this.body.range.start, 'Number');
     var end = util.convert(this.body.range.end, 'Number');
     var gap = this.body.range.options.gap;
-    var diffInHours = (end - start) / (1000 * 60 * 60) / gap;
+    var totalizersToAdd = this.body.totalizer && this.body.totalizer.periods ? this.body.totalizer.periods.length : 0;
+    var diffInHours = (end - start) / (1000 * 60 * 60) / (gap ? gap : 1) + totalizersToAdd;
 
     var step = new TimeStep(new Date(start), new Date(end));
     step.setMoment(this.options.moment);
@@ -28266,17 +28250,39 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   LineGraph.prototype._convertXcoordinates = function (datapoints) {
-    for (var i = 0; i < datapoints.length; i++) {
-      if (this.body.range.options.gap === 0) {
-        datapoints[i].screen_x = this.props.width + this._calculateGapPositionVIS(datapoints[i].x);
+    var _this6 = this;
+
+    var _loop = function _loop(i) {
+      if (_this6.body.range.options.gap === 0) {
+        datapoints[i].screen_x = _this6.props.width + _this6._calculateGapPositionVIS(datapoints[i].x);
       } else {
-        var factor = this.body.range.end - this.body.range.start;
-        var xToPercent = (datapoints[i].x.getTime() - this.body.range.start) * 100 / factor;
+        var factor = _this6.body.range.end - _this6.body.range.start;
+        var xToPercent = (datapoints[i].x.getTime() - _this6.body.range.start) * 100 / factor;
         xToPercent = Number.isNaN(xToPercent) ? 0 : xToPercent;
-        datapoints[i].screen_x = this.props.width * xToPercent / 100;
+        if (_this6.body.totalizer && _this6.body.totalizer.periods && _this6.body.totalizer.periods.length > 0) {
+          totalizers = _this6.body.totalizer.periods.filter(function (x) {
+            return x.end.valueOf() > _this6.body.range.start && x.end.valueOf() < _this6.body.range.end;
+          });
+          filteredTotalizers = totalizers.filter(function (x) {
+            return x.end.valueOf() < datapoints[i].x.getTime();
+          });
+          columnWidth = _this6.props.width / (factor / (3600000 * _this6.body.range.options.gap) + totalizers.length);
+
+          datapoints[i].screen_x = (_this6.props.width - totalizers.length * columnWidth) * xToPercent / 100 + filteredTotalizers.length * columnWidth;
+        } else {
+          datapoints[i].screen_x = _this6.props.width * xToPercent / 100;
+        }
       }
 
       datapoints[i].screen_y = datapoints[i].y; //starting point for range calculations
+    };
+
+    for (var i = 0; i < datapoints.length; i++) {
+      var totalizers;
+      var filteredTotalizers;
+      var columnWidth;
+
+      _loop(i);
     }
   };
 
@@ -31298,6 +31304,7 @@ return /******/ (function(modules) { // webpackBootstrap
           _this.body.summaryWidth = properties.visPropertiesMetadata.summaryWidth;
           _this.body.dataRegionDatagrid = properties.visPropertiesMetadata.dataRegionDatagrid;
         }
+        _this.body.totalizer = properties.totalizer;
       }
 
       // range
