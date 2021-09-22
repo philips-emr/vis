@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-09-10
+ * @date    2021-09-21
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -13397,8 +13397,9 @@ return /******/ (function(modules) { // webpackBootstrap
   Timeline.prototype.getEventProperties = function (event) {
     var clientX = event.center ? event.center.x : event.clientX;
     var clientY = event.center ? event.center.y : event.clientY;
-    var x = clientX - util.getAbsoluteLeft(this.dom.centerContainer);
-    var y = clientY - util.getAbsoluteTop(this.dom.centerContainer);
+    var centerContainerRect = this.dom.centerContainer.getBoundingClientRect();
+    var x = clientX - centerContainerRect.left;
+    var y = clientY - centerContainerRect.top;
 
     var item = this.itemSet.itemFromTarget(event);
     var group = this.itemSet.groupFromTarget(event);
@@ -18324,12 +18325,12 @@ return /******/ (function(modules) { // webpackBootstrap
         throw new Error('Unknown easing function ' + JSON.stringify(easingName) + '. ' + 'Choose from: ' + Object.keys(util.easingFunctions).join(', '));
       }
 
-      var initTime = new Date().valueOf();
+      var initTime = Date.now();
       var anyChanged = false;
 
       var next = function next() {
         if (!me.props.touch.dragging) {
-          var now = new Date().valueOf();
+          var now = Date.now();
           var time = now - initTime;
           var ease = easingFunction(time / duration);
           var done = time > duration;
@@ -18776,8 +18777,8 @@ return /******/ (function(modules) { // webpackBootstrap
     // calculate the time where the mouse is, check whether inside
     // and no scroll action should happen.
     var clientX = event.center ? event.center.x : event.clientX;
-    var x = clientX - util.getAbsoluteLeft(this.body.dom.centerContainer);
-    var time = this.body.util.toTime(x);
+    var centerContainerRect = this.body.dom.centerContainer.getBoundingClientRect();
+    var time = this.body.util.toTime(centerContainerRect.right - clientX);
 
     return time >= this.start && time <= this.end;
   };
@@ -18811,9 +18812,10 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   function getPointer(touch, element) {
+    var elementRect = element.getBoundingClientRect();
     return {
-      x: touch.x - util.getAbsoluteLeft(element),
-      y: touch.y - util.getAbsoluteTop(element)
+      x: touch.x - elementRect.left,
+      y: touch.y - elementRect.top
     };
   }
 
@@ -19607,7 +19609,9 @@ return /******/ (function(modules) { // webpackBootstrap
       bottom: {},
       border: {},
       scrollTop: 0,
-      scrollTopMin: 0
+      scrollTopMin: 0,
+      borderRootHeight: {},
+      borderRootWidth: {}
     };
 
     this.customTimes = [];
@@ -20050,12 +20054,13 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   Core.prototype._redraw = function () {
     this.redrawCount++;
-    var resized = false;
-    var options = this.options;
-    var props = this.props;
     var dom = this.dom;
 
     if (!dom || !dom.container || dom.container.clientWidth == 0) return; // when destroyed, or invisible
+
+    var resized = false;
+    var options = this.options;
+    var props = this.props;
 
     DateUtil.updateHiddenDates(this.options.moment, this.body, this.options.hiddenDates);
 
@@ -20073,22 +20078,27 @@ return /******/ (function(modules) { // webpackBootstrap
     dom.root.style.minHeight = util.option.asSize(options.minHeight, '');
     dom.root.style.width = util.option.asSize(options.width, '');
 
+    var rootClientHeight = dom.root.clientHeight;
+    var rootOffsetHeight = dom.root.offsetHeight;
+    var rootOffsetWidth = dom.root.offsetWidth;
+    var centerContainerClientHeight = dom.centerContainer.clientHeight;
+
     // calculate border widths
     props.border.left = (dom.centerContainer.offsetWidth - dom.centerContainer.clientWidth) / 2;
     props.border.right = props.border.left;
-    props.border.top = (dom.centerContainer.offsetHeight - dom.centerContainer.clientHeight) / 2;
+    props.border.top = (dom.centerContainer.offsetHeight - centerContainerClientHeight) / 2;
     props.border.bottom = props.border.top;
-    var borderRootHeight = dom.root.offsetHeight - dom.root.clientHeight;
-    var borderRootWidth = dom.root.offsetWidth - dom.root.clientWidth;
+    props.borderRootHeight = rootOffsetHeight - rootClientHeight;
+    props.borderRootWidth = rootOffsetWidth - dom.root.clientWidth;
 
     // workaround for a bug in IE: the clientWidth of an element with
     // a height:0px and overflow:hidden is not calculated and always has value 0
-    if (dom.centerContainer.clientHeight === 0) {
+    if (centerContainerClientHeight === 0) {
       props.border.left = props.border.top;
       props.border.right = props.border.left;
     }
-    if (dom.root.clientHeight === 0) {
-      borderRootWidth = borderRootHeight;
+    if (rootClientHeight === 0) {
+      props.borderRootWidth = props.borderRootHeight;
     }
 
     // calculate the heights. If any of the side panels is empty, we set the height to
@@ -20104,20 +20114,20 @@ return /******/ (function(modules) { // webpackBootstrap
     // apply auto height
     // TODO: only calculate autoHeight when needed (else we cause an extra reflow/repaint of the DOM)
     var contentHeight = Math.max(props.left.height, props.center.height, props.right.height);
-    var autoHeight = props.top.height + contentHeight + props.bottom.height + borderRootHeight + props.border.top + props.border.bottom;
+    var autoHeight = props.top.height + contentHeight + props.bottom.height + props.borderRootHeight + props.border.top + props.border.bottom;
     dom.root.style.height = util.option.asSize(options.height, autoHeight + 'px');
 
     // calculate heights of the content panels
     props.root.height = dom.root.offsetHeight;
-    props.background.height = props.root.height - borderRootHeight;
-    var containerHeight = props.root.height - props.top.height - props.bottom.height - borderRootHeight;
+    props.background.height = props.root.height - props.borderRootHeight;
+    var containerHeight = props.root.height - props.top.height - props.bottom.height - props.borderRootHeight;
     props.centerContainer.height = containerHeight;
     props.leftContainer.height = containerHeight;
     props.rightContainer.height = props.leftContainer.height;
 
     // calculate the widths of the panels
-    props.root.width = dom.root.offsetWidth;
-    props.background.width = props.root.width - borderRootWidth;
+    props.root.width = rootOffsetWidth;
+    props.background.width = props.root.width - props.borderRootWidth;
     props.left.width = dom.leftContainer.clientWidth || -props.border.left;
     props.leftContainer.width = props.left.width;
     props.right.width = dom.rightContainer.clientWidth || -props.border.right;
@@ -20125,9 +20135,9 @@ return /******/ (function(modules) { // webpackBootstrap
     var centerWidth = 0;
     if (this.body.origin === 'flowsheet') {
       // once now we are moving "left" to datagrid, it's not necessary to reduce it from center.
-      centerWidth = props.root.width - props.right.width - borderRootWidth;
+      centerWidth = props.root.width - props.right.width - props.borderRootWidth;
     } else {
-      centerWidth = props.root.width - props.left.width - props.right.width - borderRootWidth;
+      centerWidth = props.root.width - props.left.width - props.right.width - props.borderRootWidth;
     }
     props.center.width = centerWidth;
     props.centerContainer.width = centerWidth;
@@ -20176,12 +20186,9 @@ return /******/ (function(modules) { // webpackBootstrap
     if (options.orientation.item != 'top') {
       offset += Math.max(this.props.centerContainer.height - this.props.center.height - this.props.border.top - this.props.border.bottom, 0);
     }
-    dom.center.style.left = '0';
-    dom.center.style.top = offset + 'px';
-    dom.left.style.left = '0';
-    dom.left.style.top = offset + 'px';
-    dom.right.style.left = '0';
-    dom.right.style.top = offset + 'px';
+    dom.center.style.transform = 'translate(0px, ' + offset + 'px)';
+    dom.left.style.transform = 'translate(0px, ' + offset + 'px)';
+    dom.right.style.transform = 'translate(0px, ' + offset + 'px)';
 
     // show shadows when vertical scrolling is available
     var visibilityTop = this.props.scrollTop == 0 ? 'hidden' : '';
@@ -20338,13 +20345,15 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       if (me.dom.root) {
+        var rootOffsetHeight = me.dom.root.offsetHeight;
+        var rootOffsetWidth = me.dom.root.offsetWidth;
         // check whether the frame is resized
         // Note: we compare offsetWidth here, not clientWidth. For some reason,
         // IE does not restore the clientWidth from 0 to the actual width after
         // changing the timeline's container display style from none to visible
-        if (me.dom.root.offsetWidth != me.props.lastWidth || me.dom.root.offsetHeight != me.props.lastHeight) {
-          me.props.lastWidth = me.dom.root.offsetWidth;
-          me.props.lastHeight = me.dom.root.offsetHeight;
+        if (rootOffsetWidth != me.props.lastWidth || rootOffsetHeight != me.props.lastHeight) {
+          me.props.lastWidth = rootOffsetWidth;
+          me.props.lastHeight = rootOffsetHeight;
 
           me.body.emitter.emit('_change');
           if (!me.body.reduceRedraw && me.body.eventOnDrawn) {
@@ -21714,8 +21723,8 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   ItemSet.prototype._onDragStartAddItem = function (event) {
     var snap = this.options.snap || null;
-    var xAbs = util.getAbsoluteLeft(this.dom.frame);
-    var x = event.center.x - xAbs - 10; // minus 10 to compensate for the drag starting as soon as you've moved 10px
+    var frameRect = this.dom.frame.getBoundingClientRect();
+    var x = event.center.x - frameRect.left - 10; // minus 10 to compensate for the drag starting as soon as you've moved 10px
     var time = this.body.util.toTime(x);
     var scale = this.body.util.getScale();
     var step = this.body.util.getStep();
@@ -21764,7 +21773,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
       var me = this;
       var snap = this.options.snap || null;
-      var xOffset = this.body.dom.root.offsetLeft + this.body.domProps.left.width;
+      var domRootOffsetLeft = this.body.dom.root.offsetLeft;
+      var xOffset = domRootOffsetLeft + this.body.domProps.left.width;
       var scale = this.body.util.getScale();
       var step = this.body.util.getStep();
 
@@ -21958,17 +21968,17 @@ return /******/ (function(modules) { // webpackBootstrap
       if (group && group.height != this.groupTouchParams.group.height) {
         var movingUp = group.top < this.groupTouchParams.group.top;
         var clientY = event.center ? event.center.y : event.clientY;
-        var targetGroupTop = util.getAbsoluteTop(group.dom.foreground);
+        var _targetGroup = group.dom.foreground.getBoundingClientRect();
         var draggedGroupHeight = this.groupTouchParams.group.height;
         if (movingUp) {
           // skip swapping the groups when the dragged group is not below clientY afterwards
-          if (targetGroupTop + draggedGroupHeight < clientY) {
+          if (_targetGroup.top + draggedGroupHeight < clientY) {
             return;
           }
         } else {
           var targetGroupHeight = group.height;
           // skip swapping the groups when the dragged group is not below clientY afterwards
-          if (targetGroupTop + targetGroupHeight - draggedGroupHeight > clientY) {
+          if (_targetGroup.top + targetGroupHeight - draggedGroupHeight > clientY) {
             return;
           }
         }
@@ -22331,17 +22341,17 @@ return /******/ (function(modules) { // webpackBootstrap
       var groupId = this.groupIds[i];
       var group = this.groups[groupId];
       var foreground = group.dom.foreground;
-      var top = util.getAbsoluteTop(foreground);
-      if (clientY > top && clientY < top + foreground.offsetHeight) {
+      var foregroundRect = foreground.getBoundingClientRect();
+      if (clientY >= foregroundRect.top && clientY < foregroundRect.top + foreground.offsetHeight) {
         return group;
       }
 
       if (this.options.orientation.item === 'top') {
-        if (i === this.groupIds.length - 1 && clientY > top) {
+        if (i === this.groupIds.length - 1 && clientY > foregroundRect.top) {
           return group;
         }
       } else {
-        if (i === 0 && clientY < top + foreground.offset) {
+        if (i === 0 && clientY < foregroundRect.top + foreground.offset) {
           return group;
         }
       }
@@ -22527,8 +22537,8 @@ return /******/ (function(modules) { // webpackBootstrap
       throw "No legal start or end date in method setRange";
     }
 
-    this._start = start != undefined ? this.moment(start.valueOf()) : new Date();
-    this._end = end != undefined ? this.moment(end.valueOf()) : new Date();
+    this._start = start != undefined ? this.moment(start.valueOf()) : Date.now();
+    this._end = end != undefined ? this.moment(end.valueOf()) : Date.now();
 
     if (this.autoScale) {
       this.setMinimumStep(minimumStep);
@@ -23044,7 +23054,7 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     function today(date) {
-      if (date.isSame(new Date(), 'day')) {
+      if (date.isSame(Date.now(), 'day')) {
         return ' vis-today';
       }
       if (date.isSame(_moment().add(1, 'day'), 'day')) {
@@ -23057,15 +23067,15 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     function currentWeek(date) {
-      return date.isSame(new Date(), 'week') ? ' vis-current-week' : '';
+      return date.isSame(Date.now(), 'week') ? ' vis-current-week' : '';
     }
 
     function currentMonth(date) {
-      return date.isSame(new Date(), 'month') ? ' vis-current-month' : '';
+      return date.isSame(Date.now(), 'month') ? ' vis-current-month' : '';
     }
 
     function currentYear(date) {
-      return date.isSame(new Date(), 'year') ? ' vis-current-year' : '';
+      return date.isSame(Date.now(), 'year') ? ' vis-current-year' : '';
     }
 
     switch (this.scale) {
@@ -23343,10 +23353,14 @@ return /******/ (function(modules) { // webpackBootstrap
     var height = this._calculateHeight(margin, timeline);
 
     // calculate actual size and position
-    var foreground = this.dom.foreground;
-    this.top = foreground.offsetTop;
-    this.left = foreground.offsetLeft;
-    this.width = foreground.offsetWidth;
+    var _dom$foreground = this.dom.foreground,
+        offsetTop = _dom$foreground.offsetTop,
+        offsetLeft = _dom$foreground.offsetLeft,
+        offsetWidth = _dom$foreground.offsetWidth;
+
+    this.top = offsetTop;
+    this.left = offsetLeft;
+    this.width = offsetWidth;
     resized = util.updateProperty(this, 'height', height) || resized;
 
     // recalculate size of label
@@ -24118,31 +24132,34 @@ return /******/ (function(modules) { // webpackBootstrap
   BoxItem.prototype.repositionX = function () {
     var start = this.conversion.toScreen(this.data.start);
     var align = this.options.align;
+    var lineWidth = this.props.line.width;
+    var dotWidth = this.props.dot.width;
+
+    var domBoxStyleLeft = void 0;
+    var domLineStyleLeft = void 0;
+    var domDotStyleLeft = void 0;
 
     // calculate left position of the box
     if (align == 'right') {
-      this.left = start - this.width;
-
       // reposition box, line, and dot
-      this.dom.box.style.left = this.left + 'px';
-      this.dom.line.style.left = start - this.props.line.width + 'px';
-      this.dom.dot.style.left = start - this.props.line.width / 2 - this.props.dot.width / 2 + 'px';
+      domBoxStyleLeft = start - this.width;
+      domLineStyleLeft = start - lineWidth;
+      domDotStyleLeft = start - lineWidth / 2 - dotWidth / 2;
     } else if (align == 'left') {
-      this.left = start;
-
       // reposition box, line, and dot
-      this.dom.box.style.left = this.left + 'px';
-      this.dom.line.style.left = start + 'px';
-      this.dom.dot.style.left = start + this.props.line.width / 2 - this.props.dot.width / 2 + 'px';
+      domBoxStyleLeft = start;
+      domLineStyleLeft = start;
+      domDotStyleLeft = start + lineWidth / 2 - dotWidth / 2;
     } else {
-      // default or 'center'
-      this.left = start - this.width / 2;
-
       // reposition box, line, and dot
-      this.dom.box.style.left = this.left + 'px';
-      this.dom.line.style.left = start - this.props.line.width / 2 + 'px';
-      this.dom.dot.style.left = start - this.props.dot.width / 2 + 'px';
+      domBoxStyleLeft = start - this.width / 2;
+      domLineStyleLeft = start - lineWidth / 2;
+      domDotStyleLeft = start - dotWidth / 2;
     }
+    this.left = domBoxStyleLeft;
+    this.dom.box.style.transform = 'translateX(' + domBoxStyleLeft + 'px)';
+    this.dom.line.style.transform = 'translateX(' + domLineStyleLeft + 'px)';
+    this.dom.dot.style.transform = 'translateX(' + domDotStyleLeft + 'px)';
   };
 
   /**
@@ -24152,15 +24169,15 @@ return /******/ (function(modules) { // webpackBootstrap
   BoxItem.prototype.repositionY = function () {
     var orientation = this.options.orientation.item;
     var box = this.dom.box;
-    var line = this.dom.line;
     var dot = this.dom.dot;
+    var lineStyle = this.dom.line.style;
 
     if (orientation == 'top') {
       box.style.top = (this.top || 0) + 'px';
 
-      line.style.top = '0';
-      line.style.height = this.parent.top + this.top + 1 + 'px';
-      line.style.bottom = '';
+      lineStyle.top = '0';
+      lineStyle.height = this.parent.top + this.top + 1 + 'px';
+      lineStyle.bottom = '';
     } else {
       // orientation 'bottom'
       var itemSetHeight = this.parent.itemSet.props.height; // TODO: this is nasty
@@ -24638,9 +24655,9 @@ return /******/ (function(modules) { // webpackBootstrap
       this.height = dom.point.offsetHeight;
 
       // reposition the dot
-      dom.dot.style.top = (this.height - this.props.dot.height) / 2 + 'px';
-      dom.dot.style.left = this.props.dot.width / 2 + 'px';
-
+      var y = (this.height - this.props.dot.height) / 2;
+      var x = this.props.dot.width / 2;
+      dom.dot.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
       this.dirty = false;
     }
 
@@ -24925,17 +24942,16 @@ return /******/ (function(modules) { // webpackBootstrap
     var parentWidth = this.parent.width;
     var start = this.conversion.toScreen(this.data.start);
     var end = this.conversion.toScreen(this.data.end);
-    var contentLeft;
+    var contentLeft = void 0;
     var contentWidth;
 
     // calculate when gap === 0 (fit)
     if (group.options.gap == 0) {
-      var _dateStart = new Date(group.start);
       var _dateElement = new Date(this.data.start);
       var _dateElementEnd = new Date(this.data.end);
       var index = 0;
       var indexEnd = 0;
-      var itemHours = null;
+
       // if the hours difference comes negative it calculates with one more day
       var diffNegative = function diffNegative(dateStart, dateEnd) {
         var diffFunction = dateStart.diff(dateEnd);
@@ -24944,25 +24960,9 @@ return /******/ (function(modules) { // webpackBootstrap
       };
       // scrolls through the items in the settingbar
       Object.values(elementHeaderWidth.children).forEach(function (item) {
-        var itemCurrentSplit = item.querySelector('.item-label').innerText.split(':');
-        var hours = itemCurrentSplit[0];
-        var minutes = itemCurrentSplit[1];
-        var diff = 0;
-        if (itemHours) {
-          //calculete difference de hours,
-          diff = moment().hours(hours).minutes(minutes).diff(itemHours);
-          //if diferrence negative, add one more day
-          if (diff < 1) {
-            diff = diffNegative(moment().add(1, 'day').hours(hours).minutes(minutes), itemHours);
-          }
-        }
-        //checks for shorter start times and adds the corresponding index
-        if (_dateStart < _dateElement || _dateStart < _dateElementEnd) {
-          _dateStart = new Date(_dateStart.getTime() + diff);
-          if (_dateStart < _dateElement) index++;
-          if (_dateStart < _dateElementEnd) indexEnd++;
-        }
-        itemHours = moment().hours(hours).minutes(minutes);
+        var _currentDateItem = item.__time.toDate();
+        if (_dateElement > _currentDateItem) index++;
+        if (_dateElementEnd > _currentDateItem) indexEnd++;
       });
 
       //multiplies the index with the width of the settingbar item and adds half more width to align correctly
@@ -25018,20 +25018,20 @@ return /******/ (function(modules) { // webpackBootstrap
       contentWidth = Math.min(end - start, this.props.content.width);
     }
 
-    this.dom.box.style.left = this.left + 'px';
+    this.dom.box.style.transform = 'translateX(' + this.left + 'px)';
     this.dom.box.style.width = boxWidth + 'px';
 
     switch (this.options.align) {
       case 'left':
-        this.dom.content.style.left = '0';
+        contentLeft = 0;
         break;
 
       case 'right':
-        this.dom.content.style.left = Math.max(boxWidth - contentWidth, 0) + 'px';
+        contentLeft = Math.max(boxWidth - contentWidth, 0);
         break;
 
       case 'center':
-        this.dom.content.style.left = Math.max((boxWidth - contentWidth) / 2, 0) + 'px';
+        contentLeft = Math.max((boxWidth - contentWidth) / 2, 0);
         break;
 
       default:
@@ -25050,8 +25050,9 @@ return /******/ (function(modules) { // webpackBootstrap
             contentLeft = 0;
           }
         }
-        this.dom.content.style.left = contentLeft + 'px';
     }
+
+    this.dom.content.style.transform = 'translateX(' + contentLeft + 'px)';
   };
 
   /**
@@ -25534,7 +25535,8 @@ return /******/ (function(modules) { // webpackBootstrap
     var start = util.convert(this.body.range.start, 'Number');
     var end = util.convert(this.body.range.end, 'Number');
     var gap = this.body.range.options.gap;
-    var diffInHours = (end - start) / (1000 * 60 * 60) / gap;
+    var totalizersToAdd = this.body.totalizer && this.body.totalizer.periods ? this.body.totalizer.periods.length : 0;
+    var diffInHours = (end - start) / (1000 * 60 * 60) / (gap ? gap : 1) + totalizersToAdd;
 
     var step = new TimeStep(new Date(start), new Date(end));
     step.setMoment(this.options.moment);
@@ -25635,6 +25637,18 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   /**
+     * Create a minor line for the axis at position x
+     * sets xy
+     * @param {string} label
+     * @param {number} x
+     * @param {number} y
+     * @private
+     */
+  TimeAxis.prototype._setXY = function (label, x, y) {
+    label.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+  };
+
+  /**
    * Create a minor label for the axis at position x
    * @param {Number} x
    * @param {String} text
@@ -25658,8 +25672,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
     label.childNodes[0].nodeValue = text;
 
-    label.style.top = orientation == 'top' ? this.props.majorLabelHeight + 'px' : '0';
-    label.style.left = x + 'px';
+    var y = orientation == 'top' ? this.props.majorLabelHeight : '0';
+    this._setXY(label, x, y);
+
     label.className = 'vis-text vis-minor ' + className;
     //label.title = title;  // TODO: this is a heavy operation
 
@@ -25692,22 +25707,22 @@ return /******/ (function(modules) { // webpackBootstrap
     label.className = 'vis-text vis-major ' + className;
     //label.title = title; // TODO: this is a heavy operation
 
-    label.style.top = orientation == 'top' ? '0' : this.props.minorLabelHeight + 'px';
-    label.style.left = x + 'px';
+    var y = orientation == 'top' ? '0' : this.props.minorLabelHeight + 'px';
+    this._setXY(label, x, y);
 
     return label;
   };
 
   /**
    * Create a minor line for the axis at position x
-   * @param {Number} x
+   * @param {Number} left
    * @param {Number} width
    * @param {String} orientation   "top" or "bottom" (default)
    * @param {String} className
    * @return {Element} Returns the created line
    * @private
    */
-  TimeAxis.prototype._repaintMinorLine = function (x, width, orientation, className, indexColumn) {
+  TimeAxis.prototype._repaintMinorLine = function (left, width, orientation, className, indexColumn) {
     // reuse redundant line
     var line = this.dom.redundant.lines.shift();
     if (!line) {
@@ -25718,14 +25733,13 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.lines.push(line);
 
     var props = this.props;
-    if (orientation == 'top') {
-      line.style.top = props.majorLabelHeight + 'px';
-    } else {
-      line.style.top = this.body.domProps.top.height + 'px';
-    }
-    line.style.height = props.minorLineHeight + 'px';
-    line.style.left = indexColumn * width - width + 'px';
+
     line.style.width = width + 'px';
+    line.style.height = props.minorLineHeight + 'px';
+
+    var y = orientation == 'top' ? props.majorLabelHeight : this.body.domProps.top.height;
+    var x = indexColumn * width - width;
+    this._setXY(line, x, y);
 
     line.className = 'vis-grid vis-vertical vis-minor ' + className;
 
@@ -25734,14 +25748,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
   /**
    * Create a Major line for the axis at position x
-   * @param {Number} x
+   * @param {Number} left
    * @param {Number} width
    * @param {String} orientation   "top" or "bottom" (default)
    * @param {String} className
    * @return {Element} Returns the created line
    * @private
    */
-  TimeAxis.prototype._repaintMajorLine = function (x, width, orientation, className) {
+  TimeAxis.prototype._repaintMajorLine = function (left, width, orientation, className) {
     // reuse redundant line
     var line = this.dom.redundant.lines.shift();
     if (!line) {
@@ -25752,14 +25766,13 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.lines.push(line);
 
     var props = this.props;
-    if (orientation == 'top') {
-      line.style.top = '0';
-    } else {
-      line.style.top = this.body.domProps.top.height + 'px';
-    }
-    line.style.left = x - props.majorLineWidth / 2 + 'px';
-    line.style.height = props.majorLineHeight + 'px';
+
     line.style.width = width + 'px';
+    line.style.height = props.majorLineHeight + 'px';
+
+    var y = orientation == 'top' ? '0' : this.body.domProps.top.height;
+    var x = left - props.majorLineWidth / 2;
+    this._setXY(line, x, y);
 
     line.className = 'vis-grid vis-vertical vis-major ' + className;
 
@@ -26528,7 +26541,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.start();
       }
 
-      var now = this.options.moment(new Date().valueOf() + this.offset);
+      var now = this.options.moment(Date.now() + this.offset);
       var x = this.body.util.toScreen(now);
 
       var locale = this.options.locales[this.options.locale];
@@ -26542,7 +26555,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var title = locale.current + ' ' + locale.time + ': ' + now.format('dddd, MMMM Do YYYY, H:mm:ss');
       title = title.charAt(0).toUpperCase() + title.substring(1);
 
-      this.bar.style.left = x + 'px';
+      this.bar.style.transform = 'translateX(' + x + 'px)';
       this.bar.title = title;
     } else {
       // remove the line from the DOM
@@ -26598,7 +26611,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   CurrentTime.prototype.setCurrentTime = function (time) {
     var t = util.convert(time, 'Date').valueOf();
-    var now = new Date().valueOf();
+    var now = Date.now();
     this.offset = t - now;
     this.redraw();
   };
@@ -26608,7 +26621,7 @@ return /******/ (function(modules) { // webpackBootstrap
    * @return {Date} Returns the current time.
    */
   CurrentTime.prototype.getCurrentTime = function () {
-    return new Date(new Date().valueOf() + this.offset);
+    return new Date(Date.now() + this.offset);
   };
 
   module.exports = CurrentTime;
@@ -28266,17 +28279,39 @@ return /******/ (function(modules) { // webpackBootstrap
    * @private
    */
   LineGraph.prototype._convertXcoordinates = function (datapoints) {
-    for (var i = 0; i < datapoints.length; i++) {
-      if (this.body.range.options.gap === 0) {
-        datapoints[i].screen_x = this.props.width + this._calculateGapPositionVIS(datapoints[i].x);
+    var _this6 = this;
+
+    var _loop = function _loop(i) {
+      if (_this6.body.range.options.gap === 0) {
+        datapoints[i].screen_x = _this6.props.width + _this6._calculateGapPositionVIS(datapoints[i].x);
       } else {
-        var factor = this.body.range.end - this.body.range.start;
-        var xToPercent = (datapoints[i].x.getTime() - this.body.range.start) * 100 / factor;
+        var factor = _this6.body.range.end - _this6.body.range.start;
+        var xToPercent = (datapoints[i].x.getTime() - _this6.body.range.start) * 100 / factor;
         xToPercent = Number.isNaN(xToPercent) ? 0 : xToPercent;
-        datapoints[i].screen_x = this.props.width * xToPercent / 100;
+        if (_this6.body.totalizer && _this6.body.totalizer.periods && _this6.body.totalizer.periods.length > 0) {
+          totalizers = _this6.body.totalizer.periods.filter(function (x) {
+            return x.end.valueOf() > _this6.body.range.start && x.end.valueOf() < _this6.body.range.end;
+          });
+          filteredTotalizers = totalizers.filter(function (x) {
+            return x.end.valueOf() < datapoints[i].x.getTime();
+          });
+          columnWidth = _this6.props.width / (factor / (3600000 * _this6.body.range.options.gap) + totalizers.length);
+
+          datapoints[i].screen_x = (_this6.props.width - totalizers.length * columnWidth) * xToPercent / 100 + filteredTotalizers.length * columnWidth;
+        } else {
+          datapoints[i].screen_x = _this6.props.width * xToPercent / 100;
+        }
       }
 
       datapoints[i].screen_y = datapoints[i].y; //starting point for range calculations
+    };
+
+    for (var i = 0; i < datapoints.length; i++) {
+      var totalizers;
+      var filteredTotalizers;
+      var columnWidth;
+
+      _loop(i);
     }
   };
 
@@ -29105,13 +29140,15 @@ return /******/ (function(modules) { // webpackBootstrap
       var showMinorLabels = this.options.showMinorLabels;
       var showMajorLabels = this.options.showMajorLabels;
 
+      var backgroundHorizontalOffsetWidth = this.body.dom.backgroundHorizontal.offsetWidth;
+
       // determine the width and height of the elements for the axis
       props.minorLabelHeight = showMinorLabels ? props.minorCharHeight : 0;
       props.majorLabelHeight = showMajorLabels ? props.majorCharHeight : 0;
 
-      props.minorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.minorLinesOffset;
+      props.minorLineWidth = backgroundHorizontalOffsetWidth - this.lineOffset - this.width + 2 * this.options.minorLinesOffset;
       props.minorLineHeight = 1;
-      props.majorLineWidth = this.body.dom.backgroundHorizontal.offsetWidth - this.lineOffset - this.width + 2 * this.options.majorLinesOffset;
+      props.majorLineWidth = backgroundHorizontalOffsetWidth - this.lineOffset - this.width + 2 * this.options.majorLinesOffset;
       props.majorLineHeight = 1;
 
       //  take frame offline while updating (is almost twice as fast)
@@ -31298,6 +31335,7 @@ return /******/ (function(modules) { // webpackBootstrap
           _this.body.summaryWidth = properties.visPropertiesMetadata.summaryWidth;
           _this.body.dataRegionDatagrid = properties.visPropertiesMetadata.dataRegionDatagrid;
         }
+        _this.body.totalizer = properties.totalizer;
       }
 
       // range
