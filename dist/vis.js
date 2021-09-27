@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-09-21
+ * @date    2021-09-27
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -20218,8 +20218,6 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.redrawCount < MAX_REDRAW) {
           this.body.emitter.emit('_change');
           return;
-        } else {
-          console.log('WARNING: infinite loop in redraw?');
         }
       } else {
         this.redrawCount = 0;
@@ -21092,7 +21090,6 @@ return /******/ (function(modules) { // webpackBootstrap
     frame.style.height = asSize(height);
 
     // calculate actual size
-    this.props.width = frame.offsetWidth;
     this.props.height = height;
 
     // reposition axis
@@ -23209,7 +23206,6 @@ return /******/ (function(modules) { // webpackBootstrap
     // display:none is changed to visible.
     this.dom.marker = document.createElement('div');
     this.dom.marker.style.visibility = 'hidden';
-    this.dom.marker.innerHTML = '?';
     this.dom.background.appendChild(this.dom.marker);
   };
 
@@ -23293,20 +23289,6 @@ return /******/ (function(modules) { // webpackBootstrap
   Group.prototype.redraw = function (range, margin, restack, timeline) {
     var resized = false;
 
-    // force recalculation of the height of the items when the marker height changed
-    // (due to the Timeline being attached to the DOM or changed from display:none to visible)
-    var markerHeight = this.dom.marker.clientHeight;
-    if (markerHeight != this.lastMarkerHeight) {
-      this.lastMarkerHeight = markerHeight;
-
-      util.forEach(this.items, function (item) {
-        item.dirty = true;
-        if (item.displayed) item.redraw();
-      });
-
-      restack = true;
-    }
-
     // recalculate the height of the subgroups
     this._calculateSubGroupHeights();
 
@@ -23352,23 +23334,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // recalculate the height of the group
     var height = this._calculateHeight(margin, timeline);
 
-    // calculate actual size and position
-    var _dom$foreground = this.dom.foreground,
-        offsetTop = _dom$foreground.offsetTop,
-        offsetLeft = _dom$foreground.offsetLeft,
-        offsetWidth = _dom$foreground.offsetWidth;
-
-    this.top = offsetTop;
-    this.left = offsetLeft;
-    this.width = offsetWidth;
-    resized = util.updateProperty(this, 'height', height) || resized;
-
-    // recalculate size of label
-    resized = util.updateProperty(this.props.label, 'width', this.dom.inner.clientWidth) || resized;
-    resized = util.updateProperty(this.props.label, 'height', this.dom.inner.clientHeight) || resized;
-
     // apply new height
-    this.dom.background.style.height = height + 'px';
     this.dom.foreground.style.height = height + 'px';
     this.dom.label.style.height = height + 'px';
 
@@ -23609,21 +23575,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Group.prototype._updateVisibleItems = function (orderedItems, oldVisibleItems, range) {
     var visibleItems = [];
     var visibleItemsLookup = {}; // we keep this to quickly look up if an item already exists in the list without using indexOf on visibleItems
-    var interval = (range.end - range.start) / 4;
-    var lowerBound = range.start - interval;
-    var upperBound = range.end + interval;
     var item, i;
-
-    // this function is used to do the binary search.
-    var searchFunction = function searchFunction(value) {
-      if (value < lowerBound) {
-        return -1;
-      } else if (value <= upperBound) {
-        return 0;
-      } else {
-        return 1;
-      }
-    };
 
     // first check if the items that were in view previously are still in view.
     // IMPORTANT: this handles the case for the items with startdate before the window and enddate after the window!
@@ -23634,14 +23586,6 @@ return /******/ (function(modules) { // webpackBootstrap
       }
     }
 
-    // we do a binary search for the items that have only start values.
-    var initialPosByStart = util.binarySearchCustom(orderedItems.byStart, searchFunction, 'data', 'start');
-
-    // trace the visible items from the inital start pos both ways until an invisible item is found, we only look at the start values.
-    this._traceVisible(initialPosByStart, orderedItems.byStart, visibleItems, visibleItemsLookup, function (item) {
-      return item.data.start < lowerBound || item.data.start > upperBound;
-    });
-
     // if the window has changed programmatically without overlapping the old window, the ranged items with start < lowerBound and end > upperbound are not shown.
     // We therefore have to brute force check all items in the byEnd list
     if (this.checkRangedItems == true) {
@@ -23649,14 +23593,6 @@ return /******/ (function(modules) { // webpackBootstrap
       for (i = 0; i < orderedItems.byEnd.length; i++) {
         this._checkIfVisibleWithReference(orderedItems.byEnd[i], visibleItems, visibleItemsLookup, range);
       }
-    } else {
-      // we do a binary search for the items that have defined end times.
-      var initialPosByEnd = util.binarySearchCustom(orderedItems.byEnd, searchFunction, 'data', 'end');
-
-      // trace the visible items from the inital start pos both ways until an invisible item is found, we only look at the end values.
-      this._traceVisible(initialPosByEnd, orderedItems.byEnd, visibleItems, visibleItemsLookup, function (item) {
-        return item.data.end < lowerBound || item.data.end > upperBound;
-      });
     }
 
     // finally, we reposition all the visible items.
@@ -23666,19 +23602,6 @@ return /******/ (function(modules) { // webpackBootstrap
       // reposition item horizontally
       item.repositionX(true, range);
     }
-
-    // debug
-    //console.log("new line")
-    //if (this.groupId == null) {
-    //  for (i = 0; i < orderedItems.byStart.length; i++) {
-    //    item = orderedItems.byStart[i].data;
-    //    console.log('start',i,initialPosByStart, item.start.valueOf(), item.content, item.start >= lowerBound && item.start <= upperBound,i == initialPosByStart ? "<------------------- HEREEEE" : "")
-    //  }
-    //  for (i = 0; i < orderedItems.byEnd.length; i++) {
-    //    item = orderedItems.byEnd[i].data;
-    //    console.log('rangeEnd',i,initialPosByEnd, item.end.valueOf(), item.content, item.end >= range.start && item.end <= range.end,i == initialPosByEnd ? "<------------------- HEREEEE" : "")
-    //  }
-    //}
 
     return visibleItems;
   };
@@ -23921,9 +23844,6 @@ return /******/ (function(modules) { // webpackBootstrap
     var resized = false;
 
     this.visibleItems = this._updateVisibleItems(this.orderedItems, this.visibleItems, range);
-
-    // calculate actual size
-    this.width = this.dom.background.offsetWidth;
 
     // apply new height (just always zero for BackgroundGroup
     this.dom.background.style.height = '0';
@@ -24879,17 +24799,6 @@ return /******/ (function(modules) { // webpackBootstrap
       var className = (this.data.className ? ' ' + this.data.className : '') + (this.selected ? ' vis-selected' : '') + (editable ? ' vis-editable' : ' vis-readonly');
       dom.box.className = this.baseClassName + className;
 
-      // determine from css whether this box has overflow
-      this.overflow = window.getComputedStyle(dom.frame).overflow !== 'hidden';
-
-      // recalculate size
-      // turn off max-width to be able to calculate the real width
-      // this causes an extra browser repaint/reflow, but so be it
-      this.dom.content.style.maxWidth = 'none';
-      this.props.content.width = this.dom.content.offsetWidth;
-      this.height = this.dom.box.offsetHeight;
-      this.dom.content.style.maxWidth = '';
-
       this.dirty = false;
     }
 
@@ -24938,12 +24847,13 @@ return /******/ (function(modules) { // webpackBootstrap
     var prop = this.data.prop;
 
     var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
-    var elementHeaderWidth = document.querySelector('.tl-setting-bar');
+    var elementOffSetWidth = group.body.domProps.center.width;
+    var widthElement = parseFloat(elementOffSetWidth / elementHeaderWidthItem.length).toFixed(2);
     var parentWidth = this.parent.width;
     var start = this.conversion.toScreen(this.data.start);
     var end = this.conversion.toScreen(this.data.end);
     var contentLeft = void 0;
-    var contentWidth;
+    var contentWidth = void 0;
 
     // calculate when gap === 0 (fit)
     if (group.options.gap == 0) {
@@ -24966,30 +24876,27 @@ return /******/ (function(modules) { // webpackBootstrap
       });
 
       //multiplies the index with the width of the settingbar item and adds half more width to align correctly
-      var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
       start = widthElement * index + widthElement / 2;
       end = widthElement * indexEnd + widthElement / 2;
 
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidth && elementHeaderWidth.offsetWidth && ['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
-      var _widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
-      var calcPositionStart = parseInt(dataIdItemSplit[1]) * _widthElement;
-      var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * _widthElement;
+    } else if (dataIdItemSplit && elementHeaderWidthItem && elementOffSetWidth && ['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
+      var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
+      var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
       start = calcPositionStart;
-      end = start == 0 ? _widthElement : calcPositionEnd;
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidth && elementHeaderWidth.offsetWidth && group) {
-      var _widthElement2 = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+      end = start == 0 ? widthElement : calcPositionEnd;
+    } else if (dataIdItemSplit && elementHeaderWidthItem && elementOffSetWidth && group) {
       var dateStart = new Date(group.start);
       var gap = 1 / group.options.gap;
       var dateElement = new Date(this.data.start);
       var timeDiffElement = Math.abs(dateElement.getTime() - dateStart.getTime());
       var diffHoursElement = parseFloat(timeDiffElement / (1000 * 60 * 60)).toFixed(2);
-      var _calcPositionStart = gap * diffHoursElement * _widthElement2;
+      var _calcPositionStart = gap * diffHoursElement * widthElement;
       start = _calcPositionStart;
       if (new Date(this.data.end) != new Date(this.data.start)) {
         var dateElementEnd = new Date(this.data.end);
         var timeDiffElementBackground = Math.abs(dateElementEnd.getTime() - dateElement.getTime());
-        end = timeDiffElementBackground / (1000 * 60 * 60) * _widthElement2 * gap + start;
+        end = timeDiffElementBackground / (1000 * 60 * 60) * widthElement * gap + start;
       }
     }
 
@@ -25002,8 +24909,8 @@ return /******/ (function(modules) { // webpackBootstrap
         end = 2 * parentWidth;
       }
     }
-    var boxWidth = Math.max(end - start, 1);
 
+    var boxWidth = Math.max(end - start, 1) + 2;
     if (this.overflow) {
       this.left = start;
       this.width = boxWidth + this.props.content.width;
@@ -28281,9 +28188,12 @@ return /******/ (function(modules) { // webpackBootstrap
   LineGraph.prototype._convertXcoordinates = function (datapoints) {
     var _this6 = this;
 
+    var dataRegion = document.querySelector('.data-region-timeline');
+    var widthTimeline = dataRegion ? dataRegion.offsetWidth : 0;
+
     var _loop = function _loop(i) {
       if (_this6.body.range.options.gap === 0) {
-        datapoints[i].screen_x = _this6.props.width + _this6._calculateGapPositionVIS(datapoints[i].x);
+        datapoints[i].screen_x = _this6.props.width + _this6._calculateGapPositionVIS(datapoints[i].x, widthTimeline);
       } else {
         var factor = _this6.body.range.end - _this6.body.range.start;
         var xToPercent = (datapoints[i].x.getTime() - _this6.body.range.start) * 100 / factor;
@@ -28315,14 +28225,11 @@ return /******/ (function(modules) { // webpackBootstrap
     }
   };
 
-  LineGraph.prototype._calculateGapPositionVIS = function (x) {
-    var dateStart = new Date(this.body.range.start);
-    var widthTimeline = document.querySelector('.data-region-timeline') ? document.querySelector('.data-region-timeline').offsetWidth : 0;
-    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
-    var elementHeaderWidth = document.querySelector('.tl-setting-bar');
-
+  LineGraph.prototype._calculateGapPositionVIS = function (x, widthTimeline) {
     // where widthTimeline 0 return 0
     if (widthTimeline === 0) return 0;
+
+    var dateStart = new Date(this.body.range.start);
 
     // calculate when gap === 0 (fit)
     if (this.body.range.options.gap === 0) {
@@ -28335,18 +28242,23 @@ return /******/ (function(modules) { // webpackBootstrap
         if (diffFunction < 1) diffNegative(dateStart.add(1, 'day'), dateEnd);
         return diffFunction;
       };
+
       // scrolls through the items in the settingbar
+      var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
+      var elementHeaderWidth = document.querySelector('.tl-setting-bar');
+
       Object.values(elementHeaderWidth.children).forEach(function (item) {
         var itemCurrentSplit = item.querySelector('.item-label').innerText.split(':');
         var hours = itemCurrentSplit[0];
         var minutes = itemCurrentSplit[1];
+        var dateNow = moment();
         var diff = 0;
         if (itemHours) {
           //calculete difference de hours,
-          diff = moment().hours(hours).minutes(minutes).diff(itemHours);
+          diff = dateNow.hours(hours).minutes(minutes).diff(itemHours);
           //if diferrence negative, add one more day
           if (diff < 1) {
-            diff = diffNegative(moment().add(1, 'day').hours(hours).minutes(minutes), itemHours);
+            diff = diffNegative(dateNow.add(1, 'day').hours(hours).minutes(minutes), itemHours);
           }
         }
         //checks for shorter start times and adds the corresponding index
@@ -28354,7 +28266,7 @@ return /******/ (function(modules) { // webpackBootstrap
           dateStart = new Date(dateStart.getTime() + diff);
           if (dateStart < dateElement) index++;
         }
-        itemHours = moment().hours(hours).minutes(minutes);
+        itemHours = dateNow.hours(hours).minutes(minutes);
       });
 
       //multiplies the index with the width of the settingbar item and adds half more width to align correctly
