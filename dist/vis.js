@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-09-27
+ * @date    2021-10-04
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -24876,27 +24876,30 @@ return /******/ (function(modules) { // webpackBootstrap
       });
 
       //multiplies the index with the width of the settingbar item and adds half more width to align correctly
-      start = widthElement * index + widthElement / 2;
-      end = widthElement * indexEnd + widthElement / 2;
-
+      if (elementHeaderWidthItem.length > 0) {
+        start = widthElement * index + widthElement / 2;
+        end = widthElement * indexEnd + widthElement / 2;
+      }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementOffSetWidth && ['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
-      var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
-      var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
-      start = calcPositionStart;
-      end = start == 0 ? widthElement : calcPositionEnd;
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementOffSetWidth && group) {
-      var dateStart = new Date(group.start);
-      var gap = 1 / group.options.gap;
-      var dateElement = new Date(this.data.start);
-      var timeDiffElement = Math.abs(dateElement.getTime() - dateStart.getTime());
-      var diffHoursElement = parseFloat(timeDiffElement / (1000 * 60 * 60)).toFixed(2);
-      var _calcPositionStart = gap * diffHoursElement * widthElement;
-      start = _calcPositionStart;
-      if (new Date(this.data.end) != new Date(this.data.start)) {
-        var dateElementEnd = new Date(this.data.end);
-        var timeDiffElementBackground = Math.abs(dateElementEnd.getTime() - dateElement.getTime());
-        end = timeDiffElementBackground / (1000 * 60 * 60) * widthElement * gap + start;
+    } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
+      if (['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
+        var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
+        var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
+        start = calcPositionStart;
+        end = start == 0 ? widthElement : calcPositionEnd;
+      } else if (group) {
+        var dateStart = new Date(group.start);
+        var gap = 1 / group.options.gap;
+        var dateElement = new Date(this.data.start);
+        var timeDiffElement = Math.abs(dateElement.getTime() - dateStart.getTime());
+        var diffHoursElement = parseFloat(timeDiffElement / (1000 * 60 * 60)).toFixed(2);
+        var _calcPositionStart = gap * diffHoursElement * widthElement;
+        start = _calcPositionStart;
+        if (new Date(this.data.end) != new Date(this.data.start)) {
+          var dateElementEnd = new Date(this.data.end);
+          var timeDiffElementBackground = Math.abs(dateElementEnd.getTime() - dateElement.getTime());
+          end = timeDiffElementBackground / (1000 * 60 * 60) * widthElement * gap + start;
+        }
       }
     }
 
@@ -27073,11 +27076,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
     var element = util.getTarget(event);
     var what = null;
+    var yAxisLeftFrame = null;
+    var yAxisLeft = this.linegraph.yAxisLeft;
+    if (this.linegraph.yAxisLeft.dom) yAxisLeftFrame = this.linegraph.yAxisLeft.dom.frame;else {
+      var frameDom = this.linegraph.yAxisLeft[this.linegraph.yAxisLeft.length - 1];
+      yAxisLeftFrame = frameDom.dom ? frameDom.dom.frame : null;
+      yAxisLeft = frameDom;
+    }
+
     if (util.hasParent(element, this.timeAxis.dom.foreground)) {
       what = 'axis';
     } else if (this.timeAxis2 && util.hasParent(element, this.timeAxis2.dom.foreground)) {
       what = 'axis';
-    } else if (util.hasParent(element, this.linegraph.yAxisLeft.dom.frame)) {
+    } else if (util.hasParent(element, yAxisLeftFrame)) {
       what = 'data-axis';
     } else if (util.hasParent(element, this.linegraph.yAxisRight.dom.frame)) {
       what = 'data-axis';
@@ -27094,7 +27105,6 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     var value = [];
-    var yAxisLeft = this.linegraph.yAxisLeft;
     var yAxisRight = this.linegraph.yAxisRight;
     if (!yAxisLeft.hidden) {
       value.push(yAxisLeft.screenToValue(y));
@@ -29892,7 +29902,11 @@ return /******/ (function(modules) { // webpackBootstrap
               type = "C";
           }
           // copy properties to path for drawing.
-          path.setAttributeNS(null, 'd', 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false));
+          var x = pathArray[0][0];
+          var y = pathArray[0][1];
+          if (typeof x === 'number' && !isNaN(x) && typeof y === 'number' && !isNaN(y)) {
+              path.setAttributeNS(null, 'd', 'M' + x + "," + y + " " + this.serializePath(pathArray, type, false));
+          }
           path.setAttributeNS(null, 'row-id', group.group.value);
       }
       return path;
