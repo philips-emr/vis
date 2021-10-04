@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-09-21
+ * @date    2021-10-04
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -27166,11 +27166,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
     var element = util.getTarget(event);
     var what = null;
+    var yAxisLeftFrame = null;
+    var yAxisLeft = this.linegraph.yAxisLeft;
+    if (this.linegraph.yAxisLeft.dom) yAxisLeftFrame = this.linegraph.yAxisLeft.dom.frame;else {
+      var frameDom = this.linegraph.yAxisLeft[this.linegraph.yAxisLeft.length - 1];
+      yAxisLeftFrame = frameDom.dom ? frameDom.dom.frame : null;
+      yAxisLeft = frameDom;
+    }
+
     if (util.hasParent(element, this.timeAxis.dom.foreground)) {
       what = 'axis';
     } else if (this.timeAxis2 && util.hasParent(element, this.timeAxis2.dom.foreground)) {
       what = 'axis';
-    } else if (util.hasParent(element, this.linegraph.yAxisLeft.dom.frame)) {
+    } else if (util.hasParent(element, yAxisLeftFrame)) {
       what = 'data-axis';
     } else if (util.hasParent(element, this.linegraph.yAxisRight.dom.frame)) {
       what = 'data-axis';
@@ -27187,7 +27195,6 @@ return /******/ (function(modules) { // webpackBootstrap
     }
 
     var value = [];
-    var yAxisLeft = this.linegraph.yAxisLeft;
     var yAxisRight = this.linegraph.yAxisRight;
     if (!yAxisLeft.hidden) {
       value.push(yAxisLeft.screenToValue(y));
@@ -29980,7 +29987,11 @@ return /******/ (function(modules) { // webpackBootstrap
               type = "C";
           }
           // copy properties to path for drawing.
-          path.setAttributeNS(null, 'd', 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false));
+          var x = pathArray[0][0];
+          var y = pathArray[0][1];
+          if (typeof x === 'number' && !isNaN(x) && typeof y === 'number' && !isNaN(y)) {
+              path.setAttributeNS(null, 'd', 'M' + x + "," + y + " " + this.serializePath(pathArray, type, false));
+          }
           path.setAttributeNS(null, 'row-id', group.group.value);
       }
       return path;
