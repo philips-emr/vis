@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-10-04
+ * @date    2021-10-25
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -31965,8 +31965,8 @@ return /******/ (function(modules) { // webpackBootstrap
         });
         var baseGraphHeight = actualY - previousY;
         var range = {
-          max: group.summary && group.group.maxValue ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
-          min: group.summary && group.group.minValue ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
+          max: group.summary && group.group.maxValue != undefined ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
+          min: group.summary && group.group.minValue != undefined ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
         };
 
         for (var i = 0; i < datapoints.length; i++) {
