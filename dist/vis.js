@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-10-04
+ * @date    2021-10-29
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7723,29 +7723,37 @@ return /******/ (function(modules) { // webpackBootstrap
     var triangleBaseWidth = 2;
     switch (groupTemplate.style) {
       case 'circle':
-        var circle = exports.getSVGElement('circle', JSONcontainer, svgContainer);
-        circle.setAttributeNS(null, "cx", x);
-        circle.setAttributeNS(null, "cy", y);
-        circle.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
-        points.push(circle);
+        if (!isNaN(y) && !isNaN(x)) {
+          var circle = exports.getSVGElement('circle', JSONcontainer, svgContainer);
+          circle.setAttributeNS(null, "cx", x);
+          circle.setAttributeNS(null, "cy", y);
+          circle.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
+          points.push(circle);
+        }
         break;
       case 'square':
-        var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-        rect.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
-        rect.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
-        rect.setAttributeNS(null, "width", groupTemplate.size);
-        rect.setAttributeNS(null, "height", groupTemplate.size);
-        points.push(rect);
+        if (!isNaN(y) && !isNaN(x)) {
+          var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
+          rect.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
+          rect.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
+          rect.setAttributeNS(null, "width", groupTemplate.size);
+          rect.setAttributeNS(null, "height", groupTemplate.size);
+          points.push(rect);
+        }
         break;
       case 'triangle-up':
-        var _polygonUp = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        _polygonUp.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
-        points.push(_polygonUp);
+        if (!isNaN(v.y) && !isNaN(v.x)) {
+          var _polygonUp = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+          _polygonUp.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
+          points.push(_polygonUp);
+        }
         break;
       case 'triangle-down':
-        var _polygonDown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        _polygonDown.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + v.y + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
-        points.push(_polygonDown);
+        if (!isNaN(v.y) && !isNaN(v.x)) {
+          var _polygonDown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+          _polygonDown.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + v.y + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
+          points.push(_polygonDown);
+        }
         break;
       case 'arrow-avg':
         var baseY = props.baseY,
@@ -7860,12 +7868,14 @@ return /******/ (function(modules) { // webpackBootstrap
         points.push(_polygonUp);
         break;
       case 'rectangle':
-        var rectangle = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-        rectangle.setAttributeNS(null, "x", x - 0.5 * groupTemplate.width);
-        rectangle.setAttributeNS(null, "y", y - 0.5 * groupTemplate.height);
-        rectangle.setAttributeNS(null, "width", groupTemplate.width);
-        rectangle.setAttributeNS(null, "height", groupTemplate.height);
-        points.push(rectangle);
+        if (!isNaN(y) && !isNaN(x)) {
+          var rectangle = exports.getSVGElement('rect', JSONcontainer, svgContainer);
+          rectangle.setAttributeNS(null, "x", x - 0.5 * groupTemplate.width);
+          rectangle.setAttributeNS(null, "y", y - 0.5 * groupTemplate.height);
+          rectangle.setAttributeNS(null, "width", groupTemplate.width);
+          rectangle.setAttributeNS(null, "height", groupTemplate.height);
+          points.push(rectangle);
+        }
         break;
     }
     //handle label
@@ -7888,8 +7898,10 @@ return /******/ (function(modules) { // webpackBootstrap
         label.setAttributeNS(null, "class", labelObj.className + " vis-label");
       }
 
-      label.setAttributeNS(null, "x", x);
-      label.setAttributeNS(null, "y", y);
+      if (!isNaN(y) && !isNaN(x)) {
+        label.setAttributeNS(null, "x", x);
+        label.setAttributeNS(null, "y", y);
+      }
     }
 
     points.forEach(function (point) {
@@ -25607,6 +25619,10 @@ return /******/ (function(modules) { // webpackBootstrap
       } else if (this.options['showMinorLines']) {
         line = this._repaintMinorLine(x, width, orientation, className, next);
       }
+
+      if (!elementHeaderWidthItem.length && !elementHeaderWidth && !step.next()) {
+        next = diffInHours;
+      }
     }
 
     if (count === MAX && !warnedForOverflow) {
@@ -29954,9 +29970,9 @@ return /******/ (function(modules) { // webpackBootstrap
           } else {
               zero = Math.min(Math.max(0, group.zeroPosition), svgHeight);
           }
-          if (group.options.shaded.orientation == 'group' && subPathArray != null && subPathArray != undefined) {
+          if (!isNaN(pathArray[0][0]) && !isNaN(pathArray[0][1]) && group.options.shaded.orientation == 'group' && subPathArray != null && subPathArray != undefined) {
               dFill = 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false) + ' L' + subPathArray[subPathArray.length - 1][0] + "," + subPathArray[subPathArray.length - 1][1] + " " + this.serializePath(subPathArray, type, true) + subPathArray[0][0] + "," + subPathArray[0][1] + " Z";
-          } else {
+          } else if (!isNaN(pathArray[0][0]) && !isNaN(pathArray[0][1])) {
               dFill = 'M' + pathArray[0][0] + "," + pathArray[0][1] + " " + this.serializePath(pathArray, type, false) + ' V' + zero + ' H' + pathArray[0][0] + " Z";
           }
 
@@ -29964,7 +29980,9 @@ return /******/ (function(modules) { // webpackBootstrap
           if (group.options.shaded.style !== undefined) {
               fillPath.setAttributeNS(null, 'style', group.options.shaded.style);
           }
-          fillPath.setAttributeNS(null, 'd', dFill);
+          if (dFill) {
+              fillPath.setAttributeNS(null, 'd', dFill);
+          }
       }
   };
 
@@ -30005,11 +30023,15 @@ return /******/ (function(modules) { // webpackBootstrap
       var d = type;
       if (inverse) {
           for (var i = pathArray.length - 2; i > 0; i--) {
-              d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+              if (!isNaN(pathArray[i][0]) && !isNaN(pathArray[i][1])) {
+                  d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+              }
           }
       } else {
           for (var i = 1; i < pathArray.length; i++) {
-              d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+              if (!isNaN(pathArray[i][0]) && !isNaN(pathArray[i][1])) {
+                  d += pathArray[i][0] + "," + pathArray[i][1] + " ";
+              }
           }
       }
       return d;
