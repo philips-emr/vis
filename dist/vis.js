@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-10-04
+ * @date    2021-11-12
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -23600,7 +23600,7 @@ return /******/ (function(modules) { // webpackBootstrap
       item = visibleItems[i];
       if (!item.displayed) item.show();
       // reposition item horizontally
-      item.repositionX(true, range);
+      item.repositionX(true, range, i);
     }
 
     return visibleItems;
@@ -24842,7 +24842,7 @@ return /******/ (function(modules) { // webpackBootstrap
    *                                   not correspond to the ranges start and end
    * @Override
    */
-  RangeItem.prototype.repositionX = function (limitSize, group) {
+  RangeItem.prototype.repositionX = function (limitSize, group, visibleItemIndex) {
     var dataIdItemSplit = this.data.id.split('_');
     var prop = this.data.prop;
 
@@ -24855,8 +24855,10 @@ return /******/ (function(modules) { // webpackBootstrap
     var contentLeft = void 0;
     var contentWidth = void 0;
 
+    var isTableMode = ['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1;
+
     // calculate when gap === 0 (fit)
-    if (group.options.gap == 0) {
+    if (group.options.gap == 0 && !isTableMode) {
       var _dateElement = new Date(this.data.start);
       var _dateElementEnd = new Date(this.data.end);
       var index = 0;
@@ -24882,9 +24884,11 @@ return /******/ (function(modules) { // webpackBootstrap
       }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
     } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
-      if (['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
-        var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
-        var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
+      if (isTableMode) {
+        var indexForColumnPositionCalculation = group.options.gap === 0 && visibleItemIndex ? visibleItemIndex : dataIdItemSplit[1];
+
+        var calcPositionStart = parseInt(indexForColumnPositionCalculation) * widthElement;
+        var calcPositionEnd = (parseInt(indexForColumnPositionCalculation) + 1) * widthElement;
         start = calcPositionStart;
         end = start == 0 ? widthElement : calcPositionEnd;
       } else if (group) {
@@ -31965,8 +31969,8 @@ return /******/ (function(modules) { // webpackBootstrap
         });
         var baseGraphHeight = actualY - previousY;
         var range = {
-          max: group.summary && group.group.maxValue ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
-          min: group.summary && group.group.minValue ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
+          max: group.summary && group.group.maxValue != undefined ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
+          min: group.summary && group.group.minValue != undefined ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
         };
 
         for (var i = 0; i < datapoints.length; i++) {
