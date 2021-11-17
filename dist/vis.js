@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-11-04
+ * @date    2021-11-17
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -23346,6 +23346,8 @@ return /******/ (function(modules) { // webpackBootstrap
     // recalculate the height of the group
     var height = this._calculateHeight(margin, timeline);
 
+    resized = util.updateProperty(this, 'height', height) || resized;
+
     // apply new height
     this.dom.foreground.style.height = height + 'px';
     this.dom.label.style.height = height + 'px';
@@ -24881,6 +24883,7 @@ return /******/ (function(modules) { // webpackBootstrap
         return diffFunction;
       };
       // scrolls through the items in the settingbar
+      var elementHeaderWidth = document.querySelector('.tl-setting-bar');
       Object.values(elementHeaderWidth.children).forEach(function (item) {
         var _currentDateItem = item.__time.toDate();
         if (_dateElement > _currentDateItem) index++;
