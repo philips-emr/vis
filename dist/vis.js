@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-11-17
+ * @date    2021-11-24
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -24734,7 +24734,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   RangeItem.prototype.isVisible = function (range) {
     // determine visibility
-    return this.data.start < range.end && this.data.end > range.start;
+    return this.data.start <= range.end && this.data.end >= range.start;
   };
 
   /**
