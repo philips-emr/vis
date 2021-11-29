@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-11-24
+ * @date    2021-11-29
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -13455,6 +13455,14 @@ return /******/ (function(modules) { // webpackBootstrap
     };
   };
 
+  /**
+   * Sets how many columns there is in the timeline
+   * @param {number} columnCount: How many columns there is in the timeline
+   */
+  Timeline.prototype.setColumnCount = function (columnCount) {
+    this.body.range.props = _.merge(this.body.range.props, { columnCount: columnCount });
+  };
+
   module.exports = Timeline;
 
 /***/ }),
@@ -25461,7 +25469,9 @@ return /******/ (function(modules) { // webpackBootstrap
     var end = util.convert(this.body.range.end, 'Number');
     var gap = this.body.range.options.gap;
     var totalizersToAdd = this.body.totalizer && this.body.totalizer.periods ? this.body.totalizer.periods.length : 0;
-    var diffInHours = (end - start) / (1000 * 60 * 60) / (gap ? gap : 1) + totalizersToAdd;
+    var diffInHours = (end - start) / (1000 * 60 * 60);
+    var rangeColumnCount = this.body.range.props && this.body.range.props.columnCount ? this.body.range.props.columnCount : 0;
+    var columnCount = rangeColumnCount ? rangeColumnCount : diffInHours / (gap ? gap : 1) + totalizersToAdd;
 
     var step = new TimeStep(new Date(start), new Date(end));
     step.setMoment(this.options.moment);
@@ -25501,7 +25511,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var elementHeaderWidth = document.querySelector('.tl-setting-bar');
     current = start;
     xNext = this.body.util.toScreen(current);
-    for (var next = 0; next < diffInHours; next++) {
+    for (var next = 0; next < columnCount; next++) {
       isMajor = step.isMajor();
       className = step.getClassName();
       labelMinor = step.getLabelMinor();
@@ -25534,7 +25544,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       if (!elementHeaderWidthItem.length && !elementHeaderWidth && !step.next()) {
-        next = diffInHours;
+        next = columnCount;
       }
     }
 
