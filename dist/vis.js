@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2021-11-29
+ * @date    2021-12-20
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -31797,14 +31797,14 @@ return /******/ (function(modules) { // webpackBootstrap
                               var pointUp = point[0];
                               var pointDown = point[2];
                               var pointMiddle = point[1];
-                              if (pointUp && pointUp.points.length > 3) {
+                              if (pointUp && pointUp.points && pointUp.points.length > 3) {
                                 dataLineUp.push({
                                   screen_x: pointUp.points[3].x,
                                   screen_y: pointUp.points[0].y
                                 });
                               }
 
-                              if (pointDown && pointDown.points.length > 3) {
+                              if (pointDown && pointDown.points && pointDown.points.length > 3) {
                                 dataLineDown.push({
                                   screen_x: pointDown.points[3].x,
                                   screen_y: pointDown.points[0].y
