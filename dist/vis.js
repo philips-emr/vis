@@ -7915,12 +7915,14 @@ return /******/ (function(modules) { // webpackBootstrap
         point.setAttributeNS(null, "tooltip", labelObj.tooltip);
       }
       point.setAttributeNS(null, 'row-id', groupTemplate.rowId);
-      var id = groupTemplate.rowId + '-' + groupTemplate.style + '-' + props.index;
-      var polygonType = point.getAttribute('polygon-type');
-      if (polygonType) {
-        id = id.concat('-' + polygonType); // without this we can't set the ID in the "use" tag
+      if (props) {
+        var id = groupTemplate.rowId + '-' + groupTemplate.style + '-' + props.index;
+        var polygonType = point.getAttribute('polygon-type');
+        if (polygonType) {
+          id = id.concat('-' + polygonType); // without this we can't set the ID in the "use" tag
+        }
+        point.setAttributeNS(null, 'id', id);
       }
-      point.setAttributeNS(null, 'id', id);
     });
 
     return points;
