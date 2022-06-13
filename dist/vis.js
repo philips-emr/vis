@@ -31758,6 +31758,18 @@ return /******/ (function(modules) { // webpackBootstrap
                     return callbackFunction('itemclick', event, element, data);
                   });
                 }
+
+                if (group.group.type === 'infusionrate') {
+                  DOMutil.attachEvents(line, 'mouseenter', groupData, function (event, element, data) {
+                    return callbackFunction('itemmouseenter', event, element, data);
+                  });
+                  DOMutil.attachEvents(line, 'mouseout', groupData, function (event, element, data) {
+                    return callbackFunction('itemmouseout', event, element, data);
+                  });
+                  DOMutil.attachEvents(line, 'click', groupData, function (event, element, data) {
+                    return callbackFunction('itemclick', event, element, data);
+                  });
+                }
               };
               for (i = 0; i < groupIds.length; i++) {
                 group = _this2.groups[groupIds[i]];
