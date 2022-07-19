@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-06-21
+ * @date    2022-07-20
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -143,12 +143,12 @@ return /******/ (function(modules) { // webpackBootstrap
   };
 
   // Network
-  exports.Network = __webpack_require__(66);
+  exports.Network = __webpack_require__(67);
   exports.network = {
-    Images: __webpack_require__(67),
-    dotparser: __webpack_require__(123),
-    gephiParser: __webpack_require__(124),
-    allOptions: __webpack_require__(119)
+    Images: __webpack_require__(68),
+    dotparser: __webpack_require__(124),
+    gephiParser: __webpack_require__(125),
+    allOptions: __webpack_require__(120)
   };
   exports.network.convertDot = function (input) {
     return exports.network.dotparser.DOTToGraph(input);
@@ -31253,8 +31253,8 @@ return /******/ (function(modules) { // webpackBootstrap
   var _require = __webpack_require__(27),
       Validator = _require.default;
 
-  var allOptions = __webpack_require__(65).allOptions;
-  var configureOptions = __webpack_require__(65).configureOptions;
+  var allOptions = __webpack_require__(66).allOptions;
+  var configureOptions = __webpack_require__(66).configureOptions;
 
   var TimelineChart = function (_Core) {
     _inherits(TimelineChart, _Core);
@@ -31551,6 +31551,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var Bars = __webpack_require__(51);
   var Lines = __webpack_require__(56);
   var Points = __webpack_require__(52);
+  var InfusionRate = __webpack_require__(65);
   var Legend = __webpack_require__(57);
   var LineGraph = __webpack_require__(50);
   var TimelineChartDataAxis = __webpack_require__(58);
@@ -31697,6 +31698,9 @@ return /******/ (function(modules) { // webpackBootstrap
               var paths = {};
               for (i = 0; i < groupIds.length; i++) {
                 group = _this2.groups[groupIds[i]];
+                if (group.group.type == 'infusionrate') {
+                  InfusionRate.drawBackground(group, _this2.framework);
+                }
                 if ((group.options.style === 'line' || group.options.style === 'trend') && group.options.shaded.enabled == true) {
                   var dataset = groupsData[groupIds[i]];
                   if (dataset == null || dataset.length == 0) {
@@ -32124,6 +32128,111 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+  var DOMUtil = __webpack_require__(7);
+
+  function InfusionRate(groupId, options) {}
+
+  InfusionRate.drawBackground = function (group, framework) {
+      var _this = this;
+
+      var zeroPosition = group.zeroPosition;
+      var subGroups = this.createSubGroups(group);
+      subGroups = this.sortBasedOnTimeForSubGroup(subGroups);
+      var yElementArray = this.sortDataAndDefineOpacity(subGroups);
+      var yMaximum = Math.max.apply(Math, _toConsumableArray(yElementArray));
+      var yMinimum = Math.min.apply(Math, _toConsumableArray(yElementArray));
+      Object.values(subGroups).forEach(function (subGroup) {
+          _this.createSVGElement(subGroup, zeroPosition, group.style, yMaximum, yMinimum, framework);
+      });
+  };
+
+  InfusionRate.createSVGElement = function (subGroup, zeroPosition, style, yMaximum, yMinimum, framework) {
+      var rectElement = DOMUtil.getSVGElement('rect', framework.svgElements, framework.svg);
+      var length = subGroup.length;
+      var opacity = 0.1;
+      var mainColorPostion = style.search('#');
+      var mainColor = style.substring(mainColorPostion, mainColorPostion + 7);
+      if (subGroup[0].y == yMinimum) {
+          opacity = 0.1;
+      } else {
+          opacity = 0.9 * (subGroup[0].y - yMinimum) / (yMaximum - yMinimum);
+          opacity = opacity + 0.1;
+      }
+      rectElement.setAttribute('id', subGroup[0].index);
+      rectElement.setAttribute('x', subGroup[0].screen_x);
+      rectElement.setAttribute('y', subGroup[0].screen_y);
+      rectElement.setAttribute('width', subGroup[length - 1].screen_x - subGroup[0].screen_x);
+      rectElement.setAttribute('height', zeroPosition - subGroup[0].screen_y);
+      rectElement.setAttribute('style', 'fill: ' + mainColor + '; fill-opacity: ' + opacity);
+  };
+
+  InfusionRate.sortBasedOnTimeForSubGroup = function (subGroups) {
+      var subGroupsToSort = subGroups;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+          for (var _iterator = Object.keys(subGroups)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var subGroupIndex = _step.value;
+
+              var sortedArray = subGroupsToSort[subGroupIndex].sort(function (a, b) {
+                  return a.screen_x - b.screen_x;
+              });
+              subGroupsToSort[subGroupIndex] = sortedArray;
+          }
+      } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+      } finally {
+          try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+              }
+          } finally {
+              if (_didIteratorError) {
+                  throw _iteratorError;
+              }
+          }
+      }
+
+      return subGroupsToSort;
+  };
+
+  InfusionRate.sortDataAndDefineOpacity = function (subGroups) {
+      var ySetElements = new Set();
+      Object.values(subGroups).forEach(function (subGroup) {
+          if (subGroup[0].y && subGroup.length >= 2) {
+              ySetElements.add(subGroup[0].y);
+          }
+      });
+      var yElementArray = Array.from(ySetElements);
+      return yElementArray;
+  };
+
+  InfusionRate.createSubGroups = function (group) {
+      var subGroups = {};
+      group.itemsData.forEach(function (groupItem) {
+          if (subGroups.hasOwnProperty(groupItem.index)) {
+              subGroups[groupItem.index].push(groupItem);
+          } else {
+              subGroups[groupItem.index] = [];
+              subGroups[groupItem.index].push(groupItem);
+          }
+      });
+      return subGroups;
+  };
+
+  module.exports = InfusionRate;
+
+/***/ }),
+/* 66 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -32429,60 +32538,60 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.configureOptions = configureOptions;
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
 
-  var _Images = __webpack_require__(67);
+  var _Images = __webpack_require__(68);
 
   var _Images2 = _interopRequireDefault(_Images);
 
-  var _Groups = __webpack_require__(68);
+  var _Groups = __webpack_require__(69);
 
   var _Groups2 = _interopRequireDefault(_Groups);
 
-  var _NodesHandler = __webpack_require__(69);
+  var _NodesHandler = __webpack_require__(70);
 
   var _NodesHandler2 = _interopRequireDefault(_NodesHandler);
 
-  var _EdgesHandler = __webpack_require__(89);
+  var _EdgesHandler = __webpack_require__(90);
 
   var _EdgesHandler2 = _interopRequireDefault(_EdgesHandler);
 
-  var _PhysicsEngine = __webpack_require__(98);
+  var _PhysicsEngine = __webpack_require__(99);
 
   var _PhysicsEngine2 = _interopRequireDefault(_PhysicsEngine);
 
-  var _Clustering = __webpack_require__(107);
+  var _Clustering = __webpack_require__(108);
 
   var _Clustering2 = _interopRequireDefault(_Clustering);
 
-  var _CanvasRenderer = __webpack_require__(110);
+  var _CanvasRenderer = __webpack_require__(111);
 
   var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-  var _Canvas = __webpack_require__(111);
+  var _Canvas = __webpack_require__(112);
 
   var _Canvas2 = _interopRequireDefault(_Canvas);
 
-  var _View = __webpack_require__(112);
+  var _View = __webpack_require__(113);
 
   var _View2 = _interopRequireDefault(_View);
 
-  var _InteractionHandler = __webpack_require__(113);
+  var _InteractionHandler = __webpack_require__(114);
 
   var _InteractionHandler2 = _interopRequireDefault(_InteractionHandler);
 
-  var _SelectionHandler = __webpack_require__(116);
+  var _SelectionHandler = __webpack_require__(117);
 
   var _SelectionHandler2 = _interopRequireDefault(_SelectionHandler);
 
-  var _LayoutEngine = __webpack_require__(117);
+  var _LayoutEngine = __webpack_require__(118);
 
   var _LayoutEngine2 = _interopRequireDefault(_LayoutEngine);
 
-  var _ManipulationSystem = __webpack_require__(118);
+  var _ManipulationSystem = __webpack_require__(119);
 
   var _ManipulationSystem2 = _interopRequireDefault(_ManipulationSystem);
 
@@ -32494,25 +32603,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _Validator2 = _interopRequireDefault(_Validator);
 
-  var _options = __webpack_require__(119);
+  var _options = __webpack_require__(120);
 
-  var _KamadaKawai = __webpack_require__(120);
+  var _KamadaKawai = __webpack_require__(121);
 
   var _KamadaKawai2 = _interopRequireDefault(_KamadaKawai);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   // Load custom shapes into CanvasRenderingContext2D
-  __webpack_require__(122);
+  __webpack_require__(123);
 
   var Emitter = __webpack_require__(13);
   var util = __webpack_require__(1);
   var DataSet = __webpack_require__(9);
   var DataView = __webpack_require__(11);
-  var dotparser = __webpack_require__(123);
-  var gephiParser = __webpack_require__(124);
+  var dotparser = __webpack_require__(124);
+  var gephiParser = __webpack_require__(125);
   var Activator = __webpack_require__(43);
-  var locales = __webpack_require__(125);
+  var locales = __webpack_require__(126);
 
   /**
    * @constructor Network
@@ -33064,7 +33173,7 @@ return /******/ (function(modules) { // webpackBootstrap
   module.exports = Network;
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -33193,7 +33302,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Images;
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -33337,7 +33446,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Groups;
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -33348,11 +33457,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Node = __webpack_require__(70);
+  var _Node = __webpack_require__(71);
 
   var _Node2 = _interopRequireDefault(_Node);
 
-  var _Label = __webpack_require__(71);
+  var _Label = __webpack_require__(72);
 
   var _Label2 = _interopRequireDefault(_Label);
 
@@ -33858,7 +33967,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NodesHandler;
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -33869,63 +33978,63 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Label = __webpack_require__(71);
+  var _Label = __webpack_require__(72);
 
   var _Label2 = _interopRequireDefault(_Label);
 
-  var _Box = __webpack_require__(72);
+  var _Box = __webpack_require__(73);
 
   var _Box2 = _interopRequireDefault(_Box);
 
-  var _Circle = __webpack_require__(74);
+  var _Circle = __webpack_require__(75);
 
   var _Circle2 = _interopRequireDefault(_Circle);
 
-  var _CircularImage = __webpack_require__(76);
+  var _CircularImage = __webpack_require__(77);
 
   var _CircularImage2 = _interopRequireDefault(_CircularImage);
 
-  var _Database = __webpack_require__(77);
+  var _Database = __webpack_require__(78);
 
   var _Database2 = _interopRequireDefault(_Database);
 
-  var _Diamond = __webpack_require__(78);
+  var _Diamond = __webpack_require__(79);
 
   var _Diamond2 = _interopRequireDefault(_Diamond);
 
-  var _Dot = __webpack_require__(80);
+  var _Dot = __webpack_require__(81);
 
   var _Dot2 = _interopRequireDefault(_Dot);
 
-  var _Ellipse = __webpack_require__(81);
+  var _Ellipse = __webpack_require__(82);
 
   var _Ellipse2 = _interopRequireDefault(_Ellipse);
 
-  var _Icon = __webpack_require__(82);
+  var _Icon = __webpack_require__(83);
 
   var _Icon2 = _interopRequireDefault(_Icon);
 
-  var _Image = __webpack_require__(83);
+  var _Image = __webpack_require__(84);
 
   var _Image2 = _interopRequireDefault(_Image);
 
-  var _Square = __webpack_require__(84);
+  var _Square = __webpack_require__(85);
 
   var _Square2 = _interopRequireDefault(_Square);
 
-  var _Star = __webpack_require__(85);
+  var _Star = __webpack_require__(86);
 
   var _Star2 = _interopRequireDefault(_Star);
 
-  var _Text = __webpack_require__(86);
+  var _Text = __webpack_require__(87);
 
   var _Text2 = _interopRequireDefault(_Text);
 
-  var _Triangle = __webpack_require__(87);
+  var _Triangle = __webpack_require__(88);
 
   var _Triangle2 = _interopRequireDefault(_Triangle);
 
-  var _TriangleDown = __webpack_require__(88);
+  var _TriangleDown = __webpack_require__(89);
 
   var _TriangleDown2 = _interopRequireDefault(_TriangleDown);
 
@@ -34402,7 +34511,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Node;
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -34741,7 +34850,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Label;
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -34752,7 +34861,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -34855,7 +34964,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Box;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -34951,7 +35060,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NodeBase;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -34962,7 +35071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(75);
+  var _CircleImageBase2 = __webpack_require__(76);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -35036,7 +35145,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Circle;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35047,7 +35156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35237,7 +35346,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CircleImageBase;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35248,7 +35357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(75);
+  var _CircleImageBase2 = __webpack_require__(76);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -35344,7 +35453,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CircularImage;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35355,7 +35464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35453,7 +35562,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Database;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35464,7 +35573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -35508,7 +35617,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Diamond;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35519,7 +35628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35615,7 +35724,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ShapeBase;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35626,7 +35735,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -35671,7 +35780,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Dot;
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35682,7 +35791,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35789,7 +35898,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Ellipse;
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35800,7 +35909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35903,7 +36012,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Icon;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35914,7 +36023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(75);
+  var _CircleImageBase2 = __webpack_require__(76);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -36020,7 +36129,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Image;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36031,7 +36140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36075,7 +36184,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Square;
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36086,7 +36195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36130,7 +36239,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Star;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36141,7 +36250,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(73);
+  var _NodeBase2 = __webpack_require__(74);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -36215,7 +36324,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Text;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36226,7 +36335,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36270,7 +36379,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Triangle;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36281,7 +36390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(79);
+  var _ShapeBase2 = __webpack_require__(80);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36325,7 +36434,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = TriangleDown;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36336,11 +36445,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Edge = __webpack_require__(90);
+  var _Edge = __webpack_require__(91);
 
   var _Edge2 = _interopRequireDefault(_Edge);
 
-  var _Label = __webpack_require__(71);
+  var _Label = __webpack_require__(72);
 
   var _Label2 = _interopRequireDefault(_Label);
 
@@ -36771,7 +36880,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = EdgesHandler;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36784,23 +36893,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Label = __webpack_require__(71);
+  var _Label = __webpack_require__(72);
 
   var _Label2 = _interopRequireDefault(_Label);
 
-  var _CubicBezierEdge = __webpack_require__(91);
+  var _CubicBezierEdge = __webpack_require__(92);
 
   var _CubicBezierEdge2 = _interopRequireDefault(_CubicBezierEdge);
 
-  var _BezierEdgeDynamic = __webpack_require__(95);
+  var _BezierEdgeDynamic = __webpack_require__(96);
 
   var _BezierEdgeDynamic2 = _interopRequireDefault(_BezierEdgeDynamic);
 
-  var _BezierEdgeStatic = __webpack_require__(96);
+  var _BezierEdgeStatic = __webpack_require__(97);
 
   var _BezierEdgeStatic2 = _interopRequireDefault(_BezierEdgeStatic);
 
-  var _StraightEdge = __webpack_require__(97);
+  var _StraightEdge = __webpack_require__(98);
 
   var _StraightEdge2 = _interopRequireDefault(_StraightEdge);
 
@@ -37385,7 +37494,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Edge;
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37398,7 +37507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CubicBezierEdgeBase2 = __webpack_require__(92);
+  var _CubicBezierEdgeBase2 = __webpack_require__(93);
 
   var _CubicBezierEdgeBase3 = _interopRequireDefault(_CubicBezierEdgeBase2);
 
@@ -37532,7 +37641,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CubicBezierEdge;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37543,7 +37652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(93);
+  var _BezierEdgeBase2 = __webpack_require__(94);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -37618,7 +37727,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CubicBezierEdgeBase;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37629,7 +37738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _EdgeBase2 = __webpack_require__(94);
+  var _EdgeBase2 = __webpack_require__(95);
 
   var _EdgeBase3 = _interopRequireDefault(_EdgeBase2);
 
@@ -37762,7 +37871,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeBase;
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38345,7 +38454,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = EdgeBase;
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -38356,7 +38465,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(93);
+  var _BezierEdgeBase2 = __webpack_require__(94);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -38549,7 +38658,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeDynamic;
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38560,7 +38669,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(93);
+  var _BezierEdgeBase2 = __webpack_require__(94);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -38817,7 +38926,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeStatic;
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38828,7 +38937,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _EdgeBase2 = __webpack_require__(94);
+  var _EdgeBase2 = __webpack_require__(95);
 
   var _EdgeBase3 = _interopRequireDefault(_EdgeBase2);
 
@@ -38927,7 +39036,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = StraightEdge;
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38938,35 +39047,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BarnesHutSolver = __webpack_require__(99);
+  var _BarnesHutSolver = __webpack_require__(100);
 
   var _BarnesHutSolver2 = _interopRequireDefault(_BarnesHutSolver);
 
-  var _RepulsionSolver = __webpack_require__(100);
+  var _RepulsionSolver = __webpack_require__(101);
 
   var _RepulsionSolver2 = _interopRequireDefault(_RepulsionSolver);
 
-  var _HierarchicalRepulsionSolver = __webpack_require__(101);
+  var _HierarchicalRepulsionSolver = __webpack_require__(102);
 
   var _HierarchicalRepulsionSolver2 = _interopRequireDefault(_HierarchicalRepulsionSolver);
 
-  var _SpringSolver = __webpack_require__(102);
+  var _SpringSolver = __webpack_require__(103);
 
   var _SpringSolver2 = _interopRequireDefault(_SpringSolver);
 
-  var _HierarchicalSpringSolver = __webpack_require__(103);
+  var _HierarchicalSpringSolver = __webpack_require__(104);
 
   var _HierarchicalSpringSolver2 = _interopRequireDefault(_HierarchicalSpringSolver);
 
-  var _CentralGravitySolver = __webpack_require__(104);
+  var _CentralGravitySolver = __webpack_require__(105);
 
   var _CentralGravitySolver2 = _interopRequireDefault(_CentralGravitySolver);
 
-  var _FA2BasedRepulsionSolver = __webpack_require__(105);
+  var _FA2BasedRepulsionSolver = __webpack_require__(106);
 
   var _FA2BasedRepulsionSolver2 = _interopRequireDefault(_FA2BasedRepulsionSolver);
 
-  var _FA2BasedCentralGravitySolver = __webpack_require__(106);
+  var _FA2BasedCentralGravitySolver = __webpack_require__(107);
 
   var _FA2BasedCentralGravitySolver2 = _interopRequireDefault(_FA2BasedCentralGravitySolver);
 
@@ -39748,7 +39857,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = PhysicsEngine;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40262,7 +40371,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BarnesHutSolver;
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40356,7 +40465,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = RepulsionSolver;
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40447,7 +40556,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = HierarchicalRepulsionSolver;
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40558,7 +40667,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = SpringSolver;
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40687,7 +40796,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = HierarchicalSpringSolver;
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40756,7 +40865,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CentralGravitySolver;
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -40767,7 +40876,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BarnesHutSolver2 = __webpack_require__(99);
+  var _BarnesHutSolver2 = __webpack_require__(100);
 
   var _BarnesHutSolver3 = _interopRequireDefault(_BarnesHutSolver2);
 
@@ -40830,7 +40939,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ForceAtlas2BasedRepulsionSolver;
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -40841,7 +40950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CentralGravitySolver2 = __webpack_require__(104);
+  var _CentralGravitySolver2 = __webpack_require__(105);
 
   var _CentralGravitySolver3 = _interopRequireDefault(_CentralGravitySolver2);
 
@@ -40886,7 +40995,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ForceAtlas2BasedCentralGravitySolver;
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -40899,11 +41008,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(108);
+  var _NetworkUtil = __webpack_require__(109);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
-  var _Cluster = __webpack_require__(109);
+  var _Cluster = __webpack_require__(110);
 
   var _Cluster2 = _interopRequireDefault(_Cluster);
 
@@ -41754,7 +41863,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ClusterEngine;
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -41892,7 +42001,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NetworkUtil;
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -41901,7 +42010,7 @@ return /******/ (function(modules) { // webpackBootstrap
     value: true
   });
 
-  var _Node2 = __webpack_require__(70);
+  var _Node2 = __webpack_require__(71);
 
   var _Node3 = _interopRequireDefault(_Node2);
 
@@ -41936,7 +42045,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Cluster;
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -42309,7 +42418,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CanvasRenderer;
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -42773,7 +42882,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Canvas;
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -42784,7 +42893,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(108);
+  var _NetworkUtil = __webpack_require__(109);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
@@ -43123,7 +43232,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = View;
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -43134,11 +43243,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NavigationHandler = __webpack_require__(114);
+  var _NavigationHandler = __webpack_require__(115);
 
   var _NavigationHandler2 = _interopRequireDefault(_NavigationHandler);
 
-  var _Popup = __webpack_require__(115);
+  var _Popup = __webpack_require__(116);
 
   var _Popup2 = _interopRequireDefault(_Popup);
 
@@ -43908,7 +44017,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = InteractionHandler;
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -44237,7 +44346,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NavigationHandler;
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -44366,7 +44475,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Popup;
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -44377,11 +44486,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Node = __webpack_require__(70);
+  var _Node = __webpack_require__(71);
 
   var _Node2 = _interopRequireDefault(_Node);
 
-  var _Edge = __webpack_require__(90);
+  var _Edge = __webpack_require__(91);
 
   var _Edge2 = _interopRequireDefault(_Edge);
 
@@ -45159,7 +45268,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = SelectionHandler;
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -45174,7 +45283,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(108);
+  var _NetworkUtil = __webpack_require__(109);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
@@ -46642,7 +46751,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = LayoutEngine;
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -47889,7 +47998,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ManipulationSystem;
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -48408,7 +48517,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.configureOptions = configureOptions;
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -48422,7 +48531,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // distance finding algorithm
 
 
-  var _FloydWarshall = __webpack_require__(121);
+  var _FloydWarshall = __webpack_require__(122);
 
   var _FloydWarshall2 = _interopRequireDefault(_FloydWarshall);
 
@@ -48696,7 +48805,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = KamadaKawai;
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -48766,7 +48875,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = FloydWarshall;
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -49054,7 +49163,7 @@ return /******/ (function(modules) { // webpackBootstrap
   }
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -49952,7 +50061,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.DOTToGraph = DOTToGraph;
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -50030,7 +50139,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.parseGephi = parseGephi;
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports) {
 
   'use strict';
