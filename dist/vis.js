@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-07-20
+ * @date    2022-07-23
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7995,7 +7995,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ (function(module, exports) {
 
-  "use strict";
+  'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -8018,6 +8018,14 @@ return /******/ (function(modules) { // webpackBootstrap
         height: width / 2
       };
     }
+  });
+
+  var BOLUS = exports.BOLUS = Object.freeze({
+    radius: 2.5,
+    stroke: '#000000',
+    strokeWidth: 1.5,
+    fill: '#ffffff',
+    className: 'bolus'
   });
 
 /***/ }),
@@ -31698,7 +31706,7 @@ return /******/ (function(modules) { // webpackBootstrap
               var paths = {};
               for (i = 0; i < groupIds.length; i++) {
                 group = _this2.groups[groupIds[i]];
-                if (group.group.type == 'infusionrate') {
+                if (group.group.type == 'infusionrate' || group.group.type == 'bolus') {
                   InfusionRate.drawBackground(group, _this2.framework);
                 }
                 if ((group.options.style === 'line' || group.options.style === 'trend') && group.options.shaded.enabled == true) {
@@ -31900,6 +31908,9 @@ return /******/ (function(modules) { // webpackBootstrap
                     default:
                     //do nothing...
                   }
+                }
+                if (group.group.type == 'infusionrate' || group.group.type == 'bolus') {
+                  InfusionRate.drawBolus(groupsData[groupIds[i]], _this2.framework, _this2.body);
                 }
               }
             }();
@@ -32136,19 +32147,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var DOMUtil = __webpack_require__(7);
 
+  var _require = __webpack_require__(8),
+      BOLUS = _require.BOLUS;
+
   function InfusionRate(groupId, options) {}
 
   InfusionRate.drawBackground = function (group, framework) {
       var _this = this;
 
       var zeroPosition = group.zeroPosition;
-      var subGroups = this.createSubGroups(group);
+      var infusionRateGroupData = group.itemsData.filter(function (groupElement) {
+          return groupElement.prop.data.element == 'INFUSIONRATE';
+      });
+      var subGroups = this.createSubGroups(infusionRateGroupData);
       subGroups = this.sortBasedOnTimeForSubGroup(subGroups);
       var yElementArray = this.sortDataAndDefineOpacity(subGroups);
       var yMaximum = Math.max.apply(Math, _toConsumableArray(yElementArray));
       var yMinimum = Math.min.apply(Math, _toConsumableArray(yElementArray));
       Object.values(subGroups).forEach(function (subGroup) {
           _this.createSVGElement(subGroup, zeroPosition, group.style, yMaximum, yMinimum, framework);
+      });
+  };
+
+  InfusionRate.drawBolus = function (group, framework, body) {
+      var _this2 = this;
+
+      var bolusGroupData = group.filter(function (groupElement) {
+          return groupElement.prop.data.element == 'BOLUS';
+      });
+      bolusGroupData.forEach(function (bolusElement) {
+          _this2.createBolusElement(bolusElement, framework, body);
       });
   };
 
@@ -32170,6 +32198,24 @@ return /******/ (function(modules) { // webpackBootstrap
       rectElement.setAttribute('width', subGroup[length - 1].screen_x - subGroup[0].screen_x);
       rectElement.setAttribute('height', zeroPosition - subGroup[0].screen_y);
       rectElement.setAttribute('style', 'fill: ' + mainColor + '; fill-opacity: ' + opacity);
+  };
+
+  InfusionRate.createBolusElement = function (element, framework, body) {
+      var bolusElement = DOMUtil.getSVGElement('circle', framework.svgElements, framework.svg);
+      bolusElement.setAttribute('id', element.index);
+      bolusElement.setAttribute('cx', element.screen_x);
+      bolusElement.setAttribute('cy', element.screen_y);
+      bolusElement.setAttribute('r', BOLUS.radius);
+      bolusElement.setAttribute('stroke', BOLUS.stroke);
+      bolusElement.setAttribute('stroke-width', BOLUS.strokeWidth);
+      bolusElement.setAttribute('fill', BOLUS.fill);
+      bolusElement.setAttribute('class', BOLUS.className);
+      DOMUtil.attachEvents(bolusElement, 'mouseenter', element, function (event, element, data) {
+          return body.emitter.emit('itemmouseenter', { data: data, event: event, element: element });
+      });
+      DOMUtil.attachEvents(bolusElement, 'mouseout', element, function (event, element, data) {
+          return body.emitter.emit('itemmouseout', { data: data, event: event, element: element });
+      });
   };
 
   InfusionRate.sortBasedOnTimeForSubGroup = function (subGroups) {
@@ -32216,9 +32262,9 @@ return /******/ (function(modules) { // webpackBootstrap
       return yElementArray;
   };
 
-  InfusionRate.createSubGroups = function (group) {
+  InfusionRate.createSubGroups = function (itemsData) {
       var subGroups = {};
-      group.itemsData.forEach(function (groupItem) {
+      itemsData.forEach(function (groupItem) {
           if (subGroups.hasOwnProperty(groupItem.index)) {
               subGroups[groupItem.index].push(groupItem);
           } else {
