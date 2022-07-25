@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-02-17
+ * @date    2022-07-11
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -23627,22 +23627,10 @@ return /******/ (function(modules) { // webpackBootstrap
     // finally, we reposition all the visible items.
     for (i = 0; i < visibleItems.length; i++) {
       item = visibleItems[i];
-      var isNotFilterFit = function isNotFilterFit() {
-        var itemsFit = range.options.itemsFit;
-
-        return !(itemsFit && itemsFit.find(function (itens) {
-          return new Date(itens.time).getTime() == item.data.start.getTime();
-        }));
-      };
-      if (range.options.gap == 0 && isNotFilterFit()) {
-        item.hide();
-      } else {
-        if (!item.displayed) item.show();
-        // reposition item horizontally
-        item.repositionX(true, range);
-      }
+      if (!item.displayed) item.show();
+      // reposition item horizontally
+      item.repositionX(true, range);
     }
-
     return visibleItems;
   };
 
@@ -24909,8 +24897,7 @@ return /******/ (function(modules) { // webpackBootstrap
         return diffFunction;
       };
       // scrolls through the items in the settingbar
-      var elementHeaderWidth = document.querySelector('.tl-setting-bar');
-      Object.values(elementHeaderWidth.children).forEach(function (item) {
+      elementHeaderWidthItem.forEach(function (item) {
         var _currentDateItem = item.__time.toDate();
         if (_dateElement > _currentDateItem) index++;
         if (_dateElementEnd > _currentDateItem) indexEnd++;
