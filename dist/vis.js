@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-11-21
+ * @date    2022-10-24
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -1590,7 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
   var require;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-  //! version : 2.29.1
+  //! version : 2.29.4
   //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
   //! license : MIT
   //! momentjs.com
@@ -1667,8 +1667,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function map(arr, fn) {
           var res = [],
-              i;
-          for (i = 0; i < arr.length; ++i) {
+              i,
+              arrLen = arr.length;
+          for (i = 0; i < arrLen; ++i) {
               res.push(fn(arr[i], i));
           }
           return res;
@@ -1797,7 +1798,10 @@ return /******/ (function(modules) { // webpackBootstrap
           updateInProgress = false;
 
       function copyConfig(to, from) {
-          var i, prop, val;
+          var i,
+              prop,
+              val,
+              momentPropertiesLen = momentProperties.length;
 
           if (!isUndefined(from._isAMomentObject)) {
               to._isAMomentObject = from._isAMomentObject;
@@ -1830,8 +1834,8 @@ return /******/ (function(modules) { // webpackBootstrap
               to._locale = from._locale;
           }
 
-          if (momentProperties.length > 0) {
-              for (i = 0; i < momentProperties.length; i++) {
+          if (momentPropertiesLen > 0) {
+              for (i = 0; i < momentPropertiesLen; i++) {
                   prop = momentProperties[i];
                   val = from[prop];
                   if (!isUndefined(val)) {
@@ -1886,8 +1890,9 @@ return /******/ (function(modules) { // webpackBootstrap
                   var args = [],
                       arg,
                       i,
-                      key;
-                  for (i = 0; i < arguments.length; i++) {
+                      key,
+                      argLen = arguments.length;
+                  for (i = 0; i < argLen; i++) {
                       arg = '';
                       if (typeof arguments[i] === 'object') {
                           arg += '\n[' + i + '] ';
@@ -2037,7 +2042,8 @@ return /******/ (function(modules) { // webpackBootstrap
           );
       }
 
-      var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
+      var formattingTokens =
+              /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
           localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
           formatFunctions = {},
           formatTokenFunctions = {};
@@ -2341,8 +2347,9 @@ return /******/ (function(modules) { // webpackBootstrap
           if (typeof units === 'object') {
               units = normalizeObjectUnits(units);
               var prioritized = getPrioritizedUnits(units),
-                  i;
-              for (i = 0; i < prioritized.length; i++) {
+                  i,
+                  prioritizedLen = prioritized.length;
+              for (i = 0; i < prioritizedLen; i++) {
                   this[prioritized[i].unit](units[prioritized[i].unit]);
               }
           } else {
@@ -2372,7 +2379,8 @@ return /******/ (function(modules) { // webpackBootstrap
           matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
           // any word (or two) characters or numbers including two/three word month in arabic.
           // includes scottish gaelic two word and hyphenated months
-          matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+          matchWord =
+              /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
           regexes;
 
       regexes = {};
@@ -2398,15 +2406,12 @@ return /******/ (function(modules) { // webpackBootstrap
           return regexEscape(
               s
                   .replace('\\', '')
-                  .replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (
-                      matched,
-                      p1,
-                      p2,
-                      p3,
-                      p4
-                  ) {
-                      return p1 || p2 || p3 || p4;
-                  })
+                  .replace(
+                      /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
+                      function (matched, p1, p2, p3, p4) {
+                          return p1 || p2 || p3 || p4;
+                      }
+                  )
           );
       }
 
@@ -2418,7 +2423,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function addParseToken(token, callback) {
           var i,
-              func = callback;
+              func = callback,
+              tokenLen;
           if (typeof token === 'string') {
               token = [token];
           }
@@ -2427,7 +2433,8 @@ return /******/ (function(modules) { // webpackBootstrap
                   array[callback] = toInt(input);
               };
           }
-          for (i = 0; i < token.length; i++) {
+          tokenLen = token.length;
+          for (i = 0; i < tokenLen; i++) {
               tokens[token[i]] = func;
           }
       }
@@ -2538,12 +2545,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // LOCALES
 
-      var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split(
-              '_'
-          ),
-          defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split(
-              '_'
-          ),
+      var defaultLocaleMonths =
+              'January_February_March_April_May_June_July_August_September_October_November_December'.split(
+                  '_'
+              ),
+          defaultLocaleMonthsShort =
+              'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
           MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,
           defaultMonthsShortRegex = matchWord,
           defaultMonthsRegex = matchWord;
@@ -2985,14 +2992,12 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('W', match1to2);
       addRegexToken('WW', match1to2, match2);
 
-      addWeekParseToken(['w', 'ww', 'W', 'WW'], function (
-          input,
-          week,
-          config,
-          token
-      ) {
-          week[token.substr(0, 1)] = toInt(input);
-      });
+      addWeekParseToken(
+          ['w', 'ww', 'W', 'WW'],
+          function (input, week, config, token) {
+              week[token.substr(0, 1)] = toInt(input);
+          }
+      );
 
       // HELPERS
 
@@ -3117,9 +3122,8 @@ return /******/ (function(modules) { // webpackBootstrap
           return ws.slice(n, 7).concat(ws.slice(0, n));
       }
 
-      var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split(
-              '_'
-          ),
+      var defaultLocaleWeekdays =
+              'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
           defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
           defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
           defaultWeekdaysRegex = matchWord,
@@ -3667,6 +3671,11 @@ return /******/ (function(modules) { // webpackBootstrap
           return globalLocale;
       }
 
+      function isLocaleNameSane(name) {
+          // Prevent names that look like filesystem paths, i.e contain '/' or '\'
+          return name.match('^[^/\\\\]*$') != null;
+      }
+
       function loadLocale(name) {
           var oldLocale = null,
               aliasedRequire;
@@ -3675,7 +3684,8 @@ return /******/ (function(modules) { // webpackBootstrap
               locales[name] === undefined &&
               typeof module !== 'undefined' &&
               module &&
-              module.exports
+              module.exports &&
+              isLocaleNameSane(name)
           ) {
               try {
                   oldLocale = globalLocale._abbr;
@@ -3892,8 +3902,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // iso 8601 regex
       // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-      var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
-          basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+      var extendedIsoRegex =
+              /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+          basicIsoRegex =
+              /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
           tzRegex = /Z|[+-]\d\d(?::?\d\d)?/,
           isoDates = [
               ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -3924,7 +3936,8 @@ return /******/ (function(modules) { // webpackBootstrap
           ],
           aspNetJsonRegex = /^\/?Date\((-?\d+)/i,
           // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-          rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
+          rfc2822 =
+              /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
           obsOffsets = {
               UT: 0,
               GMT: 0,
@@ -3947,12 +3960,13 @@ return /******/ (function(modules) { // webpackBootstrap
               allowTime,
               dateFormat,
               timeFormat,
-              tzFormat;
+              tzFormat,
+              isoDatesLen = isoDates.length,
+              isoTimesLen = isoTimes.length;
 
           if (match) {
               getParsingFlags(config).iso = true;
-
-              for (i = 0, l = isoDates.length; i < l; i++) {
+              for (i = 0, l = isoDatesLen; i < l; i++) {
                   if (isoDates[i][1].exec(match[1])) {
                       dateFormat = isoDates[i][0];
                       allowTime = isoDates[i][2] !== false;
@@ -3964,7 +3978,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   return;
               }
               if (match[3]) {
-                  for (i = 0, l = isoTimes.length; i < l; i++) {
+                  for (i = 0, l = isoTimesLen; i < l; i++) {
                       if (isoTimes[i][1].exec(match[3])) {
                           // match[2] should be 'T' or space
                           timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -4031,7 +4045,7 @@ return /******/ (function(modules) { // webpackBootstrap
       function preprocessRFC2822(s) {
           // Remove comments and folding whitespace and replace multiple-spaces with a single space
           return s
-              .replace(/\([^)]*\)|[\n\t]/g, ' ')
+              .replace(/\([^()]*\)|[\n\t]/g, ' ')
               .replace(/(\s\s+)/g, ' ')
               .replace(/^\s\s*/, '')
               .replace(/\s\s*$/, '');
@@ -4344,12 +4358,13 @@ return /******/ (function(modules) { // webpackBootstrap
               skipped,
               stringLength = string.length,
               totalParsedInputLength = 0,
-              era;
+              era,
+              tokenLen;
 
           tokens =
               expandFormat(config._f, config._locale).match(formattingTokens) || [];
-
-          for (i = 0; i < tokens.length; i++) {
+          tokenLen = tokens.length;
+          for (i = 0; i < tokenLen; i++) {
               token = tokens[i];
               parsedInput = (string.match(getParseRegexForToken(token, config)) ||
                   [])[0];
@@ -4444,15 +4459,16 @@ return /******/ (function(modules) { // webpackBootstrap
               i,
               currentScore,
               validFormatFound,
-              bestFormatIsValid = false;
+              bestFormatIsValid = false,
+              configfLen = config._f.length;
 
-          if (config._f.length === 0) {
+          if (configfLen === 0) {
               getParsingFlags(config).invalidFormat = true;
               config._d = new Date(NaN);
               return;
           }
 
-          for (i = 0; i < config._f.length; i++) {
+          for (i = 0; i < configfLen; i++) {
               currentScore = 0;
               validFormatFound = false;
               tempConfig = copyConfig({}, config);
@@ -4693,7 +4709,8 @@ return /******/ (function(modules) { // webpackBootstrap
       function isDurationValid(m) {
           var key,
               unitHasDecimal = false,
-              i;
+              i,
+              orderLen = ordering.length;
           for (key in m) {
               if (
                   hasOwnProp(m, key) &&
@@ -4706,7 +4723,7 @@ return /******/ (function(modules) { // webpackBootstrap
               }
           }
 
-          for (i = 0; i < ordering.length; ++i) {
+          for (i = 0; i < orderLen; ++i) {
               if (m[ordering[i]]) {
                   if (unitHasDecimal) {
                       return false; // only allow non-integers for smallest unit
@@ -5031,7 +5048,8 @@ return /******/ (function(modules) { // webpackBootstrap
           // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
           // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
           // and further modified to allow for strings containing both week and day
-          isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+          isoRegex =
+              /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
       function createDuration(input, key) {
           var duration = input,
@@ -5252,9 +5270,10 @@ return /******/ (function(modules) { // webpackBootstrap
                   'ms',
               ],
               i,
-              property;
+              property,
+              propertyLen = properties.length;
 
-          for (i = 0; i < properties.length; i += 1) {
+          for (i = 0; i < propertyLen; i += 1) {
               property = properties[i];
               propertyTest = propertyTest || hasOwnProp(input, property);
           }
@@ -5877,19 +5896,17 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('NNNN', matchEraName);
       addRegexToken('NNNNN', matchEraNarrow);
 
-      addParseToken(['N', 'NN', 'NNN', 'NNNN', 'NNNNN'], function (
-          input,
-          array,
-          config,
-          token
-      ) {
-          var era = config._locale.erasParse(input, token, config._strict);
-          if (era) {
-              getParsingFlags(config).era = era;
-          } else {
-              getParsingFlags(config).invalidEra = input;
+      addParseToken(
+          ['N', 'NN', 'NNN', 'NNNN', 'NNNNN'],
+          function (input, array, config, token) {
+              var era = config._locale.erasParse(input, token, config._strict);
+              if (era) {
+                  getParsingFlags(config).era = era;
+              } else {
+                  getParsingFlags(config).invalidEra = input;
+              }
           }
-      });
+      );
 
       addRegexToken('y', matchUnsigned);
       addRegexToken('yy', matchUnsigned);
@@ -6181,14 +6198,12 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('GGGGG', match1to6, match6);
       addRegexToken('ggggg', match1to6, match6);
 
-      addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (
-          input,
-          week,
-          config,
-          token
-      ) {
-          week[token.substr(0, 2)] = toInt(input);
-      });
+      addWeekParseToken(
+          ['gggg', 'ggggg', 'GGGG', 'GGGGG'],
+          function (input, week, config, token) {
+              week[token.substr(0, 2)] = toInt(input);
+          }
+      );
 
       addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
           week[token] = hooks.parseTwoDigitYear(input);
@@ -7211,7 +7226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       //! moment.js
 
-      hooks.version = '2.29.1';
+      hooks.version = '2.29.4';
 
       setHookCallback(createLocal);
 
@@ -30741,11 +30756,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return; // exit
         }
 
-        if (group.group.axisCustomLabel) {
-          this._renderCustomLabel({ lineHeight: lineHeight, orientation: orientation, labelClass: labelClass, group: group });
-          return; // exit
-        }
-
         if (group.summary && group.group && group.group.intervalScale) {
           this._renderLabelWithScale({ lineHeight: lineHeight, orientation: orientation, labelClass: labelClass, group: group, maxValue: maxValue, minValue: minValue, avgValue: avgValue, referenceLine: referenceLine });
           return; // exit
@@ -30870,55 +30880,6 @@ return /******/ (function(modules) { // webpackBootstrap
           avgValue: avgValue,
           referenceLine: referenceLine
         };
-      }
-
-      /**
-       * Redraw axisCustomLabel list
-       * @param lineHeight
-       * @param orientation
-       * @param labelClass
-       * @param group
-       * @private
-       */
-
-    }, {
-      key: '_renderCustomLabel',
-      value: function _renderCustomLabel(_ref2) {
-        var _this = this;
-
-        var lineHeight = _ref2.lineHeight,
-            orientation = _ref2.orientation,
-            labelClass = _ref2.labelClass,
-            group = _ref2.group;
-        var length = group.group.axisCustomLabel.length;
-
-        var amountLabels = length;
-        var position = lineHeight - this.props.minorCharHeight;
-        var internHeight = lineHeight - this.props.minorCharHeight * 2;
-        var amountLabelsToFit = Math.floor(internHeight / this.props.minorCharHeight);
-
-        // Divides the number of labels to fit the available height
-        while (amountLabels > amountLabelsToFit) {
-          amountLabels = Math.floor((amountLabels - 2) / 2);
-        }
-        var intervalHeight = Math.floor(internHeight / amountLabels);
-
-        // Print top and bottom labels
-        var firstItem = group.group.axisCustomLabel[0];
-        var lastItem = group.group.axisCustomLabel[length - 1];
-        var lastItemLabel = lastItem.alternativeLabel ? lastItem.alternativeLabel : lastItem.y;
-        var firstItemLabel = firstItem.alternativeLabel ? firstItem.alternativeLabel : firstItem.y;
-        this._redrawLabel(position, lastItemLabel, orientation, labelClass, this.props.minorCharHeight);
-        this._redrawLabel(0, firstItemLabel, orientation, labelClass, this.props.minorCharHeight);
-
-        // Print middle labels
-        group.group.axisCustomLabel.slice().reverse().filter(function (a, i) {
-          return i > 0 && i % Math.floor(length / amountLabels) === 0;
-        }).forEach(function (axisCustomLabel) {
-          position = position - intervalHeight;
-          var label = axisCustomLabel.alternativeLabel ? axisCustomLabel.alternativeLabel : axisCustomLabel.y;
-          _this._redrawLabel(position, label, orientation, labelClass, _this.props.minorCharHeight);
-        });
       }
     }]);
 
@@ -32133,13 +32094,30 @@ return /******/ (function(modules) { // webpackBootstrap
       key: '_convertPointsYcoordinates',
       value: function _convertPointsYcoordinates(datapoints, group, actualY, previousY) {
         var axis = this._getAxisLeft(group.id);
-        if (group.options.yAxisOrientation === 'right') {
+        if (group.options.yAxisOrientation == 'right') {
           axis = this.yAxisRight;
         }
 
         var offset = 10;
         var baseScreenY = actualY - previousY - offset;
-        var range = this._calculateRange(group, datapoints);
+        var listOfValues = datapoints.map(function (d) {
+          return d.y;
+        }).filter(function (value, index, self) {
+          return self.indexOf(value) === index;
+        }).sort();
+
+        if (group.summary && group.group.intervalScale && group.group.minValue !== group.group.maxValue) {
+          if (group.group.maxValue != undefined && !listOfValues.includes(group.group.maxValue)) {
+            listOfValues.push(group.group.maxValue);
+          }
+          if (group.group.minValue != undefined && !listOfValues.includes(group.group.minValue)) {
+            listOfValues.push(group.group.minValue);
+          }
+        }
+        var range = {
+          max: Math.max.apply(Math, _toConsumableArray(listOfValues)),
+          min: Math.min.apply(Math, _toConsumableArray(listOfValues))
+        };
 
         for (var i = 0; i < datapoints.length; i++) {
           var convertedValue = 0;
@@ -32147,9 +32125,6 @@ return /******/ (function(modules) { // webpackBootstrap
             convertedValue = Math.round(baseScreenY * 50 / 100);
           } else {
             convertedValue = Math.round(axis.convertValue(datapoints[i].y, range, baseScreenY));
-          }
-          if (group.group.axisCustomLabel) {
-            convertedValue = this._invertScale({ group: group, convertedValue: convertedValue, baseScreenY: baseScreenY });
           }
           datapoints[i].screen_y = actualY - offset / 2 - convertedValue;
         }
@@ -32163,13 +32138,22 @@ return /******/ (function(modules) { // webpackBootstrap
       key: '_convertAvgYcoordinates',
       value: function _convertAvgYcoordinates(datapoints, group, actualY, previousY) {
         var axis = this._getAxisLeft(group.id);
-        if (group.options.yAxisOrientation === 'right') {
+        if (group.options.yAxisOrientation == 'right') {
           axis = this.yAxisRight;
         }
         var offset = 10;
         var baseScreenY = actualY - previousY - offset;
+        var listOfMaxValues = datapoints.map(function (d) {
+          return d.referenceLine ? d.y : d.maxValue;
+        });
+        var listOfMinValues = datapoints.map(function (d) {
+          return d.referenceLine ? d.y : d.minValue;
+        });
         var baseGraphHeight = actualY - previousY;
-        var range = this._calculateRange(group, datapoints);
+        var range = {
+          max: group.summary && group.group.maxValue != undefined ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
+          min: group.summary && group.group.minValue != undefined ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
+        };
 
         for (var i = 0; i < datapoints.length; i++) {
           if (datapoints[i].referenceLine) {
@@ -32180,9 +32164,6 @@ return /******/ (function(modules) { // webpackBootstrap
             convertedValue = Math.round(baseScreenY * 50 / 100);
             if (datapoints[i].referenceLine) {
               convertedValue = Math.round(axis.convertValue(datapoints[i].y, range, baseScreenY));
-            }
-            if (group.group.axisCustomLabel) {
-              convertedValue = this._invertScale({ group: group, convertedValue: convertedValue, baseScreenY: baseScreenY });
             }
             datapoints[i].screen_y = actualY - offset / 2 - convertedValue;
 
@@ -32244,88 +32225,6 @@ return /******/ (function(modules) { // webpackBootstrap
         this.options.height = totalHeight + 1;
         this.options.graphHeight = totalHeight + 1;
         this.options.legend = { enabled: false };
-      }
-
-      /**
-       * IF max is less than min so the scale is inverted
-       * e.g -4 on top until 4 on bottom
-       * !important: not available for avg coordinates
-       * @param group
-       * @param convertedValue
-       * @param baseScreenY
-       * @returns {number}
-       * @private
-       */
-
-    }, {
-      key: '_invertScale',
-      value: function _invertScale(_ref) {
-        var group = _ref.group,
-            convertedValue = _ref.convertedValue,
-            baseScreenY = _ref.baseScreenY;
-
-        var listOfYLabels = group.group.axisCustomLabel.map(function (d) {
-          return d.y;
-        });
-        var first = listOfYLabels[0];
-        var last = listOfYLabels[listOfYLabels.length - 1];
-        if (first < last) {
-          convertedValue = baseScreenY - convertedValue;
-        }
-        return convertedValue;
-      }
-    }, {
-      key: '_calculateRange',
-      value: function _calculateRange(group, datapoints) {
-        if (group.group.axisCustomLabel) {
-          var listOfValues = group.group.axisCustomLabel.map(function (d) {
-            return d.y;
-          });
-          return {
-            max: Math.max.apply(Math, _toConsumableArray(listOfValues)),
-            min: Math.min.apply(Math, _toConsumableArray(listOfValues))
-          };
-        }
-        if (group.group.type === 'arrow-avg') {
-          return this._calculateRangeAvg(group, datapoints);
-        }
-        return this._calculateRangePoints(group, datapoints);
-      }
-    }, {
-      key: '_calculateRangePoints',
-      value: function _calculateRangePoints(group, datapoints) {
-        var listOfValues = datapoints.map(function (d) {
-          return d.y;
-        }).filter(function (value, index, self) {
-          return self.indexOf(value) === index;
-        }).sort();
-
-        if (group.summary && group.group.intervalScale && group.group.minValue !== group.group.maxValue) {
-          if (group.group.maxValue !== undefined && !listOfValues.includes(group.group.maxValue)) {
-            listOfValues.push(group.group.maxValue);
-          }
-          if (group.group.minValue !== undefined && !listOfValues.includes(group.group.minValue)) {
-            listOfValues.push(group.group.minValue);
-          }
-        }
-        return {
-          max: Math.max.apply(Math, _toConsumableArray(listOfValues)),
-          min: Math.min.apply(Math, _toConsumableArray(listOfValues))
-        };
-      }
-    }, {
-      key: '_calculateRangeAvg',
-      value: function _calculateRangeAvg(group, datapoints) {
-        var listOfMaxValues = datapoints.map(function (d) {
-          return d.referenceLine ? d.y : d.maxValue;
-        });
-        var listOfMinValues = datapoints.map(function (d) {
-          return d.referenceLine ? d.y : d.minValue;
-        });
-        return {
-          max: group.summary && group.group.maxValue !== undefined ? group.group.maxValue : Math.max.apply(Math, _toConsumableArray(listOfMaxValues)),
-          min: group.summary && group.group.minValue !== undefined ? group.group.minValue : Math.min.apply(Math, _toConsumableArray(listOfMinValues))
-        };
       }
     }]);
 
