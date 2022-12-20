@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-11-21
+ * @date    2022-12-20
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -10260,7 +10260,7 @@ return /******/ (function(modules) { // webpackBootstrap
       noCanvas.style.color = 'red';
       noCanvas.style.fontWeight = 'bold';
       noCanvas.style.padding = '10px';
-      noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
+      noCanvas.innerText = 'Error: your browser does not support HTML canvas';
       this.frame.canvas.appendChild(noCanvas);
     }
 
@@ -12492,7 +12492,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.appendChild(frame.progress);
       }
       var progress = this.getLoadedProgress();
-      frame.progress.innerHTML = 'Loading animation... ' + progress + '%';
+      frame.progress.innerText = 'Loading animation... ' + progress + '%';
       // TODO: this is no nice solution...
       frame.progress.style.bottom = 60 + 'px'; // TODO: use height of slider
       frame.progress.style.left = 10 + 'px';
@@ -13763,7 +13763,7 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.options.showButton === true) {
           var generateButton = document.createElement('div');
           generateButton.className = 'vis-configuration vis-config-button';
-          generateButton.innerHTML = 'generate options';
+          generateButton.innerText = 'generate options';
           generateButton.onclick = function () {
             _this._printOptions();
           };
@@ -14787,7 +14787,7 @@ return /******/ (function(modules) { // webpackBootstrap
           noCanvas.style.color = 'red';
           noCanvas.style.fontWeight = 'bold';
           noCanvas.style.padding = '10px';
-          noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
+          noCanvas.innerText = 'Error: your browser does not support HTML canvas';
           this.colorPickerCanvas.appendChild(noCanvas);
         } else {
           var ctx = this.colorPickerCanvas.getContext("2d");
@@ -14844,38 +14844,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.brightnessLabel = document.createElement("div");
         this.brightnessLabel.className = "vis-label vis-brightness";
-        this.brightnessLabel.innerHTML = 'brightness:';
+        this.brightnessLabel.innerText = 'brightness:';
 
         this.opacityLabel = document.createElement("div");
         this.opacityLabel.className = "vis-label vis-opacity";
-        this.opacityLabel.innerHTML = 'opacity:';
+        this.opacityLabel.innerText = 'opacity:';
 
         this.newColorDiv = document.createElement("div");
         this.newColorDiv.className = "vis-new-color";
-        this.newColorDiv.innerHTML = 'new';
+        this.newColorDiv.innerText = 'new';
 
         this.initialColorDiv = document.createElement("div");
         this.initialColorDiv.className = "vis-initial-color";
-        this.initialColorDiv.innerHTML = 'initial';
+        this.initialColorDiv.innerText = 'initial';
 
         this.cancelButton = document.createElement("div");
         this.cancelButton.className = "vis-button vis-cancel";
-        this.cancelButton.innerHTML = 'cancel';
+        this.cancelButton.innerText = 'cancel';
         this.cancelButton.onclick = this._hide.bind(this, false);
 
         this.applyButton = document.createElement("div");
         this.applyButton.className = "vis-button vis-apply";
-        this.applyButton.innerHTML = 'apply';
+        this.applyButton.innerText = 'apply';
         this.applyButton.onclick = this._apply.bind(this);
 
         this.saveButton = document.createElement("div");
         this.saveButton.className = "vis-button vis-save";
-        this.saveButton.innerHTML = 'save';
+        this.saveButton.innerText = 'save';
         this.saveButton.onclick = this._save.bind(this);
 
         this.loadButton = document.createElement("div");
         this.loadButton.className = "vis-button vis-load";
-        this.loadButton.innerHTML = 'load last';
+        this.loadButton.innerText = 'load last';
         this.loadButton.onclick = this._loadLast.bind(this);
 
         this.frame.appendChild(this.colorPickerDiv);
@@ -19086,10 +19086,13 @@ return /******/ (function(modules) { // webpackBootstrap
    * @protected
    */
   Component.prototype._isResized = function () {
-    var resized = this.props._previousWidth !== this.props.width || this.props._previousHeight !== this.props.height;
+    var props = this.props;
+    var propsWidth = props.width;
+    var propsHeight = props.height;
+    var resized = props._previousWidth !== propsWidth || props._previousHeight !== propsHeight;
 
-    this.props._previousWidth = this.props.width;
-    this.props._previousHeight = this.props.height;
+    props._previousWidth = propsWidth;
+    props._previousHeight = propsHeight;
 
     return resized;
   };
@@ -20195,31 +20198,32 @@ return /******/ (function(modules) { // webpackBootstrap
     this.redrawCount++;
     var dom = this.dom;
 
-    if (!dom || !dom.container || dom.container.clientWidth == 0) return; // when destroyed, or invisible
+    if (!dom || !dom.container) return; // when destroyed, or invisible
 
     var resized = false;
     var options = this.options;
     var props = this.props;
+    var domRoot = dom.root;
 
     DateUtil.updateHiddenDates(this.options.moment, this.body, this.options.hiddenDates);
 
     // update class names
     if (options.orientation == 'top') {
-      util.addClassName(dom.root, 'vis-top');
-      util.removeClassName(dom.root, 'vis-bottom');
+      util.addClassName(domRoot, 'vis-top');
+      util.removeClassName(domRoot, 'vis-bottom');
     } else {
-      util.removeClassName(dom.root, 'vis-top');
-      util.addClassName(dom.root, 'vis-bottom');
+      util.removeClassName(domRoot, 'vis-top');
+      util.addClassName(domRoot, 'vis-bottom');
     }
 
     // update root width and height options
-    dom.root.style.maxHeight = util.option.asSize(options.maxHeight, '');
-    dom.root.style.minHeight = util.option.asSize(options.minHeight, '');
-    dom.root.style.width = util.option.asSize(options.width, '');
+    domRoot.style.maxHeight = util.option.asSize(options.maxHeight, '');
+    domRoot.style.minHeight = util.option.asSize(options.minHeight, '');
+    domRoot.style.width = util.option.asSize(options.width, '');
 
-    var rootClientHeight = dom.root.clientHeight;
-    var rootOffsetHeight = dom.root.offsetHeight;
-    var rootOffsetWidth = dom.root.offsetWidth;
+    var rootClientHeight = domRoot.clientHeight;
+    var rootOffsetHeight = domRoot.offsetHeight;
+    var rootOffsetWidth = domRoot.offsetWidth;
     var centerContainerClientHeight = dom.centerContainer.clientHeight;
 
     // calculate border widths
@@ -20228,7 +20232,7 @@ return /******/ (function(modules) { // webpackBootstrap
     props.border.top = (dom.centerContainer.offsetHeight - centerContainerClientHeight) / 2;
     props.border.bottom = props.border.top;
     props.borderRootHeight = rootOffsetHeight - rootClientHeight;
-    props.borderRootWidth = rootOffsetWidth - dom.root.clientWidth;
+    props.borderRootWidth = rootOffsetWidth - domRoot.clientWidth;
 
     // workaround for a bug in IE: the clientWidth of an element with
     // a height:0px and overflow:hidden is not calculated and always has value 0
@@ -20254,10 +20258,10 @@ return /******/ (function(modules) { // webpackBootstrap
     // TODO: only calculate autoHeight when needed (else we cause an extra reflow/repaint of the DOM)
     var contentHeight = Math.max(props.left.height, props.center.height, props.right.height);
     var autoHeight = props.top.height + contentHeight + props.bottom.height + props.borderRootHeight + props.border.top + props.border.bottom;
-    dom.root.style.height = util.option.asSize(options.height, autoHeight + 'px');
+    domRoot.style.height = util.option.asSize(options.height, autoHeight + 'px');
 
     // calculate heights of the content panels
-    props.root.height = dom.root.offsetHeight;
+    props.root.height = rootOffsetHeight;
     props.background.height = props.root.height - props.borderRootHeight;
     var containerHeight = props.root.height - props.top.height - props.bottom.height - props.borderRootHeight;
     props.centerContainer.height = containerHeight;
@@ -20284,10 +20288,12 @@ return /******/ (function(modules) { // webpackBootstrap
     props.bottom.width = centerWidth;
 
     // resize the panels
-    dom.background.style.height = props.background.height + 'px';
-    dom.backgroundVertical.style.height = props.background.height + 'px';
-    dom.backgroundHorizontal.style.height = props.centerContainer.height + 'px';
-    dom.centerContainer.style.height = props.centerContainer.height + 'px';
+    var backgroundHeight = props.background.height + 'px';
+    var centerContainerHeight = props.centerContainer.height + 'px';
+    dom.background.style.height = backgroundHeight;
+    dom.backgroundVertical.style.height = backgroundHeight;
+    dom.backgroundHorizontal.style.height = centerContainerHeight;
+    dom.centerContainer.style.height = centerContainerHeight;
     dom.leftContainer.style.height = props.leftContainer.height + 'px';
     dom.rightContainer.style.height = props.rightContainer.height + 'px';
 
@@ -23990,7 +23996,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.visibleItems = this._updateVisibleItems(this.orderedItems, this.visibleItems, range);
 
     // apply new height (just always zero for BackgroundGroup
-    this.dom.background.style.height = '0';
+    // this.dom.background.style.height  = '0';
 
     // update vertical position of items after they are re-stacked and the height of the group is calculated
     for (var i = 0, ii = this.visibleItems.length; i < ii; i++) {
@@ -24864,7 +24870,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   RangeItem.prototype.isVisible = function (range) {
     // determine visibility
-    return this.data.start <= range.end && this.data.end >= range.start;
+    return true; // (this.data.start <= range.end) && (this.data.end >= range.start);
   };
 
   /**
@@ -24987,7 +24993,6 @@ return /******/ (function(modules) { // webpackBootstrap
    * @Override
    */
   RangeItem.prototype.repositionX = function (limitSize, group) {
-    var dataIdItemSplit = this.data.id.split('_');
     var prop = this.data.prop;
 
     var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
@@ -25026,8 +25031,9 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dom.box.classList.add('tablemode-fit');
       }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
+    } else if (this.data.id && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
       if (['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
+        var dataIdItemSplit = this.data.id.split('_');
         this.dom.box.classList.toggle('tablemode-fit', false);
         var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
         var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
@@ -25054,8 +25060,9 @@ return /******/ (function(modules) { // webpackBootstrap
       if (start < -parentWidth) {
         start = -parentWidth;
       }
-      if (end > 2 * parentWidth) {
-        end = 2 * parentWidth;
+      var parentWidthPer2 = 2 * parentWidth;
+      if (end > parentWidthPer2) {
+        end = parentWidthPer2;
       }
     }
 
@@ -25650,9 +25657,10 @@ return /******/ (function(modules) { // webpackBootstrap
       xNext = this.body.util.toScreen(current);
       width = xNext - x;
 
-      if (elementHeaderWidthItem && elementHeaderWidth && elementHeaderWidth.offsetWidth) {
-        var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
-        width = widthElement;
+      if (elementHeaderWidthItem && elementHeaderWidth) {
+        // && elementHeaderWidth.offsetWidth
+        width = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+        // width = widthElement;
       }
 
       if (this.options.showMinorLabels) {
@@ -25857,28 +25865,32 @@ return /******/ (function(modules) { // webpackBootstrap
     // example when any of the timelines parents had display:none for example.
 
     // determine the char width and height on the minor axis
-    if (!this.dom.measureCharMinor) {
-      this.dom.measureCharMinor = document.createElement('DIV');
-      this.dom.measureCharMinor.className = 'vis-text vis-minor vis-measure';
-      this.dom.measureCharMinor.style.position = 'absolute';
+    var measureCharMinor = this.dom.measureCharMinor;
+    if (!measureCharMinor) {
+      measureCharMinor = document.createElement('DIV');
+      measureCharMinor.className = 'vis-text vis-minor vis-measure';
+      measureCharMinor.style.position = 'absolute';
 
-      this.dom.measureCharMinor.appendChild(document.createTextNode('0'));
-      this.dom.foreground.appendChild(this.dom.measureCharMinor);
+      measureCharMinor.appendChild(document.createTextNode('0'));
+      this.dom.foreground.appendChild(measureCharMinor);
+
+      this.props.minorCharHeight = measureCharMinor.clientHeight;
+      this.props.minorCharWidth = measureCharMinor.clientWidth;
     }
-    this.props.minorCharHeight = this.dom.measureCharMinor.clientHeight;
-    this.props.minorCharWidth = this.dom.measureCharMinor.clientWidth;
 
     // determine the char width and height on the major axis
-    if (!this.dom.measureCharMajor) {
-      this.dom.measureCharMajor = document.createElement('DIV');
-      this.dom.measureCharMajor.className = 'vis-text vis-major vis-measure';
-      this.dom.measureCharMajor.style.position = 'absolute';
+    var measureCharMajor = this.dom.measureCharMajor;
+    if (!measureCharMajor) {
+      measureCharMajor = document.createElement('DIV');
+      measureCharMajor.className = 'vis-text vis-major vis-measure';
+      measureCharMajor.style.position = 'absolute';
 
-      this.dom.measureCharMajor.appendChild(document.createTextNode('0'));
-      this.dom.foreground.appendChild(this.dom.measureCharMajor);
+      measureCharMajor.appendChild(document.createTextNode('0'));
+      this.dom.foreground.appendChild(measureCharMajor);
+
+      this.props.majorCharHeight = measureCharMajor.clientHeight;
+      this.props.majorCharWidth = measureCharMajor.clientWidth;
     }
-    this.props.majorCharHeight = this.dom.measureCharMajor.clientHeight;
-    this.props.majorCharWidth = this.dom.measureCharMajor.clientWidth;
   };
 
   var warnedForOverflow = false;
@@ -28408,7 +28420,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.body.range.options.gap === 0) {
       var dateElement = new Date(x);
       var index = 0;
-      var itemHours = null;
+      // let itemHours = null;
       // if the hours difference comes negative it calculates with one more day
       var diffNegative = function diffNegative(dateStart, dateEnd) {
         var diffFunction = dateStart.diff(dateEnd);
@@ -29372,7 +29384,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // reuse redundant label
     var label = DOMutil.getDOMElement('div', this.DOMelements.labels, this.dom.frame); //this.dom.redundant.labels.shift();
     label.className = className;
-    label.innerHTML = text;
+    label.innerText = text;
     if (orientation === 'left') {
       label.style.left = '-' + this.options.labelOffsetX + 'px';
       label.style.textAlign = "right";
@@ -29438,7 +29450,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.options[orientation].title !== undefined && this.options[orientation].title.text !== undefined) {
       var title = DOMutil.getDOMElement('div', this.DOMelements.title, this.dom.frame);
       title.className = 'vis-y-axis vis-title vis-' + orientation;
-      title.innerHTML = this.options[orientation].title.text;
+      title.innerText = this.options[orientation].title.text;
 
       // Add style - if provided
       if (this.options[orientation].title.style !== undefined) {
@@ -30633,7 +30645,7 @@ return /******/ (function(modules) { // webpackBootstrap
         // reuse redundant label
         var label = DOMutil.getDOMElement('div', this.DOMelements.labels, this.dom.frame); //this.dom.redundant.labels.shift();
         label.className = className;
-        label.innerHTML = text;
+        label.innerText = text;
         if (orientation === 'left') {
           label.style.textAlign = "right";
         } else {
