@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2022-11-21
+ * @date    2022-12-21
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -1590,7 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
   var require;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-  //! version : 2.29.1
+  //! version : 2.29.4
   //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
   //! license : MIT
   //! momentjs.com
@@ -1667,8 +1667,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function map(arr, fn) {
           var res = [],
-              i;
-          for (i = 0; i < arr.length; ++i) {
+              i,
+              arrLen = arr.length;
+          for (i = 0; i < arrLen; ++i) {
               res.push(fn(arr[i], i));
           }
           return res;
@@ -1797,7 +1798,10 @@ return /******/ (function(modules) { // webpackBootstrap
           updateInProgress = false;
 
       function copyConfig(to, from) {
-          var i, prop, val;
+          var i,
+              prop,
+              val,
+              momentPropertiesLen = momentProperties.length;
 
           if (!isUndefined(from._isAMomentObject)) {
               to._isAMomentObject = from._isAMomentObject;
@@ -1830,8 +1834,8 @@ return /******/ (function(modules) { // webpackBootstrap
               to._locale = from._locale;
           }
 
-          if (momentProperties.length > 0) {
-              for (i = 0; i < momentProperties.length; i++) {
+          if (momentPropertiesLen > 0) {
+              for (i = 0; i < momentPropertiesLen; i++) {
                   prop = momentProperties[i];
                   val = from[prop];
                   if (!isUndefined(val)) {
@@ -1886,8 +1890,9 @@ return /******/ (function(modules) { // webpackBootstrap
                   var args = [],
                       arg,
                       i,
-                      key;
-                  for (i = 0; i < arguments.length; i++) {
+                      key,
+                      argLen = arguments.length;
+                  for (i = 0; i < argLen; i++) {
                       arg = '';
                       if (typeof arguments[i] === 'object') {
                           arg += '\n[' + i + '] ';
@@ -2037,7 +2042,8 @@ return /******/ (function(modules) { // webpackBootstrap
           );
       }
 
-      var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
+      var formattingTokens =
+              /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
           localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
           formatFunctions = {},
           formatTokenFunctions = {};
@@ -2341,8 +2347,9 @@ return /******/ (function(modules) { // webpackBootstrap
           if (typeof units === 'object') {
               units = normalizeObjectUnits(units);
               var prioritized = getPrioritizedUnits(units),
-                  i;
-              for (i = 0; i < prioritized.length; i++) {
+                  i,
+                  prioritizedLen = prioritized.length;
+              for (i = 0; i < prioritizedLen; i++) {
                   this[prioritized[i].unit](units[prioritized[i].unit]);
               }
           } else {
@@ -2372,7 +2379,8 @@ return /******/ (function(modules) { // webpackBootstrap
           matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
           // any word (or two) characters or numbers including two/three word month in arabic.
           // includes scottish gaelic two word and hyphenated months
-          matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+          matchWord =
+              /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
           regexes;
 
       regexes = {};
@@ -2398,15 +2406,12 @@ return /******/ (function(modules) { // webpackBootstrap
           return regexEscape(
               s
                   .replace('\\', '')
-                  .replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (
-                      matched,
-                      p1,
-                      p2,
-                      p3,
-                      p4
-                  ) {
-                      return p1 || p2 || p3 || p4;
-                  })
+                  .replace(
+                      /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
+                      function (matched, p1, p2, p3, p4) {
+                          return p1 || p2 || p3 || p4;
+                      }
+                  )
           );
       }
 
@@ -2418,7 +2423,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function addParseToken(token, callback) {
           var i,
-              func = callback;
+              func = callback,
+              tokenLen;
           if (typeof token === 'string') {
               token = [token];
           }
@@ -2427,7 +2433,8 @@ return /******/ (function(modules) { // webpackBootstrap
                   array[callback] = toInt(input);
               };
           }
-          for (i = 0; i < token.length; i++) {
+          tokenLen = token.length;
+          for (i = 0; i < tokenLen; i++) {
               tokens[token[i]] = func;
           }
       }
@@ -2538,12 +2545,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // LOCALES
 
-      var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split(
-              '_'
-          ),
-          defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split(
-              '_'
-          ),
+      var defaultLocaleMonths =
+              'January_February_March_April_May_June_July_August_September_October_November_December'.split(
+                  '_'
+              ),
+          defaultLocaleMonthsShort =
+              'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
           MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,
           defaultMonthsShortRegex = matchWord,
           defaultMonthsRegex = matchWord;
@@ -2985,14 +2992,12 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('W', match1to2);
       addRegexToken('WW', match1to2, match2);
 
-      addWeekParseToken(['w', 'ww', 'W', 'WW'], function (
-          input,
-          week,
-          config,
-          token
-      ) {
-          week[token.substr(0, 1)] = toInt(input);
-      });
+      addWeekParseToken(
+          ['w', 'ww', 'W', 'WW'],
+          function (input, week, config, token) {
+              week[token.substr(0, 1)] = toInt(input);
+          }
+      );
 
       // HELPERS
 
@@ -3117,9 +3122,8 @@ return /******/ (function(modules) { // webpackBootstrap
           return ws.slice(n, 7).concat(ws.slice(0, n));
       }
 
-      var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split(
-              '_'
-          ),
+      var defaultLocaleWeekdays =
+              'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
           defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
           defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
           defaultWeekdaysRegex = matchWord,
@@ -3667,6 +3671,11 @@ return /******/ (function(modules) { // webpackBootstrap
           return globalLocale;
       }
 
+      function isLocaleNameSane(name) {
+          // Prevent names that look like filesystem paths, i.e contain '/' or '\'
+          return name.match('^[^/\\\\]*$') != null;
+      }
+
       function loadLocale(name) {
           var oldLocale = null,
               aliasedRequire;
@@ -3675,7 +3684,8 @@ return /******/ (function(modules) { // webpackBootstrap
               locales[name] === undefined &&
               typeof module !== 'undefined' &&
               module &&
-              module.exports
+              module.exports &&
+              isLocaleNameSane(name)
           ) {
               try {
                   oldLocale = globalLocale._abbr;
@@ -3892,8 +3902,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // iso 8601 regex
       // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-      var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
-          basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+      var extendedIsoRegex =
+              /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+          basicIsoRegex =
+              /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
           tzRegex = /Z|[+-]\d\d(?::?\d\d)?/,
           isoDates = [
               ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -3924,7 +3936,8 @@ return /******/ (function(modules) { // webpackBootstrap
           ],
           aspNetJsonRegex = /^\/?Date\((-?\d+)/i,
           // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-          rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
+          rfc2822 =
+              /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
           obsOffsets = {
               UT: 0,
               GMT: 0,
@@ -3947,12 +3960,13 @@ return /******/ (function(modules) { // webpackBootstrap
               allowTime,
               dateFormat,
               timeFormat,
-              tzFormat;
+              tzFormat,
+              isoDatesLen = isoDates.length,
+              isoTimesLen = isoTimes.length;
 
           if (match) {
               getParsingFlags(config).iso = true;
-
-              for (i = 0, l = isoDates.length; i < l; i++) {
+              for (i = 0, l = isoDatesLen; i < l; i++) {
                   if (isoDates[i][1].exec(match[1])) {
                       dateFormat = isoDates[i][0];
                       allowTime = isoDates[i][2] !== false;
@@ -3964,7 +3978,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   return;
               }
               if (match[3]) {
-                  for (i = 0, l = isoTimes.length; i < l; i++) {
+                  for (i = 0, l = isoTimesLen; i < l; i++) {
                       if (isoTimes[i][1].exec(match[3])) {
                           // match[2] should be 'T' or space
                           timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -4031,7 +4045,7 @@ return /******/ (function(modules) { // webpackBootstrap
       function preprocessRFC2822(s) {
           // Remove comments and folding whitespace and replace multiple-spaces with a single space
           return s
-              .replace(/\([^)]*\)|[\n\t]/g, ' ')
+              .replace(/\([^()]*\)|[\n\t]/g, ' ')
               .replace(/(\s\s+)/g, ' ')
               .replace(/^\s\s*/, '')
               .replace(/\s\s*$/, '');
@@ -4344,12 +4358,13 @@ return /******/ (function(modules) { // webpackBootstrap
               skipped,
               stringLength = string.length,
               totalParsedInputLength = 0,
-              era;
+              era,
+              tokenLen;
 
           tokens =
               expandFormat(config._f, config._locale).match(formattingTokens) || [];
-
-          for (i = 0; i < tokens.length; i++) {
+          tokenLen = tokens.length;
+          for (i = 0; i < tokenLen; i++) {
               token = tokens[i];
               parsedInput = (string.match(getParseRegexForToken(token, config)) ||
                   [])[0];
@@ -4444,15 +4459,16 @@ return /******/ (function(modules) { // webpackBootstrap
               i,
               currentScore,
               validFormatFound,
-              bestFormatIsValid = false;
+              bestFormatIsValid = false,
+              configfLen = config._f.length;
 
-          if (config._f.length === 0) {
+          if (configfLen === 0) {
               getParsingFlags(config).invalidFormat = true;
               config._d = new Date(NaN);
               return;
           }
 
-          for (i = 0; i < config._f.length; i++) {
+          for (i = 0; i < configfLen; i++) {
               currentScore = 0;
               validFormatFound = false;
               tempConfig = copyConfig({}, config);
@@ -4693,7 +4709,8 @@ return /******/ (function(modules) { // webpackBootstrap
       function isDurationValid(m) {
           var key,
               unitHasDecimal = false,
-              i;
+              i,
+              orderLen = ordering.length;
           for (key in m) {
               if (
                   hasOwnProp(m, key) &&
@@ -4706,7 +4723,7 @@ return /******/ (function(modules) { // webpackBootstrap
               }
           }
 
-          for (i = 0; i < ordering.length; ++i) {
+          for (i = 0; i < orderLen; ++i) {
               if (m[ordering[i]]) {
                   if (unitHasDecimal) {
                       return false; // only allow non-integers for smallest unit
@@ -5031,7 +5048,8 @@ return /******/ (function(modules) { // webpackBootstrap
           // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
           // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
           // and further modified to allow for strings containing both week and day
-          isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+          isoRegex =
+              /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
       function createDuration(input, key) {
           var duration = input,
@@ -5252,9 +5270,10 @@ return /******/ (function(modules) { // webpackBootstrap
                   'ms',
               ],
               i,
-              property;
+              property,
+              propertyLen = properties.length;
 
-          for (i = 0; i < properties.length; i += 1) {
+          for (i = 0; i < propertyLen; i += 1) {
               property = properties[i];
               propertyTest = propertyTest || hasOwnProp(input, property);
           }
@@ -5877,19 +5896,17 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('NNNN', matchEraName);
       addRegexToken('NNNNN', matchEraNarrow);
 
-      addParseToken(['N', 'NN', 'NNN', 'NNNN', 'NNNNN'], function (
-          input,
-          array,
-          config,
-          token
-      ) {
-          var era = config._locale.erasParse(input, token, config._strict);
-          if (era) {
-              getParsingFlags(config).era = era;
-          } else {
-              getParsingFlags(config).invalidEra = input;
+      addParseToken(
+          ['N', 'NN', 'NNN', 'NNNN', 'NNNNN'],
+          function (input, array, config, token) {
+              var era = config._locale.erasParse(input, token, config._strict);
+              if (era) {
+                  getParsingFlags(config).era = era;
+              } else {
+                  getParsingFlags(config).invalidEra = input;
+              }
           }
-      });
+      );
 
       addRegexToken('y', matchUnsigned);
       addRegexToken('yy', matchUnsigned);
@@ -6181,14 +6198,12 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('GGGGG', match1to6, match6);
       addRegexToken('ggggg', match1to6, match6);
 
-      addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (
-          input,
-          week,
-          config,
-          token
-      ) {
-          week[token.substr(0, 2)] = toInt(input);
-      });
+      addWeekParseToken(
+          ['gggg', 'ggggg', 'GGGG', 'GGGGG'],
+          function (input, week, config, token) {
+              week[token.substr(0, 2)] = toInt(input);
+          }
+      );
 
       addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
           week[token] = hooks.parseTwoDigitYear(input);
@@ -7211,7 +7226,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       //! moment.js
 
-      hooks.version = '2.29.1';
+      hooks.version = '2.29.4';
 
       setHookCallback(createLocal);
 
@@ -10260,7 +10275,7 @@ return /******/ (function(modules) { // webpackBootstrap
       noCanvas.style.color = 'red';
       noCanvas.style.fontWeight = 'bold';
       noCanvas.style.padding = '10px';
-      noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
+      noCanvas.innerText = 'Error: your browser does not support HTML canvas';
       this.frame.canvas.appendChild(noCanvas);
     }
 
@@ -12492,7 +12507,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.appendChild(frame.progress);
       }
       var progress = this.getLoadedProgress();
-      frame.progress.innerHTML = 'Loading animation... ' + progress + '%';
+      frame.progress.innerText = 'Loading animation... ' + progress + '%';
       // TODO: this is no nice solution...
       frame.progress.style.bottom = 60 + 'px'; // TODO: use height of slider
       frame.progress.style.left = 10 + 'px';
@@ -13763,7 +13778,7 @@ return /******/ (function(modules) { // webpackBootstrap
         if (this.options.showButton === true) {
           var generateButton = document.createElement('div');
           generateButton.className = 'vis-configuration vis-config-button';
-          generateButton.innerHTML = 'generate options';
+          generateButton.innerText = 'generate options';
           generateButton.onclick = function () {
             _this._printOptions();
           };
@@ -14787,7 +14802,7 @@ return /******/ (function(modules) { // webpackBootstrap
           noCanvas.style.color = 'red';
           noCanvas.style.fontWeight = 'bold';
           noCanvas.style.padding = '10px';
-          noCanvas.innerHTML = 'Error: your browser does not support HTML canvas';
+          noCanvas.innerText = 'Error: your browser does not support HTML canvas';
           this.colorPickerCanvas.appendChild(noCanvas);
         } else {
           var ctx = this.colorPickerCanvas.getContext("2d");
@@ -14844,38 +14859,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.brightnessLabel = document.createElement("div");
         this.brightnessLabel.className = "vis-label vis-brightness";
-        this.brightnessLabel.innerHTML = 'brightness:';
+        this.brightnessLabel.innerText = 'brightness:';
 
         this.opacityLabel = document.createElement("div");
         this.opacityLabel.className = "vis-label vis-opacity";
-        this.opacityLabel.innerHTML = 'opacity:';
+        this.opacityLabel.innerText = 'opacity:';
 
         this.newColorDiv = document.createElement("div");
         this.newColorDiv.className = "vis-new-color";
-        this.newColorDiv.innerHTML = 'new';
+        this.newColorDiv.innerText = 'new';
 
         this.initialColorDiv = document.createElement("div");
         this.initialColorDiv.className = "vis-initial-color";
-        this.initialColorDiv.innerHTML = 'initial';
+        this.initialColorDiv.innerText = 'initial';
 
         this.cancelButton = document.createElement("div");
         this.cancelButton.className = "vis-button vis-cancel";
-        this.cancelButton.innerHTML = 'cancel';
+        this.cancelButton.innerText = 'cancel';
         this.cancelButton.onclick = this._hide.bind(this, false);
 
         this.applyButton = document.createElement("div");
         this.applyButton.className = "vis-button vis-apply";
-        this.applyButton.innerHTML = 'apply';
+        this.applyButton.innerText = 'apply';
         this.applyButton.onclick = this._apply.bind(this);
 
         this.saveButton = document.createElement("div");
         this.saveButton.className = "vis-button vis-save";
-        this.saveButton.innerHTML = 'save';
+        this.saveButton.innerText = 'save';
         this.saveButton.onclick = this._save.bind(this);
 
         this.loadButton = document.createElement("div");
         this.loadButton.className = "vis-button vis-load";
-        this.loadButton.innerHTML = 'load last';
+        this.loadButton.innerText = 'load last';
         this.loadButton.onclick = this._loadLast.bind(this);
 
         this.frame.appendChild(this.colorPickerDiv);
@@ -19086,10 +19101,13 @@ return /******/ (function(modules) { // webpackBootstrap
    * @protected
    */
   Component.prototype._isResized = function () {
-    var resized = this.props._previousWidth !== this.props.width || this.props._previousHeight !== this.props.height;
+    var props = this.props;
+    var propsWidth = props.width;
+    var propsHeight = props.height;
+    var resized = props._previousWidth !== propsWidth || props._previousHeight !== propsHeight;
 
-    this.props._previousWidth = this.props.width;
-    this.props._previousHeight = this.props.height;
+    props._previousWidth = propsWidth;
+    props._previousHeight = propsHeight;
 
     return resized;
   };
@@ -20195,31 +20213,32 @@ return /******/ (function(modules) { // webpackBootstrap
     this.redrawCount++;
     var dom = this.dom;
 
-    if (!dom || !dom.container || dom.container.clientWidth == 0) return; // when destroyed, or invisible
+    if (!dom || !dom.container) return; // when destroyed, or invisible
 
     var resized = false;
     var options = this.options;
     var props = this.props;
+    var domRoot = dom.root;
 
     DateUtil.updateHiddenDates(this.options.moment, this.body, this.options.hiddenDates);
 
     // update class names
     if (options.orientation == 'top') {
-      util.addClassName(dom.root, 'vis-top');
-      util.removeClassName(dom.root, 'vis-bottom');
+      util.addClassName(domRoot, 'vis-top');
+      util.removeClassName(domRoot, 'vis-bottom');
     } else {
-      util.removeClassName(dom.root, 'vis-top');
-      util.addClassName(dom.root, 'vis-bottom');
+      util.removeClassName(domRoot, 'vis-top');
+      util.addClassName(domRoot, 'vis-bottom');
     }
 
     // update root width and height options
-    dom.root.style.maxHeight = util.option.asSize(options.maxHeight, '');
-    dom.root.style.minHeight = util.option.asSize(options.minHeight, '');
-    dom.root.style.width = util.option.asSize(options.width, '');
+    domRoot.style.maxHeight = util.option.asSize(options.maxHeight, '');
+    domRoot.style.minHeight = util.option.asSize(options.minHeight, '');
+    domRoot.style.width = util.option.asSize(options.width, '');
 
-    var rootClientHeight = dom.root.clientHeight;
-    var rootOffsetHeight = dom.root.offsetHeight;
-    var rootOffsetWidth = dom.root.offsetWidth;
+    var rootClientHeight = domRoot.clientHeight;
+    var rootOffsetHeight = domRoot.offsetHeight;
+    var rootOffsetWidth = domRoot.offsetWidth;
     var centerContainerClientHeight = dom.centerContainer.clientHeight;
 
     // calculate border widths
@@ -20228,7 +20247,7 @@ return /******/ (function(modules) { // webpackBootstrap
     props.border.top = (dom.centerContainer.offsetHeight - centerContainerClientHeight) / 2;
     props.border.bottom = props.border.top;
     props.borderRootHeight = rootOffsetHeight - rootClientHeight;
-    props.borderRootWidth = rootOffsetWidth - dom.root.clientWidth;
+    props.borderRootWidth = rootOffsetWidth - domRoot.clientWidth;
 
     // workaround for a bug in IE: the clientWidth of an element with
     // a height:0px and overflow:hidden is not calculated and always has value 0
@@ -20254,10 +20273,10 @@ return /******/ (function(modules) { // webpackBootstrap
     // TODO: only calculate autoHeight when needed (else we cause an extra reflow/repaint of the DOM)
     var contentHeight = Math.max(props.left.height, props.center.height, props.right.height);
     var autoHeight = props.top.height + contentHeight + props.bottom.height + props.borderRootHeight + props.border.top + props.border.bottom;
-    dom.root.style.height = util.option.asSize(options.height, autoHeight + 'px');
+    domRoot.style.height = util.option.asSize(options.height, autoHeight + 'px');
 
     // calculate heights of the content panels
-    props.root.height = dom.root.offsetHeight;
+    props.root.height = rootOffsetHeight;
     props.background.height = props.root.height - props.borderRootHeight;
     var containerHeight = props.root.height - props.top.height - props.bottom.height - props.borderRootHeight;
     props.centerContainer.height = containerHeight;
@@ -20284,10 +20303,12 @@ return /******/ (function(modules) { // webpackBootstrap
     props.bottom.width = centerWidth;
 
     // resize the panels
-    dom.background.style.height = props.background.height + 'px';
-    dom.backgroundVertical.style.height = props.background.height + 'px';
-    dom.backgroundHorizontal.style.height = props.centerContainer.height + 'px';
-    dom.centerContainer.style.height = props.centerContainer.height + 'px';
+    var backgroundHeight = props.background.height + 'px';
+    var centerContainerHeight = props.centerContainer.height + 'px';
+    dom.background.style.height = backgroundHeight;
+    dom.backgroundVertical.style.height = backgroundHeight;
+    dom.backgroundHorizontal.style.height = centerContainerHeight;
+    dom.centerContainer.style.height = centerContainerHeight;
     dom.leftContainer.style.height = props.leftContainer.height + 'px';
     dom.rightContainer.style.height = props.rightContainer.height + 'px';
 
@@ -23990,7 +24011,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.visibleItems = this._updateVisibleItems(this.orderedItems, this.visibleItems, range);
 
     // apply new height (just always zero for BackgroundGroup
-    this.dom.background.style.height = '0';
+    // this.dom.background.style.height  = '0';
 
     // update vertical position of items after they are re-stacked and the height of the group is calculated
     for (var i = 0, ii = this.visibleItems.length; i < ii; i++) {
@@ -24987,7 +25008,6 @@ return /******/ (function(modules) { // webpackBootstrap
    * @Override
    */
   RangeItem.prototype.repositionX = function (limitSize, group) {
-    var dataIdItemSplit = this.data.id.split('_');
     var prop = this.data.prop;
 
     var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
@@ -25026,8 +25046,9 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dom.box.classList.add('tablemode-fit');
       }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
-    } else if (dataIdItemSplit && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
+    } else if (this.data.id && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
       if (['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
+        var dataIdItemSplit = this.data.id.split('_');
         this.dom.box.classList.toggle('tablemode-fit', false);
         var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
         var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
@@ -25054,8 +25075,9 @@ return /******/ (function(modules) { // webpackBootstrap
       if (start < -parentWidth) {
         start = -parentWidth;
       }
-      if (end > 2 * parentWidth) {
-        end = 2 * parentWidth;
+      var parentWidthPer2 = 2 * parentWidth;
+      if (end > parentWidthPer2) {
+        end = parentWidthPer2;
       }
     }
 
@@ -25650,9 +25672,9 @@ return /******/ (function(modules) { // webpackBootstrap
       xNext = this.body.util.toScreen(current);
       width = xNext - x;
 
-      if (elementHeaderWidthItem && elementHeaderWidth && elementHeaderWidth.offsetWidth) {
-        var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
-        width = widthElement;
+      if (elementHeaderWidthItem && elementHeaderWidth) {
+        // && elementHeaderWidth.offsetWidth
+        width = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
       }
 
       if (this.options.showMinorLabels) {
@@ -25857,28 +25879,32 @@ return /******/ (function(modules) { // webpackBootstrap
     // example when any of the timelines parents had display:none for example.
 
     // determine the char width and height on the minor axis
-    if (!this.dom.measureCharMinor) {
-      this.dom.measureCharMinor = document.createElement('DIV');
-      this.dom.measureCharMinor.className = 'vis-text vis-minor vis-measure';
-      this.dom.measureCharMinor.style.position = 'absolute';
+    var measureCharMinor = this.dom.measureCharMinor;
+    if (!measureCharMinor) {
+      measureCharMinor = document.createElement('DIV');
+      measureCharMinor.className = 'vis-text vis-minor vis-measure';
+      measureCharMinor.style.position = 'absolute';
 
-      this.dom.measureCharMinor.appendChild(document.createTextNode('0'));
-      this.dom.foreground.appendChild(this.dom.measureCharMinor);
+      measureCharMinor.appendChild(document.createTextNode('0'));
+      this.dom.foreground.appendChild(measureCharMinor);
+
+      this.props.minorCharHeight = measureCharMinor.clientHeight;
+      this.props.minorCharWidth = measureCharMinor.clientWidth;
     }
-    this.props.minorCharHeight = this.dom.measureCharMinor.clientHeight;
-    this.props.minorCharWidth = this.dom.measureCharMinor.clientWidth;
 
     // determine the char width and height on the major axis
-    if (!this.dom.measureCharMajor) {
-      this.dom.measureCharMajor = document.createElement('DIV');
-      this.dom.measureCharMajor.className = 'vis-text vis-major vis-measure';
-      this.dom.measureCharMajor.style.position = 'absolute';
+    var measureCharMajor = this.dom.measureCharMajor;
+    if (!measureCharMajor) {
+      measureCharMajor = document.createElement('DIV');
+      measureCharMajor.className = 'vis-text vis-major vis-measure';
+      measureCharMajor.style.position = 'absolute';
 
-      this.dom.measureCharMajor.appendChild(document.createTextNode('0'));
-      this.dom.foreground.appendChild(this.dom.measureCharMajor);
+      measureCharMajor.appendChild(document.createTextNode('0'));
+      this.dom.foreground.appendChild(measureCharMajor);
+
+      this.props.majorCharHeight = measureCharMajor.clientHeight;
+      this.props.majorCharWidth = measureCharMajor.clientWidth;
     }
-    this.props.majorCharHeight = this.dom.measureCharMajor.clientHeight;
-    this.props.majorCharWidth = this.dom.measureCharMajor.clientWidth;
   };
 
   var warnedForOverflow = false;
@@ -28408,7 +28434,6 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.body.range.options.gap === 0) {
       var dateElement = new Date(x);
       var index = 0;
-      var itemHours = null;
       // if the hours difference comes negative it calculates with one more day
       var diffNegative = function diffNegative(dateStart, dateEnd) {
         var diffFunction = dateStart.diff(dateEnd);
@@ -29372,7 +29397,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // reuse redundant label
     var label = DOMutil.getDOMElement('div', this.DOMelements.labels, this.dom.frame); //this.dom.redundant.labels.shift();
     label.className = className;
-    label.innerHTML = text;
+    label.innerText = text;
     if (orientation === 'left') {
       label.style.left = '-' + this.options.labelOffsetX + 'px';
       label.style.textAlign = "right";
@@ -29438,7 +29463,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (this.options[orientation].title !== undefined && this.options[orientation].title.text !== undefined) {
       var title = DOMutil.getDOMElement('div', this.DOMelements.title, this.dom.frame);
       title.className = 'vis-y-axis vis-title vis-' + orientation;
-      title.innerHTML = this.options[orientation].title.text;
+      title.innerText = this.options[orientation].title.text;
 
       // Add style - if provided
       if (this.options[orientation].title.style !== undefined) {
@@ -30633,7 +30658,7 @@ return /******/ (function(modules) { // webpackBootstrap
         // reuse redundant label
         var label = DOMutil.getDOMElement('div', this.DOMelements.labels, this.dom.frame); //this.dom.redundant.labels.shift();
         label.className = className;
-        label.innerHTML = text;
+        label.innerText = text;
         if (orientation === 'left') {
           label.style.textAlign = "right";
         } else {
