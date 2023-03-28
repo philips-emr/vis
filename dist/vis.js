@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-03-10
+ * @date    2023-03-28
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -18289,9 +18289,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
       /*
        Copyright (c) 2011 Andrei Mackenzie
-         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
 
     }, {
@@ -31749,7 +31749,7 @@ return /******/ (function(modules) { // webpackBootstrap
         // create svg element for graph drawing.
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.svg.style.position = 'relative';
-        this.svg.style.height = ('' + this.options.graphHeight).replace('px', '') + 'px';
+        this.svg.style.height = '200px'; //('' + this.options.graphHeight).replace('px', '') + 'px';
         this.svg.style.display = 'block';
         frame.appendChild(this.svg);
 
@@ -32259,13 +32259,17 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_calculateHeights',
       value: function _calculateHeights() {
-        var totalHeight = 0;
+        var groupsDataId = {};
 
         this.groupsData.forEach(function (d) {
-          if (d.rowHeightId) {
-            totalHeight += d.rowHeightId[d.className];
+          var dataIdItemSplit = d.id.split('_').pop();
+          if (d.rowHeightId && dataIdItemSplit) {
+            groupsDataId[dataIdItemSplit] = d.rowHeightId[d.className];
           }
         });
+        var totalHeight = Object.values(groupsDataId).reduce(function (partialHeight, height) {
+          return partialHeight + height;
+        }, 0);
 
         this.options.height = totalHeight + 1;
         this.options.graphHeight = totalHeight + 1;
