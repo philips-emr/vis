@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-03-10
+ * @date    2023-03-29
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -8117,11 +8117,15 @@ return /******/ (function(modules) { // webpackBootstrap
   });
 
   var BOLUS = exports.BOLUS = Object.freeze({
-    radius: 2.5,
-    stroke: '#000000',
+    radius: 3,
+    stroke: '#212121',
     strokeWidth: 1.5,
     fill: '#ffffff',
     className: 'bolus'
+  });
+
+  var INFUSION_RATE = exports.INFUSION_RATE = Object.freeze({
+    className: 'infusionrate'
   });
 
   var PARTOGRAM_HEAD_POSITION_DEGREE = exports.PARTOGRAM_HEAD_POSITION_DEGREE = Object.freeze({
@@ -18289,9 +18293,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
       /*
        Copyright (c) 2011 Andrei Mackenzie
-         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
 
     }, {
@@ -31868,7 +31872,7 @@ return /******/ (function(modules) { // webpackBootstrap
               for (i = 0; i < groupIds.length; i++) {
                 group = _this2.groups[groupIds[i]];
                 if (group.group.type == 'infusionrate' || group.group.type == 'bolus') {
-                  InfusionRate.drawBackground(group, _this2.framework);
+                  InfusionRate.drawBackground(group, _this2.framework, _this2.body);
                 }
                 if ((group.options.style === 'line' || group.options.style === 'trend') && group.options.shaded.enabled == true) {
                   var dataset = groupsData[groupIds[i]];
@@ -32371,11 +32375,12 @@ return /******/ (function(modules) { // webpackBootstrap
   var DOMUtil = __webpack_require__(7);
 
   var _require = __webpack_require__(8),
-      BOLUS = _require.BOLUS;
+      BOLUS = _require.BOLUS,
+      INFUSION_RATE = _require.INFUSION_RATE;
 
   function InfusionRate(groupId, options) {}
 
-  InfusionRate.drawBackground = function (group, framework) {
+  InfusionRate.drawBackground = function (group, framework, body) {
       var _this = this;
 
       var zeroPosition = group.zeroPosition;
@@ -32388,7 +32393,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var yMaximum = Math.max.apply(Math, _toConsumableArray(yElementArray));
       var yMinimum = Math.min.apply(Math, _toConsumableArray(yElementArray));
       Object.values(subGroups).forEach(function (subGroup) {
-          _this.createSVGElement(subGroup, zeroPosition, group.style, yMaximum, yMinimum, framework);
+          _this.createSVGElement(subGroup, zeroPosition, group.style, yMaximum, yMinimum, framework, body);
       });
   };
 
@@ -32403,7 +32408,7 @@ return /******/ (function(modules) { // webpackBootstrap
       });
   };
 
-  InfusionRate.createSVGElement = function (subGroup, zeroPosition, style, yMaximum, yMinimum, framework) {
+  InfusionRate.createSVGElement = function (subGroup, zeroPosition, style, yMaximum, yMinimum, framework, body) {
       var rectElement = DOMUtil.getSVGElement('rect', framework.svgElements, framework.svg);
       var length = subGroup.length;
       var opacity = 0.1;
@@ -32421,6 +32426,13 @@ return /******/ (function(modules) { // webpackBootstrap
       rectElement.setAttribute('width', subGroup[length - 1].screen_x - subGroup[0].screen_x);
       rectElement.setAttribute('height', zeroPosition - subGroup[0].screen_y);
       rectElement.setAttribute('style', 'fill: ' + mainColor + '; fill-opacity: ' + opacity);
+      rectElement.setAttribute('class', INFUSION_RATE.className);
+      DOMUtil.attachEvents(rectElement, 'mouseenter', subGroup, function (event, element, data) {
+          return body.emitter.emit('itemmouseenter', { data: data, event: event, element: element });
+      });
+      DOMUtil.attachEvents(rectElement, 'mouseout', subGroup, function (event, element, data) {
+          return body.emitter.emit('itemmouseout', { data: data, event: event, element: element });
+      });
   };
 
   InfusionRate.createBolusElement = function (element, framework, body) {
