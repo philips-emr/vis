@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-03-29
+ * @date    2023-04-03
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -32263,13 +32263,19 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_calculateHeights',
       value: function _calculateHeights() {
-        var totalHeight = 0;
+        var groupsDataId = {};
 
         this.groupsData.forEach(function (d) {
-          if (d.rowHeightId) {
-            totalHeight += d.rowHeightId[d.className];
+          var dataIdItemSplit = d.id.split('_').pop();
+          if (d.rowHeightId && dataIdItemSplit && Object.keys(groupsDataId).indexOf(dataIdItemSplit) === -1) {
+            // get once height by id
+            groupsDataId[dataIdItemSplit] = d.rowHeightId[d.className];
           }
         });
+        // sometimes groupsData has different type icons to same id, in this case, must sum only one height
+        var totalHeight = Object.values(groupsDataId).reduce(function (partialHeight, height) {
+          return partialHeight + height;
+        }, 0);
 
         this.options.height = totalHeight + 1;
         this.options.graphHeight = totalHeight + 1;
