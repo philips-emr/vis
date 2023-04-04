@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-03-29
+ * @date    2023-04-04
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -146,9 +146,9 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.Network = __webpack_require__(67);
   exports.network = {
     Images: __webpack_require__(68),
-    dotparser: __webpack_require__(124),
-    gephiParser: __webpack_require__(125),
-    allOptions: __webpack_require__(120)
+    dotparser: __webpack_require__(128),
+    gephiParser: __webpack_require__(129),
+    allOptions: __webpack_require__(124)
   };
   exports.network.convertDot = function (input) {
     return exports.network.dotparser.DOTToGraph(input);
@@ -844,7 +844,7 @@ return /******/ (function(modules) { // webpackBootstrap
           if (needExecution) {
             throttled();
           }
-        }, wait);
+        }, 0);
       } else {
         needExecution = true;
       }
@@ -1590,7 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
   var require;/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
-  //! version : 2.29.4
+  //! version : 2.29.1
   //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
   //! license : MIT
   //! momentjs.com
@@ -1667,9 +1667,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function map(arr, fn) {
           var res = [],
-              i,
-              arrLen = arr.length;
-          for (i = 0; i < arrLen; ++i) {
+              i;
+          for (i = 0; i < arr.length; ++i) {
               res.push(fn(arr[i], i));
           }
           return res;
@@ -1798,10 +1797,7 @@ return /******/ (function(modules) { // webpackBootstrap
           updateInProgress = false;
 
       function copyConfig(to, from) {
-          var i,
-              prop,
-              val,
-              momentPropertiesLen = momentProperties.length;
+          var i, prop, val;
 
           if (!isUndefined(from._isAMomentObject)) {
               to._isAMomentObject = from._isAMomentObject;
@@ -1834,8 +1830,8 @@ return /******/ (function(modules) { // webpackBootstrap
               to._locale = from._locale;
           }
 
-          if (momentPropertiesLen > 0) {
-              for (i = 0; i < momentPropertiesLen; i++) {
+          if (momentProperties.length > 0) {
+              for (i = 0; i < momentProperties.length; i++) {
                   prop = momentProperties[i];
                   val = from[prop];
                   if (!isUndefined(val)) {
@@ -1890,9 +1886,8 @@ return /******/ (function(modules) { // webpackBootstrap
                   var args = [],
                       arg,
                       i,
-                      key,
-                      argLen = arguments.length;
-                  for (i = 0; i < argLen; i++) {
+                      key;
+                  for (i = 0; i < arguments.length; i++) {
                       arg = '';
                       if (typeof arguments[i] === 'object') {
                           arg += '\n[' + i + '] ';
@@ -2042,8 +2037,7 @@ return /******/ (function(modules) { // webpackBootstrap
           );
       }
 
-      var formattingTokens =
-              /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
+      var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|N{1,5}|YYYYYY|YYYYY|YYYY|YY|y{2,4}|yo?|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g,
           localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,
           formatFunctions = {},
           formatTokenFunctions = {};
@@ -2347,9 +2341,8 @@ return /******/ (function(modules) { // webpackBootstrap
           if (typeof units === 'object') {
               units = normalizeObjectUnits(units);
               var prioritized = getPrioritizedUnits(units),
-                  i,
-                  prioritizedLen = prioritized.length;
-              for (i = 0; i < prioritizedLen; i++) {
+                  i;
+              for (i = 0; i < prioritized.length; i++) {
                   this[prioritized[i].unit](units[prioritized[i].unit]);
               }
           } else {
@@ -2379,8 +2372,7 @@ return /******/ (function(modules) { // webpackBootstrap
           matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, // 123456789 123456789.123
           // any word (or two) characters or numbers including two/three word month in arabic.
           // includes scottish gaelic two word and hyphenated months
-          matchWord =
-              /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
+          matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i,
           regexes;
 
       regexes = {};
@@ -2406,12 +2398,15 @@ return /******/ (function(modules) { // webpackBootstrap
           return regexEscape(
               s
                   .replace('\\', '')
-                  .replace(
-                      /\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g,
-                      function (matched, p1, p2, p3, p4) {
-                          return p1 || p2 || p3 || p4;
-                      }
-                  )
+                  .replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (
+                      matched,
+                      p1,
+                      p2,
+                      p3,
+                      p4
+                  ) {
+                      return p1 || p2 || p3 || p4;
+                  })
           );
       }
 
@@ -2423,8 +2418,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       function addParseToken(token, callback) {
           var i,
-              func = callback,
-              tokenLen;
+              func = callback;
           if (typeof token === 'string') {
               token = [token];
           }
@@ -2433,8 +2427,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   array[callback] = toInt(input);
               };
           }
-          tokenLen = token.length;
-          for (i = 0; i < tokenLen; i++) {
+          for (i = 0; i < token.length; i++) {
               tokens[token[i]] = func;
           }
       }
@@ -2545,12 +2538,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // LOCALES
 
-      var defaultLocaleMonths =
-              'January_February_March_April_May_June_July_August_September_October_November_December'.split(
-                  '_'
-              ),
-          defaultLocaleMonthsShort =
-              'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_'),
+      var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split(
+              '_'
+          ),
+          defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split(
+              '_'
+          ),
           MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/,
           defaultMonthsShortRegex = matchWord,
           defaultMonthsRegex = matchWord;
@@ -2992,12 +2985,14 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('W', match1to2);
       addRegexToken('WW', match1to2, match2);
 
-      addWeekParseToken(
-          ['w', 'ww', 'W', 'WW'],
-          function (input, week, config, token) {
-              week[token.substr(0, 1)] = toInt(input);
-          }
-      );
+      addWeekParseToken(['w', 'ww', 'W', 'WW'], function (
+          input,
+          week,
+          config,
+          token
+      ) {
+          week[token.substr(0, 1)] = toInt(input);
+      });
 
       // HELPERS
 
@@ -3122,8 +3117,9 @@ return /******/ (function(modules) { // webpackBootstrap
           return ws.slice(n, 7).concat(ws.slice(0, n));
       }
 
-      var defaultLocaleWeekdays =
-              'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_'),
+      var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split(
+              '_'
+          ),
           defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_'),
           defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_'),
           defaultWeekdaysRegex = matchWord,
@@ -3671,11 +3667,6 @@ return /******/ (function(modules) { // webpackBootstrap
           return globalLocale;
       }
 
-      function isLocaleNameSane(name) {
-          // Prevent names that look like filesystem paths, i.e contain '/' or '\'
-          return name.match('^[^/\\\\]*$') != null;
-      }
-
       function loadLocale(name) {
           var oldLocale = null,
               aliasedRequire;
@@ -3684,8 +3675,7 @@ return /******/ (function(modules) { // webpackBootstrap
               locales[name] === undefined &&
               typeof module !== 'undefined' &&
               module &&
-              module.exports &&
-              isLocaleNameSane(name)
+              module.exports
           ) {
               try {
                   oldLocale = globalLocale._abbr;
@@ -3902,10 +3892,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // iso 8601 regex
       // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
-      var extendedIsoRegex =
-              /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
-          basicIsoRegex =
-              /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+      var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
+          basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d|))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([+-]\d\d(?::?\d\d)?|\s*Z)?)?$/,
           tzRegex = /Z|[+-]\d\d(?::?\d\d)?/,
           isoDates = [
               ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
@@ -3936,8 +3924,7 @@ return /******/ (function(modules) { // webpackBootstrap
           ],
           aspNetJsonRegex = /^\/?Date\((-?\d+)/i,
           // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
-          rfc2822 =
-              /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
+          rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/,
           obsOffsets = {
               UT: 0,
               GMT: 0,
@@ -3960,13 +3947,12 @@ return /******/ (function(modules) { // webpackBootstrap
               allowTime,
               dateFormat,
               timeFormat,
-              tzFormat,
-              isoDatesLen = isoDates.length,
-              isoTimesLen = isoTimes.length;
+              tzFormat;
 
           if (match) {
               getParsingFlags(config).iso = true;
-              for (i = 0, l = isoDatesLen; i < l; i++) {
+
+              for (i = 0, l = isoDates.length; i < l; i++) {
                   if (isoDates[i][1].exec(match[1])) {
                       dateFormat = isoDates[i][0];
                       allowTime = isoDates[i][2] !== false;
@@ -3978,7 +3964,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   return;
               }
               if (match[3]) {
-                  for (i = 0, l = isoTimesLen; i < l; i++) {
+                  for (i = 0, l = isoTimes.length; i < l; i++) {
                       if (isoTimes[i][1].exec(match[3])) {
                           // match[2] should be 'T' or space
                           timeFormat = (match[2] || ' ') + isoTimes[i][0];
@@ -4045,7 +4031,7 @@ return /******/ (function(modules) { // webpackBootstrap
       function preprocessRFC2822(s) {
           // Remove comments and folding whitespace and replace multiple-spaces with a single space
           return s
-              .replace(/\([^()]*\)|[\n\t]/g, ' ')
+              .replace(/\([^)]*\)|[\n\t]/g, ' ')
               .replace(/(\s\s+)/g, ' ')
               .replace(/^\s\s*/, '')
               .replace(/\s\s*$/, '');
@@ -4358,13 +4344,12 @@ return /******/ (function(modules) { // webpackBootstrap
               skipped,
               stringLength = string.length,
               totalParsedInputLength = 0,
-              era,
-              tokenLen;
+              era;
 
           tokens =
               expandFormat(config._f, config._locale).match(formattingTokens) || [];
-          tokenLen = tokens.length;
-          for (i = 0; i < tokenLen; i++) {
+
+          for (i = 0; i < tokens.length; i++) {
               token = tokens[i];
               parsedInput = (string.match(getParseRegexForToken(token, config)) ||
                   [])[0];
@@ -4459,16 +4444,15 @@ return /******/ (function(modules) { // webpackBootstrap
               i,
               currentScore,
               validFormatFound,
-              bestFormatIsValid = false,
-              configfLen = config._f.length;
+              bestFormatIsValid = false;
 
-          if (configfLen === 0) {
+          if (config._f.length === 0) {
               getParsingFlags(config).invalidFormat = true;
               config._d = new Date(NaN);
               return;
           }
 
-          for (i = 0; i < configfLen; i++) {
+          for (i = 0; i < config._f.length; i++) {
               currentScore = 0;
               validFormatFound = false;
               tempConfig = copyConfig({}, config);
@@ -4709,8 +4693,7 @@ return /******/ (function(modules) { // webpackBootstrap
       function isDurationValid(m) {
           var key,
               unitHasDecimal = false,
-              i,
-              orderLen = ordering.length;
+              i;
           for (key in m) {
               if (
                   hasOwnProp(m, key) &&
@@ -4723,7 +4706,7 @@ return /******/ (function(modules) { // webpackBootstrap
               }
           }
 
-          for (i = 0; i < orderLen; ++i) {
+          for (i = 0; i < ordering.length; ++i) {
               if (m[ordering[i]]) {
                   if (unitHasDecimal) {
                       return false; // only allow non-integers for smallest unit
@@ -5048,8 +5031,7 @@ return /******/ (function(modules) { // webpackBootstrap
           // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
           // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
           // and further modified to allow for strings containing both week and day
-          isoRegex =
-              /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+          isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
 
       function createDuration(input, key) {
           var duration = input,
@@ -5270,10 +5252,9 @@ return /******/ (function(modules) { // webpackBootstrap
                   'ms',
               ],
               i,
-              property,
-              propertyLen = properties.length;
+              property;
 
-          for (i = 0; i < propertyLen; i += 1) {
+          for (i = 0; i < properties.length; i += 1) {
               property = properties[i];
               propertyTest = propertyTest || hasOwnProp(input, property);
           }
@@ -5896,17 +5877,19 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('NNNN', matchEraName);
       addRegexToken('NNNNN', matchEraNarrow);
 
-      addParseToken(
-          ['N', 'NN', 'NNN', 'NNNN', 'NNNNN'],
-          function (input, array, config, token) {
-              var era = config._locale.erasParse(input, token, config._strict);
-              if (era) {
-                  getParsingFlags(config).era = era;
-              } else {
-                  getParsingFlags(config).invalidEra = input;
-              }
+      addParseToken(['N', 'NN', 'NNN', 'NNNN', 'NNNNN'], function (
+          input,
+          array,
+          config,
+          token
+      ) {
+          var era = config._locale.erasParse(input, token, config._strict);
+          if (era) {
+              getParsingFlags(config).era = era;
+          } else {
+              getParsingFlags(config).invalidEra = input;
           }
-      );
+      });
 
       addRegexToken('y', matchUnsigned);
       addRegexToken('yy', matchUnsigned);
@@ -6198,12 +6181,14 @@ return /******/ (function(modules) { // webpackBootstrap
       addRegexToken('GGGGG', match1to6, match6);
       addRegexToken('ggggg', match1to6, match6);
 
-      addWeekParseToken(
-          ['gggg', 'ggggg', 'GGGG', 'GGGGG'],
-          function (input, week, config, token) {
-              week[token.substr(0, 2)] = toInt(input);
-          }
-      );
+      addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (
+          input,
+          week,
+          config,
+          token
+      ) {
+          week[token.substr(0, 2)] = toInt(input);
+      });
 
       addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
           week[token] = hooks.parseTwoDigitYear(input);
@@ -7226,7 +7211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       //! moment.js
 
-      hooks.version = '2.29.4';
+      hooks.version = '2.29.1';
 
       setHookCallback(createLocal);
 
@@ -9034,6 +9019,11 @@ return /******/ (function(modules) { // webpackBootstrap
         converted[field] = value;
       }
     }
+
+    if (!converted[this._fieldId]) {
+      converted[this._fieldId] = id;
+    }
+
     return converted;
   };
 
@@ -18293,9 +18283,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
       /*
        Copyright (c) 2011 Andrei Mackenzie
-        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
 
     }, {
@@ -19752,7 +19742,44 @@ return /******/ (function(modules) { // webpackBootstrap
       if (me.isActive()) {
         me.emit('mousewheel', event);
       }
+
+      // prevent scrolling when zoomKey defined or activated
+      if (!me.options.zoomKey || event[me.options.zoomKey]) return;
+
+      var delta = 0;
+      if (event.wheelDelta) {
+        /* IE/Opera. */
+        delta = event.wheelDelta / 120;
+      } else if (event.detail) {
+        /* Mozilla case. */
+        // In Mozilla, sign of delta is different than in IE.
+        // Also, delta is multiple of 3.
+        delta = -event.detail / 3;
+      }
+
+      var current = me.props.scrollTop;
+      var adjusted = current + delta * 120;
+      if (me.isActive()) {
+        me._setScrollTop(adjusted);
+        me._redraw();
+        me.emit('scroll', event);
+      }
+
+      // Prevent default actions caused by mouse wheel
+      // (else the page and timeline both scroll)
+      event.preventDefault();
     }
+
+    if (this.dom.root.addEventListener) {
+      // IE9, Chrome, Safari, Opera
+      this.dom.root.addEventListener("mousewheel", onMouseWheel, false);
+      // Firefox
+      this.dom.root.addEventListener("DOMMouseScroll", onMouseWheel, false);
+    } else {
+      // IE 6/7/8
+      this.dom.root.attachEvent("onmousewheel", onMouseWheel);
+    }
+
     this.dom.root.addEventListener('mousewheel', onMouseWheel);
     this.dom.root.addEventListener('DOMMouseScroll', onMouseWheel);
 
@@ -19816,7 +19843,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Core.prototype.setOptions = function (options) {
     if (options) {
       // copy the known options
-      var fields = ['width', 'height', 'minHeight', 'maxHeight', 'autoResize', 'start', 'end', 'clickToUse', 'dataAttributes', 'hiddenDates', 'locale', 'locales', 'moment', 'throttleRedraw'];
+      var fields = ['width', 'height', 'minHeight', 'maxHeight', 'autoResize', 'start', 'end', 'clickToUse', 'dataAttributes', 'hiddenDates', 'locale', 'locales', 'moment', 'rtl', 'zoomKey', 'throttleRedraw'];
       util.selectiveExtend(fields, this.options, options);
 
       this.options.orientation = { item: undefined, axis: undefined };
@@ -20217,7 +20244,8 @@ return /******/ (function(modules) { // webpackBootstrap
     this.redrawCount++;
     var dom = this.dom;
 
-    if (!dom || !dom.container || dom.container.clientWidth == 0) return; // when destroyed, or invisible
+    if (!dom || !dom.container) return;
+    if (dom.container.clientWidth == 0) return; // when destroyed, or invisible
 
     var resized = false;
     var options = this.options;
@@ -20500,22 +20528,25 @@ return /******/ (function(modules) { // webpackBootstrap
     this._stopAutoResize();
 
     this._onResize = function () {
+      var meDom = me.dom;
+      var meDomRoot = meDom.root;
       if (me.options.autoResize != true) {
         // stop watching when the option autoResize is changed to false
         me._stopAutoResize();
         return;
       }
 
-      if (me.dom && me.dom.root) {
-        var rootOffsetHeight = me.dom.root.offsetHeight;
-        var rootOffsetWidth = me.dom.root.offsetWidth;
+      if (meDom && meDomRoot) {
+        var rootOffsetHeight = meDomRoot.offsetHeight;
+        var rootOffsetWidth = meDomRoot.offsetWidth;
+        var meProps = me.props;
         // check whether the frame is resized
         // Note: we compare offsetWidth here, not clientWidth. For some reason,
         // IE does not restore the clientWidth from 0 to the actual width after
         // changing the timeline's container display style from none to visible
-        if (rootOffsetWidth != me.props.lastWidth || rootOffsetHeight != me.props.lastHeight) {
-          me.props.lastWidth = rootOffsetWidth;
-          me.props.lastHeight = rootOffsetHeight;
+        if (rootOffsetWidth != meProps.lastWidth || rootOffsetHeight != meProps.lastHeight) {
+          meProps.lastWidth = rootOffsetWidth;
+          meProps.lastHeight = rootOffsetHeight;
 
           me.body.emitter.emit('_change');
           if (!me.body.reduceRedraw && me.body.eventOnDrawn) {
@@ -20804,7 +20835,6 @@ return /******/ (function(modules) { // webpackBootstrap
     this.groupIds = [];
 
     this.selection = []; // list with the ids of all selected nodes
-    this.stackDirty = true; // if true, all items will be restacked on next redraw
 
     this.touchParams = {}; // stores properties while dragging
     this.groupTouchParams = {};
@@ -21159,7 +21189,7 @@ return /******/ (function(modules) { // webpackBootstrap
     for (var groupId in this.groups) {
       if (this.groups.hasOwnProperty(groupId)) {
         var group = this.groups[groupId];
-        var rawVisibleItems = group.visibleItems;
+        var rawVisibleItems = group.isVisible ? group.visibleItems : [];
 
         // filter the "raw" set with visibleItems into a set which is really
         // visible by pixels
@@ -21220,11 +21250,12 @@ return /******/ (function(modules) { // webpackBootstrap
     // TODO: would be nicer to get this as a trigger from Range
     var visibleInterval = range.end - range.start;
     var zoomed = visibleInterval != this.lastVisibleInterval || this.props.width != this.props.lastWidth;
-    if (zoomed) this.stackDirty = true;
+    var scrolled = range.start != this.lastRangeStart;
+    var forceRestack = zoomed || scrolled;
     this.lastVisibleInterval = visibleInterval;
+    this.lastRangeStart = range.start;
     this.props.lastWidth = this.props.width;
 
-    var restack = this.stackDirty;
     var firstGroup = this._firstGroup();
     var firstMargin = {
       item: margin.item,
@@ -21238,17 +21269,16 @@ return /******/ (function(modules) { // webpackBootstrap
     var minHeight = margin.axis + margin.item.vertical;
 
     // redraw the background group
-    this.groups[BACKGROUND].redraw(range, nonFirstMargin, restack);
+    this.groups[BACKGROUND].redraw(range, nonFirstMargin, forceRestack);
 
     // redraw all regular groups
     util.forEach(this.groups, function (group) {
       var groupMargin = group == firstGroup ? firstMargin : nonFirstMargin;
-      var groupResized = group.redraw(range, groupMargin, restack, timeline);
+      var groupResized = group.redraw(range, groupMargin, forceRestack, timeline);
       resized = groupResized || resized;
       height += group.height;
     });
     height = Math.max(height, minHeight);
-    this.stackDirty = false;
 
     // update frame height
     frame.style.height = asSize(height);
@@ -21286,7 +21316,6 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   ItemSet.prototype._updateUngrouped = function () {
     var ungrouped = this.groups[UNGROUPED];
-    var background = this.groups[BACKGROUND];
     var item, itemId;
 
     if (this.groupsData) {
@@ -21545,7 +21574,6 @@ return /******/ (function(modules) { // webpackBootstrap
     }.bind(this));
 
     this._order();
-    this.stackDirty = true; // force re-stacking of all items next redraw
     if (this.body && this.body.emitter) this.body.emitter.emit('_change', { queue: true });
   };
 
@@ -21575,7 +21603,6 @@ return /******/ (function(modules) { // webpackBootstrap
     if (count) {
       // update order
       this._order();
-      this.stackDirty = true; // force re-stacking of all items next redraw
       this.body.emitter.emit('_change', { queue: true });
     }
   };
@@ -22029,7 +22056,6 @@ return /******/ (function(modules) { // webpackBootstrap
         }.bind(this));
       }.bind(this));
 
-      this.stackDirty = true; // force re-stacking of all items next redraw
       this.body.emitter.emit('_change');
     }
   };
@@ -22080,7 +22106,6 @@ return /******/ (function(modules) { // webpackBootstrap
             }
 
             // force re-stacking of all items next redraw
-            me.stackDirty = true;
             me.body.emitter.emit('_change');
           });
         } else {
@@ -22095,7 +22120,6 @@ return /******/ (function(modules) { // webpackBootstrap
               // restore original values
               props.item.setData(props.data);
 
-              me.stackDirty = true; // force re-stacking of all items next redraw
               me.body.emitter.emit('_change');
             }
           });
@@ -23625,6 +23649,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Group.prototype.add = function (item) {
     this.items[item.id] = item;
     item.setParent(this);
+    this.stackDirty = true;
 
     // add to
     if (item.data.subgroup !== undefined) {
@@ -23684,6 +23709,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Group.prototype.remove = function (item) {
     delete this.items[item.id];
     item.setParent(null);
+    this.stackDirty = true;
 
     // remove from visible items
     var index = this.visibleItems.indexOf(item);
@@ -24373,6 +24399,7 @@ return /******/ (function(modules) { // webpackBootstrap
     if (groupChanged) {
       this.parent.itemSet._moveToGroup(this, data.group);
     }
+    this.parent.stackDirty = true;
 
     if (data.hasOwnProperty('editable') && typeof data.editable === 'boolean') {
       this.editable = data.editable;
@@ -25012,12 +25039,9 @@ return /******/ (function(modules) { // webpackBootstrap
    * @Override
    */
   RangeItem.prototype.repositionX = function (limitSize, group) {
-    var prop = this.data.prop;
-
     var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
     var elementOffSetWidth = group.body.domProps.center.width;
     var widthElement = parseFloat(elementOffSetWidth / elementHeaderWidthItem.length).toFixed(2);
-    var parentWidth = this.parent.width;
     var start = this.conversion.toScreen(this.data.start);
     var end = this.conversion.toScreen(this.data.end);
     var contentLeft = void 0;
@@ -25051,11 +25075,14 @@ return /******/ (function(modules) { // webpackBootstrap
       }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
     } else if (this.data.id && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && elementOffSetWidth) {
+      var prop = this.data.prop;
+
       if (['tablemode', 'tablemode_multiple_values'].indexOf(prop.type) > -1) {
         var dataIdItemSplit = this.data.id.split('_');
-        this.dom.box.classList.toggle('tablemode-fit', false);
-        var calcPositionStart = parseInt(dataIdItemSplit[1]) * widthElement;
-        var calcPositionEnd = (parseInt(dataIdItemSplit[1]) + 1) * widthElement;
+        var dataIdItemSplit_1 = parseInt(dataIdItemSplit[1]);
+        this.dom.box.classList.remove('tablemode-fit');
+        var calcPositionStart = dataIdItemSplit_1 * widthElement;
+        var calcPositionEnd = (dataIdItemSplit_1 + 1) * widthElement;
         start = calcPositionStart;
         end = start == 0 ? widthElement : calcPositionEnd;
       } else if (group) {
@@ -25076,6 +25103,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // limit the width of the range, as browsers cannot draw very wide divs
     if (limitSize === undefined || limitSize === true) {
+      var parentWidth = this.parent.width;
       if (start < -parentWidth) {
         start = -parentWidth;
       }
@@ -25253,7 +25281,7 @@ return /******/ (function(modules) { // webpackBootstrap
    */
   BackgroundItem.prototype.isVisible = function (range) {
     // determine visibility
-    return this.data.start < range.end && this.data.end > range.start;
+    return true; // (this.data.start < range.end) && (this.data.end > range.start);
   };
 
   /**
@@ -25311,8 +25339,8 @@ return /******/ (function(modules) { // webpackBootstrap
       this._updateStyle(this.dom.box);
 
       // update class
-      var className = (this.data.className ? ' ' + this.data.className : '') + (this.selected ? ' vis-selected' : '');
-      dom.box.className = this.baseClassName + className;
+      var className = (this.data.className ? ' ' + this.data.className : '') + ' ' + (this.selected ? ' vis-selected' : '');
+      dom.box.className = this.baseClassName + ' ' + className;
 
       // determine from css whether this box has overflow
       this.overflow = window.getComputedStyle(dom.content).overflow !== 'hidden';
@@ -27472,7 +27500,7 @@ return /******/ (function(modules) { // webpackBootstrap
     // create svg element for graph drawing.
     this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     this.svg.style.position = 'relative';
-    this.svg.style.height = ('' + this.options.graphHeight).replace('px', '') + 'px';
+    this.svg.style.height = this.options.graphHeight.toString().replace('px', '') + 'px';
     this.svg.style.display = 'block';
     frame.appendChild(this.svg);
 
@@ -27503,7 +27531,7 @@ return /******/ (function(modules) { // webpackBootstrap
       if (options.graphHeight === undefined && options.height !== undefined) {
         this.updateSVGheight = true;
         this.updateSVGheightOnResize = true;
-      } else if (this.body.domProps.centerContainer.height !== undefined && options.graphHeight !== undefined && parseInt((options.graphHeight + '').replace("px", '')) < this.body.domProps.centerContainer.height) {
+      } else if (this.body.domProps.centerContainer.height !== undefined && options.graphHeight !== undefined && parseInt(options.graphHeight.toString().replace('px', '')) < this.body.domProps.centerContainer.height) {
         this.updateSVGheight = true;
       }
       util.selectiveDeepExtend(fields, this.options, options);
@@ -27776,7 +27804,7 @@ return /******/ (function(modules) { // webpackBootstrap
       if (!groupsContent.hasOwnProperty(_groupId)) {
         groupsContent[_groupId] = new Array(groupCounts[_groupId]);
       }
-      //Copy data (because of unmodifiable DataView input.
+      // Copy data (because of unmodifiable DataView input.
       var extended = util.bridgeObject(_item);
       extended.x = util.convert(_item.x, 'Date');
       extended.orginalY = _item.y; //real Y
@@ -27878,20 +27906,21 @@ return /******/ (function(modules) { // webpackBootstrap
       this.svg.style.width = util.option.asSize(this.props.width);
 
       // if the height of the graph is set as proportional, change the height of the svg
-      if ((this.options.height + '').indexOf("%") !== -1 || this.updateSVGheightOnResize === true) {
+      if (this.options.height.toString().indexOf("%") !== -1 || this.updateSVGheightOnResize === true) {
         this.updateSVGheight = true;
       }
     }
 
     // update the height of the graph on each redraw of the graph.
     if (this.updateSVGheight === true) {
-      if (this.options.graphHeight !== this.props.height + 'px') {
-        this.options.graphHeight = this.props.height + 'px';
-        this.svg.style.height = this.props.height + 'px';
+      var propsHeight = this.props.height + 'px';
+      if (this.options.graphHeight !== propsHeight) {
+        this.options.graphHeight = propsHeight;
+        this.svg.style.height = propsHeight;
       }
       this.updateSVGheight = false;
     } else {
-      this.svg.style.height = ('' + this.options.graphHeight).replace('px', '') + 'px';
+      this.svg.style.height = this.options.graphHeight.toString().replace('px', '') + 'px';
     }
 
     // zoomed is here to ensure that animations are shown correctly.
@@ -28396,28 +28425,29 @@ return /******/ (function(modules) { // webpackBootstrap
     var widthTimeline = dataRegion ? dataRegion.offsetWidth : 0;
 
     var _loop = function _loop(i) {
+      var dataPointItem = datapoints[i];
       if (_this6.body.range.options.gap === 0) {
-        datapoints[i].screen_x = _this6._calculateGapPositionVIS(datapoints[i].x, widthTimeline);
+        dataPointItem.screen_x = _this6._calculateGapPositionVIS(dataPointItem.x, widthTimeline);
       } else {
         var factor = _this6.body.range.end - _this6.body.range.start;
-        var xToPercent = (datapoints[i].x.getTime() - _this6.body.range.start) * 100 / factor;
+        var xToPercent = (dataPointItem.x.getTime() - _this6.body.range.start) * 100 / factor;
         xToPercent = Number.isNaN(xToPercent) ? 0 : xToPercent;
         if (_this6.body.totalizer && _this6.body.totalizer.periods && _this6.body.totalizer.periods.length > 0) {
           totalizers = _this6.body.totalizer.periods.filter(function (x) {
             return x.end.valueOf() > _this6.body.range.start && x.end.valueOf() < _this6.body.range.end;
           });
           filteredTotalizers = totalizers.filter(function (x) {
-            return x.end.valueOf() < datapoints[i].x.getTime();
+            return x.end.valueOf() < dataPointItem.x.getTime();
           });
           columnWidth = _this6.props.width / (factor / (3600000 * _this6.body.range.options.gap) + totalizers.length);
 
-          datapoints[i].screen_x = (_this6.props.width - totalizers.length * columnWidth) * xToPercent / 100 + filteredTotalizers.length * columnWidth;
+          dataPointItem.screen_x = (_this6.props.width - totalizers.length * columnWidth) * xToPercent / 100 + filteredTotalizers.length * columnWidth;
         } else {
-          datapoints[i].screen_x = _this6.props.width * xToPercent / 100;
+          dataPointItem.screen_x = _this6.props.width * xToPercent / 100;
         }
       }
 
-      datapoints[i].screen_y = datapoints[i].y; //starting point for range calculations
+      dataPointItem.screen_y = dataPointItem.y; //starting point for range calculations
     };
 
     for (var i = 0; i < datapoints.length; i++) {
@@ -28433,60 +28463,26 @@ return /******/ (function(modules) { // webpackBootstrap
     // where widthTimeline 0 return 0
     if (widthTimeline === 0) return 0;
 
-    var dateStart = new Date(this.body.range.start);
+    var dateElement = new Date(x);
+    var index = 0;
+    // if the hours difference comes negative it calculates with one more day
+    var diffNegative = function diffNegative(dateStart, dateEnd) {
+      var diffFunction = dateStart.diff(dateEnd);
+      if (diffFunction < 1) diffNegative(dateStart.add(1, 'day'), dateEnd);
+      return diffFunction;
+    };
 
-    // calculate when gap === 0 (fit)
-    if (this.body.range.options.gap === 0) {
-      var dateElement = new Date(x);
-      var index = 0;
-      // if the hours difference comes negative it calculates with one more day
-      var diffNegative = function diffNegative(dateStart, dateEnd) {
-        var diffFunction = dateStart.diff(dateEnd);
-        if (diffFunction < 1) diffNegative(dateStart.add(1, 'day'), dateEnd);
-        return diffFunction;
-      };
+    // scrolls through the items in the settingbar
+    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
+    var elementHeaderWidth = document.querySelector('.tl-setting-bar');
 
-      // scrolls through the items in the settingbar
-      var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
-      var elementHeaderWidth = document.querySelector('.tl-setting-bar');
+    Object.values(elementHeaderWidth.children).forEach(function (item) {
+      if (new Date(item.__time).getTime() == dateElement.getTime()) index = parseInt(item.children[0].attributes.index.value);
+    });
 
-      Object.values(elementHeaderWidth.children).forEach(function (item) {
-        if (new Date(item.__time).getTime() == dateElement.getTime()) index = parseInt(item.children[0].attributes.index.value);
-      });
-
-      //multiplies the index with the width of the settingbar item and adds half more width to align correctly
-      var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
-      return widthElement * index;
-    } else {
-      var gap = 0;
-      if (this.body.range.options.gap < .05) gap = 1 / this.body.range.options.gap * .028;else if (this.body.range.options.gap < .1) gap = 1 / this.body.range.options.gap * .15;else if (this.body.range.options.gap < .5) gap = 1 / this.body.range.options.gap * .5;else if (this.body.range.options.gap < 1) gap = 1 / this.body.range.options.gap * 1.15;else if (this.body.range.options.gap === 1) gap = this.body.range.options.gap * 2.45;else if (this.body.range.options.gap === 2) gap = this.body.range.options.gap * .85;else if (this.body.range.options.gap < 5) gap = this.body.range.options.gap * .95;else gap = this.body.range.options.gap * 1.05;
-
-      //width timeline > 1000
-      if (widthTimeline > 1000) {
-        gap = gap + .75;
-        if (gap > 5) gap = gap + 1.75;
-        if (this.body.range.options.gap === 1) gap = 0;
-        gap = Math.round(gap);
-      }
-
-      //width timeline < 800
-      if (widthTimeline < 800) {
-        if (this.body.range.options.gap < .05) gap = gap * .0125;else if (this.body.range.options.gap < 1) gap = gap * .45;
-        if (this.body.range.options.gap > 1) gap = gap + .75;
-        if (gap > 8) gap = gap * .75;
-        if (this.body.range.options.gap === 1) gap = gap * .6;
-      }
-
-      var dateItem = new Date(x);
-      var timeDiff = Math.abs(dateItem.getTime() - dateStart.getTime());
-      var diffHours = parseFloat(timeDiff / (1000 * 60 * 60));
-      var valueDiffWidth = this.props.width / widthTimeline;
-
-      var valueScreenSmall = valueDiffWidth > 1 || widthTimeline < 800 ? 0 : 2.5 * diffHours;
-      valueDiffWidth = this.body.range.options.gap < 1 && widthTimeline < 800 ? valueDiffWidth / gap + this.body.range.options.gap * 2.25 : valueDiffWidth;
-
-      return parseInt(valueDiffWidth * gap * diffHours) + valueScreenSmall;
-    }
+    //multiplies the index with the width of the settingbar item and adds half more width to align correctly
+    var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+    return widthElement * index;
   };
 
   /**
@@ -29520,19 +29516,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
       this.dom.frame.removeChild(measureCharMajor);
     }
-
-    if (!('titleCharHeight' in this.props)) {
-      var textTitle = document.createTextNode('0');
-      var measureCharTitle = document.createElement('div');
-      measureCharTitle.className = 'vis-y-axis vis-title vis-measure';
-      measureCharTitle.appendChild(textTitle);
-      this.dom.frame.appendChild(measureCharTitle);
-
-      this.props.titleCharHeight = measureCharTitle.clientHeight;
-      this.props.titleCharWidth = measureCharTitle.clientWidth;
-
-      this.dom.frame.removeChild(measureCharTitle);
-    }
   };
 
   module.exports = DataAxis;
@@ -29800,7 +29783,6 @@ return /******/ (function(modules) { // webpackBootstrap
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
   var util = __webpack_require__(1);
-  var DOMutil = __webpack_require__(7);
   var Bars = __webpack_require__(51);
   var Lines = __webpack_require__(56);
   var Points = __webpack_require__(52);
@@ -30522,7 +30504,7 @@ return /******/ (function(modules) { // webpackBootstrap
         labelOffsetX: 10,
         labelOffsetY: 2,
         iconWidth: 20,
-        width: dataRegionTimeline ? parseInt(dataRegionTimeline.offsetWidth / 26) + 'px' : '0px',
+        width: 0, // (dataRegionTimeline) ? `${parseInt(dataRegionTimeline.offsetWidth / 26)}px` : '0px',
         visible: true,
         alignZeros: true,
         data: undefined,
@@ -32828,51 +32810,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _Images2 = _interopRequireDefault(_Images);
 
-  var _Groups = __webpack_require__(69);
+  var _Groups = __webpack_require__(70);
 
   var _Groups2 = _interopRequireDefault(_Groups);
 
-  var _NodesHandler = __webpack_require__(70);
+  var _NodesHandler = __webpack_require__(71);
 
   var _NodesHandler2 = _interopRequireDefault(_NodesHandler);
 
-  var _EdgesHandler = __webpack_require__(90);
+  var _EdgesHandler = __webpack_require__(91);
 
   var _EdgesHandler2 = _interopRequireDefault(_EdgesHandler);
 
-  var _PhysicsEngine = __webpack_require__(99);
+  var _PhysicsEngine = __webpack_require__(100);
 
   var _PhysicsEngine2 = _interopRequireDefault(_PhysicsEngine);
 
-  var _Clustering = __webpack_require__(108);
+  var _Clustering = __webpack_require__(112);
 
   var _Clustering2 = _interopRequireDefault(_Clustering);
 
-  var _CanvasRenderer = __webpack_require__(111);
+  var _CanvasRenderer = __webpack_require__(115);
 
   var _CanvasRenderer2 = _interopRequireDefault(_CanvasRenderer);
 
-  var _Canvas = __webpack_require__(112);
+  var _Canvas = __webpack_require__(116);
 
   var _Canvas2 = _interopRequireDefault(_Canvas);
 
-  var _View = __webpack_require__(113);
+  var _View = __webpack_require__(117);
 
   var _View2 = _interopRequireDefault(_View);
 
-  var _InteractionHandler = __webpack_require__(114);
+  var _InteractionHandler = __webpack_require__(118);
 
   var _InteractionHandler2 = _interopRequireDefault(_InteractionHandler);
 
-  var _SelectionHandler = __webpack_require__(117);
+  var _SelectionHandler = __webpack_require__(121);
 
   var _SelectionHandler2 = _interopRequireDefault(_SelectionHandler);
 
-  var _LayoutEngine = __webpack_require__(118);
+  var _LayoutEngine = __webpack_require__(122);
 
   var _LayoutEngine2 = _interopRequireDefault(_LayoutEngine);
 
-  var _ManipulationSystem = __webpack_require__(119);
+  var _ManipulationSystem = __webpack_require__(123);
 
   var _ManipulationSystem2 = _interopRequireDefault(_ManipulationSystem);
 
@@ -32884,25 +32866,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _Validator2 = _interopRequireDefault(_Validator);
 
-  var _options = __webpack_require__(120);
+  var _options = __webpack_require__(124);
 
-  var _KamadaKawai = __webpack_require__(121);
+  var _KamadaKawai = __webpack_require__(125);
 
   var _KamadaKawai2 = _interopRequireDefault(_KamadaKawai);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   // Load custom shapes into CanvasRenderingContext2D
-  __webpack_require__(123);
+  __webpack_require__(127);
 
   var Emitter = __webpack_require__(13);
   var util = __webpack_require__(1);
   var DataSet = __webpack_require__(9);
   var DataView = __webpack_require__(11);
-  var dotparser = __webpack_require__(124);
-  var gephiParser = __webpack_require__(125);
+  var dotparser = __webpack_require__(128);
+  var gephiParser = __webpack_require__(129);
   var Activator = __webpack_require__(43);
-  var locales = __webpack_require__(126);
+  var locales = __webpack_require__(130);
 
   /**
    * @constructor Network
@@ -33144,6 +33126,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.body.emitter.on("_dataChanged", function () {
       // update shortcut lists
       _this3._updateVisibleIndices();
+      _this3.physics.initPhysicsData();
       _this3.body.emitter.emit("_requestRedraw");
       // call the dataUpdated event because the only difference between the two is the updating of the indices
       _this3.body.emitter.emit("_dataUpdated");
@@ -33455,7 +33438,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 68 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
 
@@ -33464,6 +33447,12 @@ return /******/ (function(modules) { // webpackBootstrap
   });
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _CachedImage = __webpack_require__(69);
+
+  var _CachedImage2 = _interopRequireDefault(_CachedImage);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -33481,48 +33470,26 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       /**
-       * @param {string} url                      The Url to cache the image as 
-        * @return {Image} imageToLoadBrokenUrlOn  The image object
+       * @param {string} url                      The original Url that failed to load, if the broken image is successfully loaded it will be added to the cache using this Url as the key so that subsequent requests for this Url will return the broken image
+       * @param {string} brokenUrl                Url the broken image to try and load
+       * @return {Image} imageToLoadBrokenUrlOn   The image object
        */
 
 
       _createClass(Images, [{
-          key: "_addImageToCache",
-          value: function _addImageToCache(url, imageToCache) {
-              // IE11 fix -- thanks dponch!
-              if (imageToCache.width === 0) {
-                  document.body.appendChild(imageToCache);
-                  imageToCache.width = imageToCache.offsetWidth;
-                  imageToCache.height = imageToCache.offsetHeight;
-                  document.body.removeChild(imageToCache);
-              }
-
-              this.images[url] = imageToCache;
-          }
-
-          /**
-           * @param {string} url                      The original Url that failed to load, if the broken image is successfully loaded it will be added to the cache using this Url as the key so that subsequent requests for this Url will return the broken image
-           * @param {string} brokenUrl                Url the broken image to try and load
-           * @return {Image} imageToLoadBrokenUrlOn   The image object
-           */
-
-      }, {
           key: "_tryloadBrokenUrl",
           value: function _tryloadBrokenUrl(url, brokenUrl, imageToLoadBrokenUrlOn) {
-              var _this = this;
-
               //If any of the parameters aren't specified then exit the function because nothing constructive can be done
               if (url === undefined || brokenUrl === undefined || imageToLoadBrokenUrlOn === undefined) return;
 
               //Clear the old subscription to the error event and put a new in place that only handle errors in loading the brokenImageUrl
               imageToLoadBrokenUrlOn.onerror = function () {
                   console.error("Could not load brokenImage:", brokenUrl);
-                  //Add an empty image to the cache so that when subsequent load calls are made for the url we don't try load the image and broken image again
-                  _this._addImageToCache(url, new Image());
+                  // cache item will contain empty image, this should be OK for default
               };
 
               //Set the source of the image to the brokenUrl, this is actually what kicks off the loading of the broken image
-              imageToLoadBrokenUrlOn.src = brokenUrl;
+              imageToLoadBrokenUrlOn.image.src = brokenUrl;
           }
 
           /**
@@ -33546,34 +33513,58 @@ return /******/ (function(modules) { // webpackBootstrap
       }, {
           key: "load",
           value: function load(url, brokenUrl, id) {
-              var _this2 = this;
+              var _this = this;
 
               //Try and get the image from the cache, if successful then return the cached image   
               var cachedImage = this.images[url];
               if (cachedImage) return cachedImage;
 
               //Create a new image
-              var img = new Image();
+              var img = new _CachedImage2.default();
+
+              // Need to add to cache here, otherwise final return will spawn different copies of the same image,
+              // Also, there will be multiple loads of the same image.
+              this.images[url] = img;
 
               //Subscribe to the event that is raised if the image loads successfully 
-              img.onload = function () {
-                  //Add the image to the cache and then request a redraw
-                  _this2._addImageToCache(url, img);
-                  _this2._redrawWithImage(img);
+              img.image.onload = function () {
+                  // Properly init the cached item and then request a redraw
+                  _this._fixImageCoordinates(img.image);
+                  img.init();
+                  _this._redrawWithImage(img);
               };
 
               //Subscribe to the event that is raised if the image fails to load
-              img.onerror = function () {
+              img.image.onerror = function () {
                   console.error("Could not load image:", url);
                   //Try and load the image specified by the brokenUrl using
-                  _this2._tryloadBrokenUrl(url, brokenUrl, img);
+                  _this._tryloadBrokenUrl(url, brokenUrl, img);
               };
 
-              //Set the source of the image to the url, this is actuall what kicks off the loading of the image
-              img.src = url;
+              //Set the source of the image to the url, this is what actually kicks off the loading of the image
+              img.image.src = url;
 
               //Return the new image
               return img;
+          }
+
+          /**
+           * IE11 fix -- thanks dponch!
+           *
+           * Local helper function
+           *
+           * @private
+           */
+
+      }, {
+          key: "_fixImageCoordinates",
+          value: function _fixImageCoordinates(imageToCache) {
+              if (imageToCache.width === 0) {
+                  document.body.appendChild(imageToCache);
+                  imageToCache.width = imageToCache.offsetWidth;
+                  imageToCache.height = imageToCache.offsetHeight;
+                  document.body.removeChild(imageToCache);
+              }
           }
       }]);
 
@@ -33584,6 +33575,184 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 69 */
+/***/ (function(module, exports) {
+
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  /**
+   * Associates a canvas to a given image, containing a number of renderings
+   * of the image at various sizes.
+   *
+   * This technique is known as 'mipmapping'.
+   *
+   * NOTE: Images can also be of type 'data:svg+xml`. This code also works
+   *       for svg, but the mipmapping may not be necessary.
+   */
+  var CachedImage = function () {
+    function CachedImage(image) {
+      _classCallCheck(this, CachedImage);
+
+      this.NUM_ITERATIONS = 4; // Number of items in the coordinates array
+
+      this.image = new Image();
+      this.canvas = document.createElement('canvas');
+    }
+
+    /**
+     * Called when the image has been succesfully loaded.
+     */
+
+
+    _createClass(CachedImage, [{
+      key: 'init',
+      value: function init() {
+        if (this.initialized()) return;
+
+        var w = this.image.width;
+        var h = this.image.height;
+
+        // Ease external access
+        this.width = w;
+        this.height = h;
+
+        // Make canvas as small as possible
+        this.canvas.width = 3 * w / 4;
+        this.canvas.height = h / 2;
+
+        // Coordinates and sizes of images contained in the canvas
+        // Values per row:  [top x, left y, width, height]
+        this.coordinates = [[0, 0, w / 2, h / 2], [w / 2, 0, w / 4, h / 4], [w / 2, h / 4, w / 8, h / 8], [5 * w / 8, h / 4, w / 16, h / 16]];
+
+        this._fillMipMap();
+      }
+
+      /**
+       * @return {Boolean} true if init() has been called, false otherwise.
+       */
+
+    }, {
+      key: 'initialized',
+      value: function initialized() {
+        return this.coordinates !== undefined;
+      }
+
+      /**
+       * Redraw main image in various sizes to the context.
+       *
+       * The rationale behind this is to reduce artefacts due to interpolation
+       * at differing zoom levels.
+       *
+       * Source: http://stackoverflow.com/q/18761404/1223531
+       *
+       * This methods takes the resizing out of the drawing loop, in order to
+       * reduce performance overhead.
+       *
+       * @private
+       */
+
+    }, {
+      key: '_fillMipMap',
+      value: function _fillMipMap() {
+        var ctx = this.canvas.getContext('2d');
+
+        // First zoom-level comes from the image
+        var to = this.coordinates[0];
+        ctx.drawImage(this.image, to[0], to[1], to[2], to[3]);
+
+        // The rest are copy actions internal to the canvas/context
+        for (var iterations = 1; iterations < this.NUM_ITERATIONS; iterations++) {
+          var from = this.coordinates[iterations - 1];
+          var _to = this.coordinates[iterations];
+
+          ctx.drawImage(this.canvas, from[0], from[1], from[2], from[3], _to[0], _to[1], _to[2], _to[3]);
+        }
+      }
+
+      /**
+       * Draw the image, using the mipmap if necessary.
+       *
+       * MipMap is only used if param factor > 2; otherwise, original bitmap
+       * is resized. This is also used to skip mipmap usage, e.g. by setting factor = 1
+       *
+       * Credits to 'Alex de Mulder' for original implementation.
+       *
+       * ctx    {Context} context on which to draw zoomed image
+       * factor {Float}   scale factor at which to draw
+       */
+
+    }, {
+      key: 'drawImageAtPosition',
+      value: function drawImageAtPosition(ctx, factor, left, top, width, height) {
+        if (factor > 2 && this.initialized()) {
+          // Determine which zoomed image to use
+          factor *= 0.5;
+          var iterations = 0;
+          while (factor > 2 && iterations < this.NUM_ITERATIONS) {
+            factor *= 0.5;
+            iterations += 1;
+          }
+
+          if (iterations >= this.NUM_ITERATIONS) {
+            iterations = this.NUM_ITERATIONS - 1;
+          }
+          //console.log("iterations: " + iterations);
+
+          var from = this.coordinates[iterations];
+          ctx.drawImage(this.canvas, from[0], from[1], from[2], from[3], left, top, width, height);
+        } else if (this._isImageOk()) {
+          // Draw image directly
+          ctx.drawImage(this.image, left, top, width, height);
+        }
+      }
+
+      /**
+       * Check if image is loaded
+       *
+       * Source: http://stackoverflow.com/a/1977898/1223531
+       *
+       * @private
+       */
+
+    }, {
+      key: '_isImageOk',
+      value: function _isImageOk(img) {
+        var img = this.image;
+
+        // During the onload event, IE correctly identifies any images that
+        // weren’t downloaded as not complete. Others should too. Gecko-based
+        // browsers act like NS4 in that they report this incorrectly.
+        if (!img.complete) {
+          return false;
+        }
+
+        // However, they do have two very useful properties: naturalWidth and
+        // naturalHeight. These give the true size of the image. If it failed
+        // to load, either of these should be zero.
+
+        if (typeof img.naturalWidth !== "undefined" && img.naturalWidth === 0) {
+          return false;
+        }
+
+        // No other way of checking: assume it’s ok.
+        return true;
+      }
+    }]);
+
+    return CachedImage;
+  }();
+
+  exports.default = CachedImage;
+
+/***/ }),
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -33727,7 +33896,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Groups;
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -33738,11 +33907,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Node = __webpack_require__(71);
+  var _Node = __webpack_require__(72);
 
   var _Node2 = _interopRequireDefault(_Node);
 
-  var _Label = __webpack_require__(72);
+  var _Label = __webpack_require__(73);
 
   var _Label2 = _interopRequireDefault(_Label);
 
@@ -34140,10 +34309,10 @@ return /******/ (function(modules) { // webpackBootstrap
         var dataset = this.body.data.nodes.getDataSet();
 
         for (var nodeId in dataset._data) {
-          if (dataset._data.hasOwnProperty(nodeId)) {
+          if (dataset._data.hasOwnProperty(nodeId) && this.body.nodes.hasOwnProperty(nodeId)) {
             var node = this.body.nodes[nodeId];
             if (dataset._data[nodeId].x != Math.round(node.x) || dataset._data[nodeId].y != Math.round(node.y)) {
-              dataArray.push({ id: node.id, x: Math.round(node.x), y: Math.round(node.y) });
+              dataArray.push({ id: nodeId, x: Math.round(node.x), y: Math.round(node.y) });
             }
           }
         }
@@ -34248,7 +34417,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NodesHandler;
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -34259,63 +34428,63 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Label = __webpack_require__(72);
+  var _Label = __webpack_require__(73);
 
   var _Label2 = _interopRequireDefault(_Label);
 
-  var _Box = __webpack_require__(73);
+  var _Box = __webpack_require__(74);
 
   var _Box2 = _interopRequireDefault(_Box);
 
-  var _Circle = __webpack_require__(75);
+  var _Circle = __webpack_require__(76);
 
   var _Circle2 = _interopRequireDefault(_Circle);
 
-  var _CircularImage = __webpack_require__(77);
+  var _CircularImage = __webpack_require__(78);
 
   var _CircularImage2 = _interopRequireDefault(_CircularImage);
 
-  var _Database = __webpack_require__(78);
+  var _Database = __webpack_require__(79);
 
   var _Database2 = _interopRequireDefault(_Database);
 
-  var _Diamond = __webpack_require__(79);
+  var _Diamond = __webpack_require__(80);
 
   var _Diamond2 = _interopRequireDefault(_Diamond);
 
-  var _Dot = __webpack_require__(81);
+  var _Dot = __webpack_require__(82);
 
   var _Dot2 = _interopRequireDefault(_Dot);
 
-  var _Ellipse = __webpack_require__(82);
+  var _Ellipse = __webpack_require__(83);
 
   var _Ellipse2 = _interopRequireDefault(_Ellipse);
 
-  var _Icon = __webpack_require__(83);
+  var _Icon = __webpack_require__(84);
 
   var _Icon2 = _interopRequireDefault(_Icon);
 
-  var _Image = __webpack_require__(84);
+  var _Image = __webpack_require__(85);
 
   var _Image2 = _interopRequireDefault(_Image);
 
-  var _Square = __webpack_require__(85);
+  var _Square = __webpack_require__(86);
 
   var _Square2 = _interopRequireDefault(_Square);
 
-  var _Star = __webpack_require__(86);
+  var _Star = __webpack_require__(87);
 
   var _Star2 = _interopRequireDefault(_Star);
 
-  var _Text = __webpack_require__(87);
+  var _Text = __webpack_require__(88);
 
   var _Text2 = _interopRequireDefault(_Text);
 
-  var _Triangle = __webpack_require__(88);
+  var _Triangle = __webpack_require__(89);
 
   var _Triangle2 = _interopRequireDefault(_Triangle);
 
-  var _TriangleDown = __webpack_require__(89);
+  var _TriangleDown = __webpack_require__(90);
 
   var _TriangleDown2 = _interopRequireDefault(_TriangleDown);
 
@@ -34370,8 +34539,8 @@ return /******/ (function(modules) { // webpackBootstrap
       this.grouplist = grouplist;
 
       // state options
-      this.x = undefined;
-      this.y = undefined;
+      this._x = undefined;
+      this._y = undefined;
       this.baseSize = this.options.size;
       this.baseFontSize = this.options.font.size;
       this.predefinedPosition = false; // used to check if initial fit should just take the range or approximate
@@ -34379,16 +34548,57 @@ return /******/ (function(modules) { // webpackBootstrap
       this.hover = false;
 
       this.labelModule = new _Label2.default(this.body, this.options, false /* Not edge label */);
+      // prevents sending connected messages on initial creation as it should be handled by added element
+      this.sendPhysicsUpdates = false;
       this.setOptions(options);
+      this.sendPhysicsUpdates = true;
     }
 
-    /**
-     * Attach a edge to the node
-     * @param {Edge} edge
-     */
-
-
     _createClass(Node, [{
+      key: 'setX',
+
+
+      /**
+       * Non emitting version for use by physics engine so we don't create infinite loops.
+       * @param newX
+       */
+      value: function setX(newX) {
+        this._x = newX;
+      }
+    }, {
+      key: 'setFixed',
+
+
+      /**
+       * Emitting version
+       *
+       * @param newFixed
+       */
+      value: function setFixed(newFixed) {
+        // TODO split out fixed portion?
+        var physOpts = Node.parseOptions(this.options, { fixed: newFixed });
+        if (Object.keys(physOpts).length > 0) {
+          this.body.emitter.emit('_physicsUpdate', { type: 'node', id: this.id, options: physOpts });
+        }
+      }
+
+      /**
+       * Non emitting version for use by physics engine so we don't create infinite loops.
+       * @param newY
+       */
+
+    }, {
+      key: 'setY',
+      value: function setY(newY) {
+        this._y = newY;
+      }
+
+      /**
+       * Attach a edge to the node
+       * @param {Edge} edge
+       */
+
+    }, {
       key: 'attachEdge',
       value: function attachEdge(edge) {
         if (this.edges.indexOf(edge) === -1) {
@@ -34464,7 +34674,7 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         // this transforms all shorthands into fully defined options
-        Node.parseOptions(this.options, options, true, this.globalOptions);
+        var physOpts = Node.parseOptions(this.options, options, true, this.globalOptions);
 
         // load the images
         if (this.options.image !== undefined) {
@@ -34478,7 +34688,21 @@ return /******/ (function(modules) { // webpackBootstrap
         this.updateLabelModule();
         this.updateShape(currentShape);
 
-        if (options.hidden !== undefined || options.physics !== undefined) {
+        if (options.mass !== undefined) {
+          this.options.mass = options.mass;
+          physOpts.mass = options.mass;
+        }
+        if (options.physics !== undefined) {
+          this.options.physics = options.physics;
+          physOpts.physics = options.physics;
+        }
+
+        if (this.sendPhysicsUpdates && Object.keys(physOpts).length > 0) {
+          this.body.emitter.emit('_physicsUpdate', { type: 'node', id: this.id, options: physOpts });
+        }
+
+        // TODO make embedded physics trigger this or handle _physicsUpdate messages
+        if (options.hidden !== undefined) {
           return true;
         }
         return false;
@@ -34737,6 +34961,24 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function isBoundingBoxOverlappingWith(obj) {
         return this.shape.boundingBox.left < obj.right && this.shape.boundingBox.right > obj.left && this.shape.boundingBox.top < obj.bottom && this.shape.boundingBox.bottom > obj.top;
       }
+    }, {
+      key: 'x',
+      get: function get() {
+        return this._x;
+      },
+      set: function set(newX) {
+        this._x = newX;
+        this.body.emitter.emit('_positionUpdate', { id: this.id, x: this._x, y: this._y });
+      }
+    }, {
+      key: 'y',
+      get: function get() {
+        return this._y;
+      },
+      set: function set(newY) {
+        this._y = newY;
+        this.body.emitter.emit('_positionUpdate', { id: this.id, x: this._x, y: this._y });
+      }
     }], [{
       key: 'parseOptions',
       value: function parseOptions(parentOptions, newOptions) {
@@ -34744,6 +34986,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var globalOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
         var fields = ['color', 'font', 'fixed', 'shadow'];
+        var changedPhysicsOptions = {};
         util.selectiveNotDeepExtend(fields, parentOptions, newOptions, allowDeletion);
 
         // merge the shadow options into the parent.
@@ -34760,14 +35003,19 @@ return /******/ (function(modules) { // webpackBootstrap
         // handle the fixed options
         if (newOptions.fixed !== undefined && newOptions.fixed !== null) {
           if (typeof newOptions.fixed === 'boolean') {
-            parentOptions.fixed.x = newOptions.fixed;
-            parentOptions.fixed.y = newOptions.fixed;
-          } else {
-            if (newOptions.fixed.x !== undefined && typeof newOptions.fixed.x === 'boolean') {
-              parentOptions.fixed.x = newOptions.fixed.x;
+            if (parentOptions.fixed.x !== newOptions.fixed || parentOptions.fixed.y !== newOptions.fixed) {
+              parentOptions.fixed.x = newOptions.fixed;
+              parentOptions.fixed.y = newOptions.fixed;
+              changedPhysicsOptions.fixed = { x: newOptions.fixed, y: newOptions.fixed };
             }
-            if (newOptions.fixed.y !== undefined && typeof newOptions.fixed.y === 'boolean') {
+          } else {
+            if (newOptions.fixed.x !== undefined && typeof newOptions.fixed.x === 'boolean' && parentOptions.fixed.x !== newOptions.fixed.x) {
+              parentOptions.fixed.x = newOptions.fixed.x;
+              util.deepExtend(changedPhysicsOptions, { fixed: { x: newOptions.fixed.x } });
+            }
+            if (newOptions.fixed.y !== undefined && typeof newOptions.fixed.y === 'boolean' && parentOptions.fixed.y !== newOptions.fixed.y) {
               parentOptions.fixed.y = newOptions.fixed.y;
+              util.deepExtend(changedPhysicsOptions, { fixed: { y: newOptions.fixed.y } });
             }
           }
         }
@@ -34783,6 +35031,7 @@ return /******/ (function(modules) { // webpackBootstrap
         if (newOptions.scaling !== undefined) {
           util.mergeOptions(parentOptions.scaling, newOptions.scaling, 'label', allowDeletion, globalOptions.scaling);
         }
+        return changedPhysicsOptions;
       }
     }]);
 
@@ -34792,7 +35041,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Node;
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35131,7 +35380,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Label;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35142,7 +35391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35245,7 +35494,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Box;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -35341,7 +35590,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NodeBase;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35352,7 +35601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(76);
+  var _CircleImageBase2 = __webpack_require__(77);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -35426,7 +35675,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Circle;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35437,7 +35686,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35564,35 +35813,12 @@ return /******/ (function(modules) { // webpackBootstrap
           // draw shadow if enabled
           this.enableShadow(ctx);
 
-          var factor = this.imageObj.width / this.width / this.body.view.scale;
-          if (factor > 2 && this.options.shapeProperties.interpolation === true) {
-            var w = this.imageObj.width;
-            var h = this.imageObj.height;
-            var can2 = document.createElement('canvas');
-            can2.width = w;
-            can2.height = w;
-            var ctx2 = can2.getContext('2d');
-
-            factor *= 0.5;
-            w *= 0.5;
-            h *= 0.5;
-            ctx2.drawImage(this.imageObj, 0, 0, w, h);
-
-            var distance = 0;
-            var iterations = 1;
-            while (factor > 2 && iterations < 4) {
-              ctx2.drawImage(can2, distance, 0, w, h, distance + w, 0, w / 2, h / 2);
-              distance += w;
-              factor *= 0.5;
-              w *= 0.5;
-              h *= 0.5;
-              iterations += 1;
-            }
-            ctx.drawImage(can2, distance, 0, w, h, this.left, this.top, this.width, this.height);
-          } else {
-            // draw image
-            ctx.drawImage(this.imageObj, this.left, this.top, this.width, this.height);
+          var factor = 1;
+          if (this.options.shapeProperties.interpolation === true) {
+            factor = this.imageObj.width / this.width / this.body.view.scale;
           }
+
+          this.imageObj.drawImageAtPosition(ctx, factor, this.left, this.top, this.width, this.height);
 
           // disable shadows for other elements.
           this.disableShadow(ctx);
@@ -35627,7 +35853,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CircleImageBase;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35638,7 +35864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(76);
+  var _CircleImageBase2 = __webpack_require__(77);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -35734,7 +35960,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CircularImage;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35745,7 +35971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -35843,7 +36069,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Database;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35854,7 +36080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -35898,7 +36124,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Diamond;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -35909,7 +36135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -36005,7 +36231,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ShapeBase;
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36016,7 +36242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36061,7 +36287,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Dot;
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36072,7 +36298,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -36179,7 +36405,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Ellipse;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36190,7 +36416,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -36293,7 +36519,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Icon;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36304,7 +36530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CircleImageBase2 = __webpack_require__(76);
+  var _CircleImageBase2 = __webpack_require__(77);
 
   var _CircleImageBase3 = _interopRequireDefault(_CircleImageBase2);
 
@@ -36410,7 +36636,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Image;
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36421,7 +36647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36465,7 +36691,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Square;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36476,7 +36702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36520,7 +36746,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Star;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36531,7 +36757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NodeBase2 = __webpack_require__(74);
+  var _NodeBase2 = __webpack_require__(75);
 
   var _NodeBase3 = _interopRequireDefault(_NodeBase2);
 
@@ -36605,7 +36831,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Text;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36616,7 +36842,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36660,7 +36886,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Triangle;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36671,7 +36897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _ShapeBase2 = __webpack_require__(80);
+  var _ShapeBase2 = __webpack_require__(81);
 
   var _ShapeBase3 = _interopRequireDefault(_ShapeBase2);
 
@@ -36715,7 +36941,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = TriangleDown;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -36726,11 +36952,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Edge = __webpack_require__(91);
+  var _Edge = __webpack_require__(92);
 
   var _Edge2 = _interopRequireDefault(_Edge);
 
-  var _Label = __webpack_require__(72);
+  var _Label = __webpack_require__(73);
 
   var _Label2 = _interopRequireDefault(_Label);
 
@@ -37161,7 +37387,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = EdgesHandler;
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37174,23 +37400,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Label = __webpack_require__(72);
+  var _Label = __webpack_require__(73);
 
   var _Label2 = _interopRequireDefault(_Label);
 
-  var _CubicBezierEdge = __webpack_require__(92);
+  var _CubicBezierEdge = __webpack_require__(93);
 
   var _CubicBezierEdge2 = _interopRequireDefault(_CubicBezierEdge);
 
-  var _BezierEdgeDynamic = __webpack_require__(96);
+  var _BezierEdgeDynamic = __webpack_require__(97);
 
   var _BezierEdgeDynamic2 = _interopRequireDefault(_BezierEdgeDynamic);
 
-  var _BezierEdgeStatic = __webpack_require__(97);
+  var _BezierEdgeStatic = __webpack_require__(98);
 
   var _BezierEdgeStatic2 = _interopRequireDefault(_BezierEdgeStatic);
 
-  var _StraightEdge = __webpack_require__(98);
+  var _StraightEdge = __webpack_require__(99);
 
   var _StraightEdge2 = _interopRequireDefault(_StraightEdge);
 
@@ -37247,7 +37473,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
       this.labelModule = new _Label2.default(this.body, this.options, true /* It's an edge label */);
 
+      // prevents sending connected messages on initial creation as it should be handled by added element
+      this.sendPhysicsUpdates = false;
       this.setOptions(options);
+      this.sendPhysicsUpdates = true;
     }
 
     /**
@@ -37372,6 +37601,8 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: 'connect',
       value: function connect() {
+        var previousConnected = this.connected;
+
         this.disconnect();
 
         this.from = this.body.nodes[this.fromId] || undefined;
@@ -37391,6 +37622,10 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         this.edgeType.connect();
+
+        if (this.sendPhysicsUpdates && this.connected !== previousConnected) {
+          this.body.emitter.emit('_physicsUpdate', { type: 'edge', id: this.id, options: { connected: this.connected } });
+        }
       }
 
       /**
@@ -37775,7 +38010,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Edge;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37788,7 +38023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CubicBezierEdgeBase2 = __webpack_require__(93);
+  var _CubicBezierEdgeBase2 = __webpack_require__(94);
 
   var _CubicBezierEdgeBase3 = _interopRequireDefault(_CubicBezierEdgeBase2);
 
@@ -37922,7 +38157,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CubicBezierEdge;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -37933,7 +38168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(94);
+  var _BezierEdgeBase2 = __webpack_require__(95);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -38008,7 +38243,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CubicBezierEdgeBase;
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38019,7 +38254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _EdgeBase2 = __webpack_require__(95);
+  var _EdgeBase2 = __webpack_require__(96);
 
   var _EdgeBase3 = _interopRequireDefault(_EdgeBase2);
 
@@ -38152,7 +38387,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeBase;
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38735,7 +38970,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = EdgeBase;
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -38746,7 +38981,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(94);
+  var _BezierEdgeBase2 = __webpack_require__(95);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -38939,7 +39174,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeDynamic;
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -38950,7 +39185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BezierEdgeBase2 = __webpack_require__(94);
+  var _BezierEdgeBase2 = __webpack_require__(95);
 
   var _BezierEdgeBase3 = _interopRequireDefault(_BezierEdgeBase2);
 
@@ -39207,7 +39442,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BezierEdgeStatic;
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -39218,7 +39453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _EdgeBase2 = __webpack_require__(95);
+  var _EdgeBase2 = __webpack_require__(96);
 
   var _EdgeBase3 = _interopRequireDefault(_EdgeBase2);
 
@@ -39317,7 +39552,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = StraightEdge;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -39328,74 +39563,46 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BarnesHutSolver = __webpack_require__(100);
+  var _PhysicsBase2 = __webpack_require__(101);
 
-  var _BarnesHutSolver2 = _interopRequireDefault(_BarnesHutSolver);
+  var _PhysicsBase3 = _interopRequireDefault(_PhysicsBase2);
 
-  var _RepulsionSolver = __webpack_require__(101);
+  var _PhysicsWorkerWrapper = __webpack_require__(110);
 
-  var _RepulsionSolver2 = _interopRequireDefault(_RepulsionSolver);
-
-  var _HierarchicalRepulsionSolver = __webpack_require__(102);
-
-  var _HierarchicalRepulsionSolver2 = _interopRequireDefault(_HierarchicalRepulsionSolver);
-
-  var _SpringSolver = __webpack_require__(103);
-
-  var _SpringSolver2 = _interopRequireDefault(_SpringSolver);
-
-  var _HierarchicalSpringSolver = __webpack_require__(104);
-
-  var _HierarchicalSpringSolver2 = _interopRequireDefault(_HierarchicalSpringSolver);
-
-  var _CentralGravitySolver = __webpack_require__(105);
-
-  var _CentralGravitySolver2 = _interopRequireDefault(_CentralGravitySolver);
-
-  var _FA2BasedRepulsionSolver = __webpack_require__(106);
-
-  var _FA2BasedRepulsionSolver2 = _interopRequireDefault(_FA2BasedRepulsionSolver);
-
-  var _FA2BasedCentralGravitySolver = __webpack_require__(107);
-
-  var _FA2BasedCentralGravitySolver2 = _interopRequireDefault(_FA2BasedCentralGravitySolver);
+  var _PhysicsWorkerWrapper2 = _interopRequireDefault(_PhysicsWorkerWrapper);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
   var util = __webpack_require__(1);
 
-  var PhysicsEngine = function () {
+  var PhysicsEngine = function (_PhysicsBase) {
+    _inherits(PhysicsEngine, _PhysicsBase);
+
     function PhysicsEngine(body) {
       _classCallCheck(this, PhysicsEngine);
 
-      this.body = body;
-      this.physicsBody = { physicsNodeIndices: [], physicsEdgeIndices: [], forces: {}, velocities: {} };
+      var _this = _possibleConstructorReturn(this, (PhysicsEngine.__proto__ || Object.getPrototypeOf(PhysicsEngine)).call(this));
 
-      this.physicsEnabled = true;
-      this.simulationInterval = 1000 / 60;
-      this.requiresTimeout = true;
-      this.previousStates = {};
-      this.referenceState = {};
-      this.freezeCache = {};
-      this.renderTimer = undefined;
+      _this.body = body;
 
-      // parameters for the adaptive timestep
-      this.adaptiveTimestep = false;
-      this.adaptiveTimestepEnabled = false;
-      this.adaptiveCounter = 0;
-      this.adaptiveInterval = 3;
+      _this.physicsEnabled = true;
+      _this.simulationInterval = 1000 / 60;
+      _this.requiresTimeout = true;
+      _this.freezeCache = {};
+      _this.renderTimer = undefined;
 
-      this.stabilized = false;
-      this.startedStabilization = false;
-      this.stabilizationIterations = 0;
-      this.ready = false; // will be set to true if the stabilize
+      _this.ready = false; // will be set to true if the stabilize
 
       // default options
-      this.options = {};
-      this.defaultOptions = {
+      _this.defaultOptions = {
         enabled: true,
+        useWorker: false,
         barnesHut: {
           theta: 0.5,
           gravitationalConstant: -2000,
@@ -39442,56 +39649,70 @@ return /******/ (function(modules) { // webpackBootstrap
         timestep: 0.5,
         adaptiveTimestep: true
       };
-      util.extend(this.options, this.defaultOptions);
-      this.timestep = 0.5;
-      this.layoutFailed = false;
+      util.extend(_this.options, _this.defaultOptions);
+      _this.layoutFailed = false;
+      _this.draggingNodes = [];
+      _this.positionUpdateHandler = function () {};
+      _this.physicsUpdateHandler = function () {};
+      _this.emit = _this.body.emitter.emit;
 
-      this.bindEventListeners();
+      _this.bindEventListeners();
+      return _this;
     }
 
     _createClass(PhysicsEngine, [{
       key: 'bindEventListeners',
       value: function bindEventListeners() {
-        var _this = this;
+        var _this2 = this;
 
         this.body.emitter.on('initPhysics', function () {
-          _this.initPhysics();
+          _this2.initPhysics();
         });
         this.body.emitter.on('_layoutFailed', function () {
-          _this.layoutFailed = true;
+          _this2.layoutFailed = true;
         });
         this.body.emitter.on('resetPhysics', function () {
-          _this.stopSimulation();_this.ready = false;
+          _this2.stopSimulation();_this2.ready = false;
         });
         this.body.emitter.on('disablePhysics', function () {
-          _this.physicsEnabled = false;_this.stopSimulation();
+          _this2.physicsEnabled = false;_this2.stopSimulation();
         });
         this.body.emitter.on('restorePhysics', function () {
-          _this.setOptions(_this.options);
-          if (_this.ready === true) {
-            _this.startSimulation();
+          _this2.setOptions(_this2.options);
+          if (_this2.ready === true) {
+            _this2.startSimulation();
           }
         });
         this.body.emitter.on('startSimulation', function () {
-          if (_this.ready === true) {
-            _this.startSimulation();
+          if (_this2.ready === true) {
+            _this2.startSimulation();
           }
         });
         this.body.emitter.on('stopSimulation', function () {
-          _this.stopSimulation();
+          _this2.stopSimulation();
         });
         this.body.emitter.on('destroy', function () {
-          _this.stopSimulation(false);
-          _this.body.emitter.off();
+          _this2.stopSimulation(false);
+          _this2.body.emitter.off();
         });
-        // this event will trigger a rebuilding of the cache everything. Used when nodes or edges have been added or removed.
-        this.body.emitter.on("_dataChanged", function () {
-          // update shortcut lists
-          _this.updatePhysicsData();
+        this.body.emitter.on('_positionUpdate', function (properties) {
+          return _this2.positionUpdateHandler(properties);
         });
-
-        // debug: show forces
-        // this.body.emitter.on("afterDrawing", (ctx) => {this._drawForces(ctx);});
+        this.body.emitter.on('_physicsUpdate', function (properties) {
+          return _this2.physicsUpdateHandler(properties);
+        });
+        this.body.emitter.on('dragStart', function (properties) {
+          _this2.draggingNodes = properties.nodes;
+        });
+        this.body.emitter.on('dragEnd', function () {
+          _this2.draggingNodes = [];
+        });
+        this.body.emitter.on('destroy', function () {
+          if (_this2.physicsWorker) {
+            _this2.physicsWorker.terminate();
+            _this2.physicsWorker = undefined;
+          }
+        });
       }
 
       /**
@@ -39525,7 +39746,12 @@ return /******/ (function(modules) { // webpackBootstrap
             this.timestep = this.options.timestep;
           }
         }
-        this.init();
+        if (this.options.useWorker) {
+          this.initPhysicsWorker();
+          this.physicsWorker.postMessage({ type: 'options', data: this.options });
+        } else {
+          this.initEmbeddedPhysics();
+        }
       }
 
       /**
@@ -39533,33 +39759,149 @@ return /******/ (function(modules) { // webpackBootstrap
        */
 
     }, {
-      key: 'init',
-      value: function init() {
-        var options;
-        if (this.options.solver === 'forceAtlas2Based') {
-          options = this.options.forceAtlas2Based;
-          this.nodesSolver = new _FA2BasedRepulsionSolver2.default(this.body, this.physicsBody, options);
-          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
-          this.gravitySolver = new _FA2BasedCentralGravitySolver2.default(this.body, this.physicsBody, options);
-        } else if (this.options.solver === 'repulsion') {
-          options = this.options.repulsion;
-          this.nodesSolver = new _RepulsionSolver2.default(this.body, this.physicsBody, options);
-          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
-          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
-        } else if (this.options.solver === 'hierarchicalRepulsion') {
-          options = this.options.hierarchicalRepulsion;
-          this.nodesSolver = new _HierarchicalRepulsionSolver2.default(this.body, this.physicsBody, options);
-          this.edgesSolver = new _HierarchicalSpringSolver2.default(this.body, this.physicsBody, options);
-          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
-        } else {
-          // barnesHut
-          options = this.options.barnesHut;
-          this.nodesSolver = new _BarnesHutSolver2.default(this.body, this.physicsBody, options);
-          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
-          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
-        }
+      key: 'initEmbeddedPhysics',
+      value: function initEmbeddedPhysics() {
+        var _this3 = this;
 
-        this.modelOptions = options;
+        this.positionUpdateHandler = function () {};
+        this.physicsUpdateHandler = function (properties) {
+          if (properties.options.physics !== undefined) {
+            // we've received a node that has changed physics state
+            // so rebuild physicsBody
+            _this3.initPhysicsData();
+          }
+          // else we're accessing the information directly out of the node
+          // so no need to do anything.
+        };
+        if (this.physicsWorker) {
+          this.options.useWorker = false;
+          this.physicsWorker.terminate();
+          this.physicsWorker = undefined;
+          this.initPhysicsData();
+        }
+        this.initPhysicsSolvers();
+      }
+    }, {
+      key: 'initPhysicsWorker',
+      value: function initPhysicsWorker() {
+        var _this4 = this;
+
+        if (!this.physicsWorker) {
+          // setup path to webworker javascript file
+          if (!__webpack_require__.p) {
+            // search for element with id of 'visjs'
+            var parentScript = document.getElementById('visjs');
+            if (parentScript) {
+              var src = parentScript.getAttribute('src');
+              __webpack_require__.p = src.substr(0, src.lastIndexOf('/') + 1);
+            } else {
+              // search all scripts for 'vis.js'
+              var scripts = document.getElementsByTagName('script');
+              for (var i = 0; i < scripts.length; i++) {
+                var _src = scripts[i].getAttribute('src');
+                if (_src && _src.length >= 6) {
+                  var position = _src.length - 6;
+                  var index = _src.indexOf('vis.js', position);
+                  if (index === position) {
+                    __webpack_require__.p = _src.substr(0, _src.lastIndexOf('/') + 1);
+                    break;
+                  }
+                }
+              }
+            }
+          }
+          // launch webworker
+          this.physicsWorker = new _PhysicsWorkerWrapper2.default();
+          this.physicsWorker.addEventListener('message', function (event) {
+            _this4.physicsWorkerMessageHandler(event);
+          });
+          this.physicsWorker.onerror = function (event) {
+            console.error('Falling back to embedded physics engine', event);
+            _this4.initEmbeddedPhysics();
+            // throw new Error(event.message + " (" + event.filename + ":" + event.lineno + ")");
+          };
+          this.positionUpdateHandler = function (positions) {
+            _this4.physicsWorker.postMessage({ type: 'updatePositions', data: positions });
+          };
+          this.physicsUpdateHandler = function (properties) {
+            _this4._physicsUpdateHandler(properties);
+          };
+        }
+      }
+    }, {
+      key: '_physicsUpdateHandler',
+      value: function _physicsUpdateHandler(properties) {
+        if (properties.options.physics !== undefined) {
+          if (properties.options.physics) {
+            var data = {
+              nodes: {},
+              edges: {}
+            };
+            if (properties.type === 'node') {
+              data.nodes[properties.id] = this.createPhysicsNode(properties.id);
+            } else if (properties.type === 'edge') {
+              data.edges[properties.id] = this.createPhysicsEdge(properties.id);
+            } else {
+              console.warn('invalid element type');
+            }
+            this.physicsWorker.postMessage({
+              type: 'addElements',
+              data: data
+            });
+          } else {
+            var _data = {
+              nodeIds: [],
+              edgeIds: []
+            };
+            if (properties.type === 'node') {
+              _data.nodeIds = [properties.id.toString()];
+            } else if (properties.type === 'edge') {
+              _data.edgeIds = [properties.id.toString()];
+            } else {
+              console.warn('invalid element type');
+            }
+            this.physicsWorker.postMessage({ type: 'removeElements', data: _data });
+          }
+        } else {
+          this.physicsWorker.postMessage({ type: 'updateProperties', data: properties });
+        }
+      }
+    }, {
+      key: 'physicsWorkerMessageHandler',
+      value: function physicsWorkerMessageHandler(event) {
+        var msg = event.data;
+        switch (msg.type) {
+          case 'tickResults':
+            this.stabilized = msg.data.stabilized;
+            this.stabilizationIterations = msg.data.stabilizationIterations;
+            this._receivedPositions(msg.data.positions);
+            break;
+          case 'finalizeStabilization':
+            this._finalizeStabilization();
+            break;
+          case 'emit':
+            this.emit(msg.data.event, msg.data.data);
+            break;
+          default:
+            console.warn('unhandled physics worker message:', msg);
+        }
+      }
+    }, {
+      key: '_receivedPositions',
+      value: function _receivedPositions(positions) {
+        for (var i = 0; i < this.draggingNodes.length; i++) {
+          delete positions[this.draggingNodes[i]];
+        }
+        var nodeIds = Object.keys(positions);
+        for (var _i = 0; _i < nodeIds.length; _i++) {
+          var nodeId = nodeIds[_i];
+          var node = this.body.nodes[nodeId];
+          // handle case where we get a positions from an old physicsObject
+          if (node) {
+            node.setX(positions[nodeId].x);
+            node.setY(positions[nodeId].y);
+          }
+        }
       }
 
       /**
@@ -39593,6 +39935,7 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function startSimulation() {
         if (this.physicsEnabled === true && this.options.enabled === true) {
           this.stabilized = false;
+          this._updateWorkerStabilized();
 
           // when visible, adaptivity is disabled.
           this.adaptiveTimestep = false;
@@ -39619,6 +39962,8 @@ return /******/ (function(modules) { // webpackBootstrap
         var emit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
         this.stabilized = true;
+        this._updateWorkerStabilized();
+
         if (emit === true) {
           this._emitStabilized();
         }
@@ -39630,30 +39975,53 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
+    }, {
+      key: '_updateWorkerStabilized',
+      value: function _updateWorkerStabilized() {
+        if (this.physicsWorker) {
+          this.physicsWorker.postMessage({
+            type: 'setStabilized',
+            data: this.stabilized
+          });
+        }
+      }
 
       /**
-       * The viewFunction inserts this step into each render loop. It calls the physics tick and handles the cleanup at stabilized.
+       * The viewFunction inserts this step into each renderloop. It calls the physics tick and handles the cleanup at stabilized.
        *
        */
 
     }, {
       key: 'simulationStep',
       value: function simulationStep() {
-        // check if the physics have settled
-        var startTime = Date.now();
-        this.physicsTick();
-        var physicsTime = Date.now() - startTime;
-
-        // run double speed if it is a little graph
-        if ((physicsTime < 0.4 * this.simulationInterval || this.runDoubleSpeed === true) && this.stabilized === false) {
+        if (this.physicsWorker) {
+          this.physicsWorker.postMessage({ type: 'physicsTick' });
+        } else {
+          // check if the physics have settled
+          var startTime = Date.now();
           this.physicsTick();
+          var physicsTime = Date.now() - startTime;
 
-          // this makes sure there is no jitter. The decision is taken once to run it at double speed.
-          this.runDoubleSpeed = true;
+          // run double speed if it is a little graph
+          if ((physicsTime < 0.4 * this.simulationInterval || this.runDoubleSpeed === true) && this.stabilized === false) {
+            this.physicsTick();
+
+            // this makes sure there is no jitter. The decision is taken once to run it at double speed.
+            this.runDoubleSpeed = true;
+          }
         }
 
         if (this.stabilized === true) {
           this.stopSimulation();
+        }
+      }
+    }, {
+      key: '_sendWorkerStabilized',
+      value: function _sendWorkerStabilized() {
+        if (this.physicsWorker) {
+          this.physicsWorker.postMessage({
+            type: 'stabilized'
+          });
         }
       }
 
@@ -39665,17 +40033,424 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_emitStabilized',
       value: function _emitStabilized() {
-        var _this2 = this;
+        var _this5 = this;
 
         var amountOfIterations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.stabilizationIterations;
 
         if (this.stabilizationIterations > 1 || this.startedStabilization === true) {
           setTimeout(function () {
-            _this2.body.emitter.emit('stabilized', { iterations: amountOfIterations });
-            _this2.startedStabilization = false;
-            _this2.stabilizationIterations = 0;
+            _this5.body.emitter.emit('stabilized', { iterations: amountOfIterations });
+            _this5.startedStabilization = false;
+            _this5.stabilizationIterations = 0;
+            _this5._sendWorkerStabilized();
           }, 0);
         }
+      }
+    }, {
+      key: 'createPhysicsNode',
+      value: function createPhysicsNode(nodeId) {
+        var node = this.body.nodes[nodeId];
+        if (node) {
+          return {
+            id: node.id.toString(),
+            x: node.x,
+            y: node.y,
+            // TODO update on change
+            edges: {
+              length: node.edges.length
+            },
+            options: {
+              fixed: {
+                x: node.options.fixed.x,
+                y: node.options.fixed.y
+              },
+              mass: node.options.mass
+            }
+          };
+        }
+      }
+    }, {
+      key: 'createPhysicsEdge',
+      value: function createPhysicsEdge(edgeId) {
+        var edge = this.body.edges[edgeId];
+        if (edge && edge.options.physics === true) {
+          var physicsEdge = {
+            id: edge.id,
+            connected: edge.connected,
+            edgeType: {},
+            toId: edge.toId,
+            fromId: edge.fromId,
+            options: {
+              length: edge.length
+            }
+          };
+          // TODO test/implment dynamic
+          if (edge.edgeType.via) {
+            physicsEdge.edgeType = {
+              via: {
+                id: edge.edgeType.via.id
+              }
+            };
+          }
+          return physicsEdge;
+        }
+      }
+
+      /**
+       * Nodes and edges can have the physics toggles on or off. A collection of indices is created here so we can skip the check all the time.
+       *
+       * @private
+       */
+
+    }, {
+      key: 'initPhysicsData',
+      value: function initPhysicsData() {
+        var nodes = this.body.nodes;
+        var edges = this.body.edges;
+
+        this.physicsBody.forces = {};
+        this.physicsBody.physicsNodeIndices = [];
+        this.physicsBody.physicsEdgeIndices = [];
+        var physicsWorkerNodes = {};
+        var physicsWorkerEdges = {};
+
+        // get node indices for physics
+        for (var nodeId in nodes) {
+          if (nodes.hasOwnProperty(nodeId)) {
+            if (nodes[nodeId].options.physics === true) {
+              this.physicsBody.physicsNodeIndices.push(nodeId);
+              if (this.physicsWorker) {
+                physicsWorkerNodes[nodeId] = this.createPhysicsNode(nodeId);
+              }
+            }
+          }
+        }
+
+        // get edge indices for physics
+        for (var edgeId in edges) {
+          if (edges.hasOwnProperty(edgeId)) {
+            if (edges[edgeId].options.physics === true) {
+              this.physicsBody.physicsEdgeIndices.push(edgeId);
+              if (this.physicsWorker) {
+                physicsWorkerEdges[edgeId] = this.createPhysicsEdge(edgeId);
+              }
+            }
+          }
+        }
+
+        // get the velocity and the forces vector
+        for (var i = 0; i < this.physicsBody.physicsNodeIndices.length; i++) {
+          var _nodeId = this.physicsBody.physicsNodeIndices[i];
+          this.physicsBody.forces[_nodeId] = { x: 0, y: 0 };
+
+          // forces can be reset because they are recalculated. Velocities have to persist.
+          if (this.physicsBody.velocities[_nodeId] === undefined) {
+            this.physicsBody.velocities[_nodeId] = { x: 0, y: 0 };
+          }
+        }
+
+        // clean deleted nodes from the velocity vector
+        for (var _nodeId2 in this.physicsBody.velocities) {
+          if (nodes[_nodeId2] === undefined) {
+            delete this.physicsBody.velocities[_nodeId2];
+          }
+        }
+
+        if (this.physicsWorker) {
+          this.physicsWorker.postMessage({
+            type: 'initPhysicsData',
+            data: {
+              nodes: physicsWorkerNodes,
+              edges: physicsWorkerEdges
+            }
+          });
+        }
+      }
+
+      /**
+       * Perform the actual step
+       *
+       * @param nodeId
+       * @param maxVelocity
+       * @returns {number}
+       * @private
+       */
+
+    }, {
+      key: '_performStep',
+      value: function _performStep(nodeId, maxVelocity) {
+        var node = this.body.nodes[nodeId];
+        var timestep = this.timestep;
+        var forces = this.physicsBody.forces;
+        var velocities = this.physicsBody.velocities;
+
+        // store the state so we can revert
+        this.previousStates[nodeId] = { x: node.x, y: node.y, vx: velocities[nodeId].x, vy: velocities[nodeId].y };
+
+        if (node.options.fixed.x === false) {
+          var dx = this.modelOptions.damping * velocities[nodeId].x; // damping force
+          var ax = (forces[nodeId].x - dx) / node.options.mass; // acceleration
+          velocities[nodeId].x += ax * timestep; // velocity
+          velocities[nodeId].x = Math.abs(velocities[nodeId].x) > maxVelocity ? velocities[nodeId].x > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].x;
+          node.setX(node.x + velocities[nodeId].x * timestep); // position
+        } else {
+          forces[nodeId].x = 0;
+          velocities[nodeId].x = 0;
+        }
+
+        if (node.options.fixed.y === false) {
+          var dy = this.modelOptions.damping * velocities[nodeId].y; // damping force
+          var ay = (forces[nodeId].y - dy) / node.options.mass; // acceleration
+          velocities[nodeId].y += ay * timestep; // velocity
+          velocities[nodeId].y = Math.abs(velocities[nodeId].y) > maxVelocity ? velocities[nodeId].y > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].y;
+          node.setY(node.y + velocities[nodeId].y * timestep); // position
+        } else {
+          forces[nodeId].y = 0;
+          velocities[nodeId].y = 0;
+        }
+
+        var totalVelocity = Math.sqrt(Math.pow(velocities[nodeId].x, 2) + Math.pow(velocities[nodeId].y, 2));
+        return totalVelocity;
+      }
+
+      // TODO probably want to move freeze/restore to PhysicsBase and do in worker if running
+      /**
+       * When initializing and stabilizing, we can freeze nodes with a predefined position. This greatly speeds up stabilization
+       * because only the supportnodes for the smoothCurves have to settle.
+       *
+       * @private
+       */
+
+    }, {
+      key: '_freezeNodes',
+      value: function _freezeNodes() {
+        var nodes = this.body.nodes;
+        for (var id in nodes) {
+          if (nodes.hasOwnProperty(id)) {
+            if (nodes[id].x && nodes[id].y) {
+              this.freezeCache[id] = { x: nodes[id].options.fixed.x, y: nodes[id].options.fixed.y };
+              nodes[id].setFixed(true);
+            }
+          }
+        }
+      }
+
+      /**
+       * Unfreezes the nodes that have been frozen by _freezeDefinedNodes.
+       *
+       * @private
+       */
+
+    }, {
+      key: '_restoreFrozenNodes',
+      value: function _restoreFrozenNodes() {
+        var nodes = this.body.nodes;
+        for (var id in nodes) {
+          if (nodes.hasOwnProperty(id)) {
+            if (this.freezeCache[id] !== undefined) {
+              nodes[id].setFixed({ x: this.freezeCache[id].x, y: this.freezeCache[id].y });
+            }
+          }
+        }
+        this.freezeCache = {};
+      }
+
+      /**
+       * Find a stable position for all nodes
+       * @private
+       */
+
+    }, {
+      key: 'stabilize',
+      value: function stabilize() {
+        var _this6 = this;
+
+        var iterations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.options.stabilization.iterations;
+
+        if (typeof iterations !== 'number') {
+          console.log('The stabilize method needs a numeric amount of iterations. Switching to default: ', this.options.stabilization.iterations);
+          iterations = this.options.stabilization.iterations;
+        }
+
+        if (this.physicsBody.physicsNodeIndices.length === 0) {
+          this.ready = true;
+          return;
+        }
+
+        // enable adaptive timesteps
+        this.adaptiveTimestep = true && this.options.adaptiveTimestep;
+
+        // this sets the width of all nodes initially which could be required for the avoidOverlap
+        this.body.emitter.emit("_resizeNodes");
+
+        // stop the render loop
+        this.stopSimulation();
+
+        // set stabilize to false
+        this.stabilized = false;
+
+        // block redraw requests
+        this.body.emitter.emit('_blockRedraw');
+        this.targetIterations = iterations;
+
+        // start the stabilization
+        if (this.options.stabilization.onlyDynamicEdges === true) {
+          this._freezeNodes();
+        }
+        this.stabilizationIterations = 0;
+
+        if (this.physicsWorker) {
+          this.physicsWorker.postMessage({
+            type: 'stabilize',
+            data: {
+              targetIterations: iterations
+            }
+          });
+        } else {
+          setTimeout(function () {
+            return _this6._stabilizationBatch();
+          }, 0);
+        }
+      }
+
+      /**
+       * Wrap up the stabilization, fit and emit the events.
+       * @private
+       */
+
+    }, {
+      key: '_finalizeStabilization',
+      value: function _finalizeStabilization() {
+        this.body.emitter.emit('_allowRedraw');
+        if (this.options.stabilization.fit === true) {
+          this.body.emitter.emit('fit');
+        }
+
+        if (this.options.stabilization.onlyDynamicEdges === true) {
+          this._restoreFrozenNodes();
+        }
+
+        this.body.emitter.emit('stabilizationIterationsDone');
+        this.body.emitter.emit('_requestRedraw');
+
+        if (this.stabilized === true) {
+          this._emitStabilized();
+        } else {
+          this.startSimulation();
+        }
+
+        this.ready = true;
+      }
+    }]);
+
+    return PhysicsEngine;
+  }(_PhysicsBase3.default);
+
+  exports.default = PhysicsEngine;
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _BarnesHutSolver = __webpack_require__(102);
+
+  var _BarnesHutSolver2 = _interopRequireDefault(_BarnesHutSolver);
+
+  var _RepulsionSolver = __webpack_require__(103);
+
+  var _RepulsionSolver2 = _interopRequireDefault(_RepulsionSolver);
+
+  var _HierarchicalRepulsionSolver = __webpack_require__(104);
+
+  var _HierarchicalRepulsionSolver2 = _interopRequireDefault(_HierarchicalRepulsionSolver);
+
+  var _SpringSolver = __webpack_require__(105);
+
+  var _SpringSolver2 = _interopRequireDefault(_SpringSolver);
+
+  var _HierarchicalSpringSolver = __webpack_require__(106);
+
+  var _HierarchicalSpringSolver2 = _interopRequireDefault(_HierarchicalSpringSolver);
+
+  var _CentralGravitySolver = __webpack_require__(107);
+
+  var _CentralGravitySolver2 = _interopRequireDefault(_CentralGravitySolver);
+
+  var _FA2BasedRepulsionSolver = __webpack_require__(108);
+
+  var _FA2BasedRepulsionSolver2 = _interopRequireDefault(_FA2BasedRepulsionSolver);
+
+  var _FA2BasedCentralGravitySolver = __webpack_require__(109);
+
+  var _FA2BasedCentralGravitySolver2 = _interopRequireDefault(_FA2BasedCentralGravitySolver);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var PhysicsBase = function () {
+    function PhysicsBase() {
+      _classCallCheck(this, PhysicsBase);
+
+      this.physicsBody = { physicsNodeIndices: [], physicsEdgeIndices: [], forces: {}, velocities: {} };
+      this.options = {};
+
+      this.referenceState = {};
+      this.previousStates = {};
+
+      this.startedStabilization = false;
+      this.stabilized = false;
+      this.stabilizationIterations = 0;
+      this.timestep = 0.5;
+
+      // parameters for the adaptive timestep
+      this.adaptiveTimestep = false;
+      this.adaptiveTimestepEnabled = false;
+      this.adaptiveCounter = 0;
+      this.adaptiveInterval = 3;
+    }
+
+    /**
+     * configure the engine.
+     */
+
+
+    _createClass(PhysicsBase, [{
+      key: 'initPhysicsSolvers',
+      value: function initPhysicsSolvers() {
+        var options;
+        if (this.options.solver === 'forceAtlas2Based') {
+          options = this.options.forceAtlas2Based;
+          this.nodesSolver = new _FA2BasedRepulsionSolver2.default(this.body, this.physicsBody, options);
+          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
+          this.gravitySolver = new _FA2BasedCentralGravitySolver2.default(this.body, this.physicsBody, options);
+        } else if (this.options.solver === 'repulsion') {
+          options = this.options.repulsion;
+          this.nodesSolver = new _RepulsionSolver2.default(this.body, this.physicsBody, options);
+          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
+          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
+        } else if (this.options.solver === 'hierarchicalRepulsion') {
+          options = this.options.hierarchicalRepulsion;
+          this.nodesSolver = new _HierarchicalRepulsionSolver2.default(this.body, this.physicsBody, options);
+          this.edgesSolver = new _HierarchicalSpringSolver2.default(this.body, this.physicsBody, options);
+          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
+        } else {
+          // barnesHut
+          options = this.options.barnesHut;
+          this.nodesSolver = new _BarnesHutSolver2.default(this.body, this.physicsBody, options);
+          this.edgesSolver = new _SpringSolver2.default(this.body, this.physicsBody, options);
+          this.gravitySolver = new _CentralGravitySolver2.default(this.body, this.physicsBody, options);
+        }
+
+        this.modelOptions = options;
       }
 
       /**
@@ -39689,7 +40464,7 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function physicsTick() {
         // this is here to ensure that there is no start event when the network is already stable.
         if (this.startedStabilization === false) {
-          this.body.emitter.emit('startStabilizing');
+          this.emit('startStabilizing');
           this.startedStabilization = true;
         }
 
@@ -39758,58 +40533,6 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       /**
-       * Nodes and edges can have the physics toggles on or off. A collection of indices is created here so we can skip the check all the time.
-       *
-       * @private
-       */
-
-    }, {
-      key: 'updatePhysicsData',
-      value: function updatePhysicsData() {
-        this.physicsBody.forces = {};
-        this.physicsBody.physicsNodeIndices = [];
-        this.physicsBody.physicsEdgeIndices = [];
-        var nodes = this.body.nodes;
-        var edges = this.body.edges;
-
-        // get node indices for physics
-        for (var nodeId in nodes) {
-          if (nodes.hasOwnProperty(nodeId)) {
-            if (nodes[nodeId].options.physics === true) {
-              this.physicsBody.physicsNodeIndices.push(nodes[nodeId].id);
-            }
-          }
-        }
-
-        // get edge indices for physics
-        for (var edgeId in edges) {
-          if (edges.hasOwnProperty(edgeId)) {
-            if (edges[edgeId].options.physics === true) {
-              this.physicsBody.physicsEdgeIndices.push(edges[edgeId].id);
-            }
-          }
-        }
-
-        // get the velocity and the forces vector
-        for (var i = 0; i < this.physicsBody.physicsNodeIndices.length; i++) {
-          var _nodeId = this.physicsBody.physicsNodeIndices[i];
-          this.physicsBody.forces[_nodeId] = { x: 0, y: 0 };
-
-          // forces can be reset because they are recalculated. Velocities have to persist.
-          if (this.physicsBody.velocities[_nodeId] === undefined) {
-            this.physicsBody.velocities[_nodeId] = { x: 0, y: 0 };
-          }
-        }
-
-        // clean deleted nodes from the velocity vector
-        for (var _nodeId2 in this.physicsBody.velocities) {
-          if (nodes[_nodeId2] === undefined) {
-            delete this.physicsBody.velocities[_nodeId2];
-          }
-        }
-      }
-
-      /**
        * Revert the simulation one step. This is done so after stabilization, every new start of the simulation will also say stabilized.
        */
 
@@ -39824,7 +40547,7 @@ return /******/ (function(modules) { // webpackBootstrap
         for (var i = 0; i < nodeIds.length; i++) {
           var nodeId = nodeIds[i];
           if (nodes[nodeId] !== undefined) {
-            if (nodes[nodeId].options.physics === true) {
+            if (this.isWorker || nodes[nodeId].options.physics === true) {
               this.referenceState[nodeId] = {
                 positions: { x: nodes[nodeId].x, y: nodes[nodeId].y }
               };
@@ -39869,7 +40592,7 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       /**
-       * move the nodes one timestep and check if they are stabilized
+       * move the nodes one timestap and check if they are stabilized
        * @returns {boolean}
        */
 
@@ -39897,51 +40620,10 @@ return /******/ (function(modules) { // webpackBootstrap
         this.stabilized = maxNodeVelocity < this.options.minVelocity;
       }
 
-      /**
-       * Perform the actual step
-       *
-       * @param nodeId
-       * @param maxVelocity
-       * @returns {number}
-       * @private
-       */
-
-    }, {
-      key: '_performStep',
-      value: function _performStep(nodeId, maxVelocity) {
-        var node = this.body.nodes[nodeId];
-        var timestep = this.timestep;
-        var forces = this.physicsBody.forces;
-        var velocities = this.physicsBody.velocities;
-
-        // store the state so we can revert
-        this.previousStates[nodeId] = { x: node.x, y: node.y, vx: velocities[nodeId].x, vy: velocities[nodeId].y };
-
-        if (node.options.fixed.x === false) {
-          var dx = this.modelOptions.damping * velocities[nodeId].x; // damping force
-          var ax = (forces[nodeId].x - dx) / node.options.mass; // acceleration
-          velocities[nodeId].x += ax * timestep; // velocity
-          velocities[nodeId].x = Math.abs(velocities[nodeId].x) > maxVelocity ? velocities[nodeId].x > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].x;
-          node.x += velocities[nodeId].x * timestep; // position
-        } else {
-          forces[nodeId].x = 0;
-          velocities[nodeId].x = 0;
-        }
-
-        if (node.options.fixed.y === false) {
-          var dy = this.modelOptions.damping * velocities[nodeId].y; // damping force
-          var ay = (forces[nodeId].y - dy) / node.options.mass; // acceleration
-          velocities[nodeId].y += ay * timestep; // velocity
-          velocities[nodeId].y = Math.abs(velocities[nodeId].y) > maxVelocity ? velocities[nodeId].y > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].y;
-          node.y += velocities[nodeId].y * timestep; // position
-        } else {
-          forces[nodeId].y = 0;
-          velocities[nodeId].y = 0;
-        }
-
-        var totalVelocity = Math.sqrt(Math.pow(velocities[nodeId].x, 2) + Math.pow(velocities[nodeId].y, 2));
-        return totalVelocity;
-      }
+      // TODO consider moving _performStep in here
+      // right now Physics nodes don't have setX setY functions
+      //   - maybe switch logic of setX and set x?
+      //   - add functions to physics nodes - seems not desirable
 
       /**
        * calculate the forces for one physics iteration.
@@ -39956,97 +40638,6 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       /**
-       * When initializing and stabilizing, we can freeze nodes with a predefined position. This greatly speeds up stabilization
-       * because only the supportnodes for the smoothCurves have to settle.
-       *
-       * @private
-       */
-
-    }, {
-      key: '_freezeNodes',
-      value: function _freezeNodes() {
-        var nodes = this.body.nodes;
-        for (var id in nodes) {
-          if (nodes.hasOwnProperty(id)) {
-            if (nodes[id].x && nodes[id].y) {
-              this.freezeCache[id] = { x: nodes[id].options.fixed.x, y: nodes[id].options.fixed.y };
-              nodes[id].options.fixed.x = true;
-              nodes[id].options.fixed.y = true;
-            }
-          }
-        }
-      }
-
-      /**
-       * Unfreezes the nodes that have been frozen by _freezeDefinedNodes.
-       *
-       * @private
-       */
-
-    }, {
-      key: '_restoreFrozenNodes',
-      value: function _restoreFrozenNodes() {
-        var nodes = this.body.nodes;
-        for (var id in nodes) {
-          if (nodes.hasOwnProperty(id)) {
-            if (this.freezeCache[id] !== undefined) {
-              nodes[id].options.fixed.x = this.freezeCache[id].x;
-              nodes[id].options.fixed.y = this.freezeCache[id].y;
-            }
-          }
-        }
-        this.freezeCache = {};
-      }
-
-      /**
-       * Find a stable position for all nodes
-       */
-
-    }, {
-      key: 'stabilize',
-      value: function stabilize() {
-        var _this3 = this;
-
-        var iterations = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.options.stabilization.iterations;
-
-        if (typeof iterations !== 'number') {
-          console.log('The stabilize method needs a numeric amount of iterations. Switching to default: ', this.options.stabilization.iterations);
-          iterations = this.options.stabilization.iterations;
-        }
-
-        if (this.physicsBody.physicsNodeIndices.length === 0) {
-          this.ready = true;
-          return;
-        }
-
-        // enable adaptive timesteps
-        this.adaptiveTimestep = true && this.options.adaptiveTimestep;
-
-        // this sets the width of all nodes initially which could be required for the avoidOverlap
-        this.body.emitter.emit("_resizeNodes");
-
-        // stop the render loop
-        this.stopSimulation();
-
-        // set stabilze to false
-        this.stabilized = false;
-
-        // block redraw requests
-        this.body.emitter.emit('_blockRedraw');
-        this.targetIterations = iterations;
-
-        // start the stabilization
-        if (this.options.stabilization.onlyDynamicEdges === true) {
-          this._freezeNodes();
-        }
-        this.stabilizationIterations = 0;
-
-        setTimeout(function () {
-          return _this3._stabilizationBatch();
-        }, 0);
-      }
-
-      /**
        * One batch of stabilization
        * @private
        */
@@ -40056,7 +40647,7 @@ return /******/ (function(modules) { // webpackBootstrap
       value: function _stabilizationBatch() {
         // this is here to ensure that there is at least one start event.
         if (this.startedStabilization === false) {
-          this.body.emitter.emit('startStabilizing');
+          this.emit('startStabilizing');
           this.startedStabilization = true;
         }
 
@@ -40067,78 +40658,21 @@ return /******/ (function(modules) { // webpackBootstrap
         }
 
         if (this.stabilized === false && this.stabilizationIterations < this.targetIterations) {
-          this.body.emitter.emit('stabilizationProgress', { iterations: this.stabilizationIterations, total: this.targetIterations });
+          this.emit('stabilizationProgress', { iterations: this.stabilizationIterations, total: this.targetIterations });
           setTimeout(this._stabilizationBatch.bind(this), 0);
         } else {
           this._finalizeStabilization();
         }
       }
-
-      /**
-       * Wrap up the stabilization, fit and emit the events.
-       * @private
-       */
-
-    }, {
-      key: '_finalizeStabilization',
-      value: function _finalizeStabilization() {
-        this.body.emitter.emit('_allowRedraw');
-        if (this.options.stabilization.fit === true) {
-          this.body.emitter.emit('fit');
-        }
-
-        if (this.options.stabilization.onlyDynamicEdges === true) {
-          this._restoreFrozenNodes();
-        }
-
-        this.body.emitter.emit('stabilizationIterationsDone');
-        this.body.emitter.emit('_requestRedraw');
-
-        if (this.stabilized === true) {
-          this._emitStabilized();
-        } else {
-          this.startSimulation();
-        }
-
-        this.ready = true;
-      }
-    }, {
-      key: '_drawForces',
-      value: function _drawForces(ctx) {
-        for (var i = 0; i < this.physicsBody.physicsNodeIndices.length; i++) {
-          var node = this.body.nodes[this.physicsBody.physicsNodeIndices[i]];
-          var force = this.physicsBody.forces[this.physicsBody.physicsNodeIndices[i]];
-          var factor = 20;
-          var colorFactor = 0.03;
-          var forceSize = Math.sqrt(Math.pow(force.x, 2) + Math.pow(force.x, 2));
-
-          var size = Math.min(Math.max(5, forceSize), 15);
-          var arrowSize = 3 * size;
-
-          var color = util.HSVToHex((180 - Math.min(1, Math.max(0, colorFactor * forceSize)) * 180) / 360, 1, 1);
-
-          ctx.lineWidth = size;
-          ctx.strokeStyle = color;
-          ctx.beginPath();
-          ctx.moveTo(node.x, node.y);
-          ctx.lineTo(node.x + factor * force.x, node.y + factor * force.y);
-          ctx.stroke();
-
-          var angle = Math.atan2(force.y, force.x);
-          ctx.fillStyle = color;
-          ctx.arrow(node.x + factor * force.x + Math.cos(angle) * arrowSize, node.y + factor * force.y + Math.sin(angle) * arrowSize, angle, arrowSize);
-          ctx.fill();
-        }
-      }
     }]);
 
-    return PhysicsEngine;
+    return PhysicsBase;
   }();
 
-  exports.default = PhysicsEngine;
+  exports.default = PhysicsBase;
 
 /***/ }),
-/* 100 */
+/* 102 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40652,7 +41186,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = BarnesHutSolver;
 
 /***/ }),
-/* 101 */
+/* 103 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40746,7 +41280,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = RepulsionSolver;
 
 /***/ }),
-/* 102 */
+/* 104 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40837,7 +41371,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = HierarchicalRepulsionSolver;
 
 /***/ }),
-/* 103 */
+/* 105 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -40890,9 +41424,9 @@ return /******/ (function(modules) { // webpackBootstrap
             if (this.body.nodes[edge.toId] !== undefined && this.body.nodes[edge.fromId] !== undefined) {
               if (edge.edgeType.via !== undefined) {
                 edgeLength = edge.options.length === undefined ? this.options.springLength : edge.options.length;
-                node1 = edge.to;
-                node2 = edge.edgeType.via;
-                node3 = edge.from;
+                node1 = nodes[edge.toId];
+                node2 = nodes[edge.edgeType.via.id];
+                node3 = nodes[edge.fromId];
 
                 this._calculateSpringForce(node1, node2, 0.5 * edgeLength);
                 this._calculateSpringForce(node2, node3, 0.5 * edgeLength);
@@ -40900,7 +41434,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 // the * 1.5 is here so the edge looks as large as a smooth edge. It does not initially because the smooth edges use
                 // the support nodes which exert a repulsive force on the to and from nodes, making the edge appear larger.
                 edgeLength = edge.options.length === undefined ? this.options.springLength * 1.5 : edge.options.length;
-                this._calculateSpringForce(edge.from, edge.to, edgeLength);
+                this._calculateSpringForce(nodes[edge.fromId], nodes[edge.toId], edgeLength);
               }
             }
           }
@@ -40948,7 +41482,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = SpringSolver;
 
 /***/ }),
-/* 104 */
+/* 106 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -41077,7 +41611,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = HierarchicalSpringSolver;
 
 /***/ }),
-/* 105 */
+/* 107 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -41146,7 +41680,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CentralGravitySolver;
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -41157,7 +41691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _BarnesHutSolver2 = __webpack_require__(100);
+  var _BarnesHutSolver2 = __webpack_require__(102);
 
   var _BarnesHutSolver3 = _interopRequireDefault(_BarnesHutSolver2);
 
@@ -41220,7 +41754,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ForceAtlas2BasedRepulsionSolver;
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -41231,7 +41765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _CentralGravitySolver2 = __webpack_require__(105);
+  var _CentralGravitySolver2 = __webpack_require__(107);
 
   var _CentralGravitySolver3 = _interopRequireDefault(_CentralGravitySolver2);
 
@@ -41276,7 +41810,346 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ForceAtlas2BasedCentralGravitySolver;
 
 /***/ }),
-/* 108 */
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  var _PhysicsWorker = __webpack_require__(111);
+
+  var _PhysicsWorker2 = _interopRequireDefault(_PhysicsWorker);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  var physicsWorker = new _PhysicsWorker2.default(function (data) {
+    return postMessage(data);
+  });
+  self.addEventListener('message', function (event) {
+    return physicsWorker.handleMessage(event);
+  }, false);
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _PhysicsBase2 = __webpack_require__(101);
+
+  var _PhysicsBase3 = _interopRequireDefault(_PhysicsBase2);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var PhysicsWorker = function (_PhysicsBase) {
+    _inherits(PhysicsWorker, _PhysicsBase);
+
+    function PhysicsWorker(postMessage) {
+      _classCallCheck(this, PhysicsWorker);
+
+      var _this = _possibleConstructorReturn(this, (PhysicsWorker.__proto__ || Object.getPrototypeOf(PhysicsWorker)).call(this));
+
+      _this.body = {
+        nodes: {},
+        edges: {}
+      };
+      _this.postMessage = postMessage;
+      _this.previousStates = {};
+      _this.toRemove = {
+        nodeIds: [],
+        edgeIds: []
+      };
+      _this.isWorker = true;
+      _this.emit = function (event, data) {
+        _this.postMessage({ type: 'emit', data: { event: event, data: data } });
+      };
+      return _this;
+    }
+
+    _createClass(PhysicsWorker, [{
+      key: 'handleMessage',
+      value: function handleMessage(event) {
+        var msg = event.data;
+        switch (msg.type) {
+          case 'physicsTick':
+            this.processRemovals();
+            this.physicsTick();
+            this.sendTickResults();
+            break;
+          case 'updatePositions':
+            this.receivePositions(msg.data);
+            break;
+          case 'updateProperties':
+            this.updateProperties(msg.data);
+            break;
+          case 'addElements':
+            this.addElements(msg.data);
+            break;
+          case 'removeElements':
+            this.removeElements(msg.data);
+            break;
+          case 'stabilize':
+            this.stabilize(msg.data);
+            break;
+          case 'setStabilized':
+            this.stabilized = msg.data;
+            break;
+          case 'stabilized':
+            this.startedStabilization = false;
+            this.stabilizationIterations = 0;
+            break;
+          case 'initPhysicsData':
+            console.debug('init physics data');
+            this.initPhysicsData(msg.data);
+            break;
+          case 'options':
+            this.options = msg.data;
+            this.timestep = this.options.timestep;
+            this.initPhysicsSolvers();
+            break;
+          default:
+            console.warn('unknown message from PhysicsEngine', msg);
+        }
+      }
+    }, {
+      key: 'sendTickResults',
+      value: function sendTickResults() {
+        var nodeIndices = this.physicsBody.physicsNodeIndices;
+        var positions = {};
+        for (var i = 0; i < nodeIndices.length; i++) {
+          var nodeId = nodeIndices[i];
+          var node = this.body.nodes[nodeId];
+          positions[nodeId] = { x: node.x, y: node.y };
+        }
+
+        this.postMessage({
+          type: 'tickResults',
+          data: {
+            positions: positions,
+            stabilized: this.stabilized,
+            stabilizationIterations: this.stabilizationIterations
+          }
+        });
+      }
+    }, {
+      key: 'receivePositions',
+      value: function receivePositions(data) {
+        var updatedNode = this.body.nodes[data.id];
+        if (updatedNode) {
+          updatedNode.x = data.x;
+          updatedNode.y = data.y;
+          this.physicsBody.forces[updatedNode.id] = { x: 0, y: 0 };
+          this.physicsBody.velocities[updatedNode.id] = { x: 0, y: 0 };
+        }
+      }
+    }, {
+      key: 'stabilize',
+      value: function stabilize(data) {
+        var _this2 = this;
+
+        this.stabilized = false;
+        this.targetIterations = data.targetIterations;
+        this.stabilizationIterations = 0;
+        setTimeout(function () {
+          return _this2._stabilizationBatch();
+        }, 0);
+      }
+    }, {
+      key: 'updateProperties',
+      value: function updateProperties(data) {
+        if (data.type === 'node') {
+          var optionsNode = this.body.nodes[data.id];
+          if (optionsNode) {
+            var opts = data.options;
+            if (opts.fixed) {
+              if (opts.fixed.x !== undefined) {
+                optionsNode.options.fixed.x = opts.fixed.x;
+              }
+              if (opts.fixed.y !== undefined) {
+                optionsNode.options.fixed.y = opts.fixed.y;
+              }
+            }
+            if (opts.mass !== undefined) {
+              optionsNode.options.mass = opts.mass;
+            }
+            if (opts.edges && opts.edges.length) {
+              optionsNode.edges.length = opts.edges.length;
+            }
+          } else {
+            console.warn('sending properties to unknown node', data.id, data.options);
+          }
+        } else if (data.type === 'edge') {
+          var edge = this.body.edges[data.id];
+          if (edge) {
+            var _opts = data.options;
+            if (_opts.connected) {
+              edge.connected = _opts.connected;
+            }
+          } else {
+            console.warn('sending properties to unknown edge', data.id, data.options);
+          }
+        } else {
+          console.warn('sending properties to unknown element', data.id, data.options);
+        }
+      }
+    }, {
+      key: 'addElements',
+      value: function addElements(data) {
+        var replaceElements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+        var nodeIds = Object.keys(data.nodes);
+        for (var i = 0; i < nodeIds.length; i++) {
+          var nodeId = nodeIds[i];
+          var newNode = data.nodes[nodeId];
+          if (replaceElements) {
+            this.body.nodes[nodeId] = newNode;
+          }
+          this.physicsBody.forces[nodeId] = { x: 0, y: 0 };
+          // forces can be reset because they are recalculated. Velocities have to persist.
+          if (this.physicsBody.velocities[nodeId] === undefined) {
+            this.physicsBody.velocities[nodeId] = { x: 0, y: 0 };
+          }
+          if (this.physicsBody.physicsNodeIndices.indexOf(nodeId) === -1) {
+            this.physicsBody.physicsNodeIndices.push(nodeId);
+          }
+        }
+        var edgeIds = Object.keys(data.edges);
+        for (var _i = 0; _i < edgeIds.length; _i++) {
+          var edgeId = edgeIds[_i];
+          if (replaceElements) {
+            this.body.edges[edgeId] = data.edges[edgeId];
+          }
+          if (this.physicsBody.physicsEdgeIndices.indexOf(edgeId) === -1) {
+            this.physicsBody.physicsEdgeIndices.push(edgeId);
+          }
+        }
+      }
+    }, {
+      key: 'removeElements',
+      value: function removeElements(data) {
+        // schedule removal of elements on the next physicsTick
+        // avoids having to defensively check every node read in each physics implementation
+        this.toRemove.nodeIds.push.apply(this.toRemove.nodeIds, data.nodeIds);
+        this.toRemove.edgeIds.push.apply(this.toRemove.edgeIds, data.edgeIds);
+        // Handle case where physics is disabled.
+        if (!this.options.enabled) {
+          this.processRemovals();
+        }
+      }
+    }, {
+      key: 'processRemovals',
+      value: function processRemovals() {
+        while (this.toRemove.nodeIds.length > 0) {
+          var nodeId = this.toRemove.nodeIds.pop();
+          var index = this.physicsBody.physicsNodeIndices.indexOf(nodeId);
+          if (index > -1) {
+            this.physicsBody.physicsNodeIndices.splice(index, 1);
+          }
+          delete this.physicsBody.forces[nodeId];
+          delete this.physicsBody.velocities[nodeId];
+          delete this.body.nodes[nodeId];
+        }
+        while (this.toRemove.edgeIds.length > 0) {
+          var edgeId = this.toRemove.edgeIds.pop();
+          var _index = this.physicsBody.physicsEdgeIndices.indexOf(edgeId);
+          if (_index > -1) {
+            this.physicsBody.physicsEdgeIndices.splice(_index, 1);
+          }
+          delete this.body.edges[edgeId];
+        }
+      }
+    }, {
+      key: 'initPhysicsData',
+      value: function initPhysicsData(data) {
+        this.physicsBody.forces = {};
+        this.physicsBody.physicsNodeIndices = [];
+        this.physicsBody.physicsEdgeIndices = [];
+
+        this.body.nodes = data.nodes;
+        this.body.edges = data.edges;
+        this.addElements(data, false);
+
+        // clean deleted nodes from the velocity vector
+        for (var nodeId in this.physicsBody.velocities) {
+          if (this.body.nodes[nodeId] === undefined) {
+            delete this.physicsBody.velocities[nodeId];
+          }
+        }
+      }
+
+      /**
+       * Perform the actual step
+       *
+       * @param nodeId
+       * @param maxVelocity
+       * @returns {number}
+       * @private
+       */
+
+    }, {
+      key: '_performStep',
+      value: function _performStep(nodeId, maxVelocity) {
+        var node = this.body.nodes[nodeId];
+        var timestep = this.timestep;
+        var forces = this.physicsBody.forces;
+        var velocities = this.physicsBody.velocities;
+
+        // store the state so we can revert
+        this.previousStates[nodeId] = { x: node.x, y: node.y, vx: velocities[nodeId].x, vy: velocities[nodeId].y };
+
+        if (node.options.fixed.x === false) {
+          var dx = this.modelOptions.damping * velocities[nodeId].x; // damping force
+          var ax = (forces[nodeId].x - dx) / node.options.mass; // acceleration
+          velocities[nodeId].x += ax * timestep; // velocity
+          velocities[nodeId].x = Math.abs(velocities[nodeId].x) > maxVelocity ? velocities[nodeId].x > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].x;
+          node.x += velocities[nodeId].x * timestep; // position
+        } else {
+          forces[nodeId].x = 0;
+          velocities[nodeId].x = 0;
+        }
+
+        if (node.options.fixed.y === false) {
+          var dy = this.modelOptions.damping * velocities[nodeId].y; // damping force
+          var ay = (forces[nodeId].y - dy) / node.options.mass; // acceleration
+          velocities[nodeId].y += ay * timestep; // velocity
+          velocities[nodeId].y = Math.abs(velocities[nodeId].y) > maxVelocity ? velocities[nodeId].y > 0 ? maxVelocity : -maxVelocity : velocities[nodeId].y;
+          node.y += velocities[nodeId].y * timestep; // position
+        } else {
+          forces[nodeId].y = 0;
+          velocities[nodeId].y = 0;
+        }
+
+        var totalVelocity = Math.sqrt(Math.pow(velocities[nodeId].x, 2) + Math.pow(velocities[nodeId].y, 2));
+        return totalVelocity;
+      }
+    }, {
+      key: '_finalizeStabilization',
+      value: function _finalizeStabilization() {
+        this.sendTickResults();
+        this.postMessage({
+          type: 'finalizeStabilization'
+        });
+      }
+    }]);
+
+    return PhysicsWorker;
+  }(_PhysicsBase3.default);
+
+  exports.default = PhysicsWorker;
+
+/***/ }),
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -41289,11 +42162,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(109);
+  var _NetworkUtil = __webpack_require__(113);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
-  var _Cluster = __webpack_require__(110);
+  var _Cluster = __webpack_require__(114);
 
   var _Cluster2 = _interopRequireDefault(_Cluster);
 
@@ -42144,7 +43017,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ClusterEngine;
 
 /***/ }),
-/* 109 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -42282,7 +43155,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NetworkUtil;
 
 /***/ }),
-/* 110 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -42291,7 +43164,7 @@ return /******/ (function(modules) { // webpackBootstrap
     value: true
   });
 
-  var _Node2 = __webpack_require__(71);
+  var _Node2 = __webpack_require__(72);
 
   var _Node3 = _interopRequireDefault(_Node2);
 
@@ -42326,7 +43199,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Cluster;
 
 /***/ }),
-/* 111 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -42699,7 +43572,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = CanvasRenderer;
 
 /***/ }),
-/* 112 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -43163,7 +44036,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Canvas;
 
 /***/ }),
-/* 113 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -43174,7 +44047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(109);
+  var _NetworkUtil = __webpack_require__(113);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
@@ -43513,7 +44386,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = View;
 
 /***/ }),
-/* 114 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -43524,11 +44397,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NavigationHandler = __webpack_require__(115);
+  var _NavigationHandler = __webpack_require__(119);
 
   var _NavigationHandler2 = _interopRequireDefault(_NavigationHandler);
 
-  var _Popup = __webpack_require__(116);
+  var _Popup = __webpack_require__(120);
 
   var _Popup2 = _interopRequireDefault(_Popup);
 
@@ -43878,8 +44751,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 yFixed: object.options.fixed.y
               };
 
-              object.options.fixed.x = true;
-              object.options.fixed.y = true;
+              object.setFixed(true);
 
               this.drag.selection.push(s);
             }
@@ -43964,8 +44836,7 @@ return /******/ (function(modules) { // webpackBootstrap
         if (selection && selection.length) {
           selection.forEach(function (s) {
             // restore original xFixed and yFixed
-            s.node.options.fixed.x = s.xFixed;
-            s.node.options.fixed.y = s.yFixed;
+            s.node.setFixed({ x: s.xFixed, y: s.yFixed });
           });
           this.selectionHandler._generateClickEvent('dragEnd', event, this.getPointer(event.center));
           this.body.emitter.emit('startSimulation');
@@ -44298,7 +45169,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = InteractionHandler;
 
 /***/ }),
-/* 115 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -44627,7 +45498,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = NavigationHandler;
 
 /***/ }),
-/* 116 */
+/* 120 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -44756,7 +45627,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = Popup;
 
 /***/ }),
-/* 117 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -44767,11 +45638,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _Node = __webpack_require__(71);
+  var _Node = __webpack_require__(72);
 
   var _Node2 = _interopRequireDefault(_Node);
 
-  var _Edge = __webpack_require__(91);
+  var _Edge = __webpack_require__(92);
 
   var _Edge2 = _interopRequireDefault(_Edge);
 
@@ -45549,7 +46420,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = SelectionHandler;
 
 /***/ }),
-/* 118 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -45564,7 +46435,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  var _NetworkUtil = __webpack_require__(109);
+  var _NetworkUtil = __webpack_require__(113);
 
   var _NetworkUtil2 = _interopRequireDefault(_NetworkUtil);
 
@@ -45775,21 +46646,30 @@ return /******/ (function(modules) { // webpackBootstrap
             var MAX_LEVELS = 10;
             var level = 0;
             var clusterThreshold = 100;
+            //Performance enhancement, during clustering edges need only be simple straight lines. These options don't propagate outside the clustering phase.
+            var clusterOptions = {
+              clusterEdgeProperties: {
+                smooth: {
+                  enabled: false
+                }
+              }
+            };
+
             // if there are a lot of nodes, we cluster before we run the algorithm.
             if (this.body.nodeIndices.length > clusterThreshold) {
               var startLength = this.body.nodeIndices.length;
-              while (this.body.nodeIndices.length > clusterThreshold) {
+              while (this.body.nodeIndices.length > clusterThreshold && level <= MAX_LEVELS) {
                 //console.time("clustering")
                 level += 1;
                 var before = this.body.nodeIndices.length;
                 // if there are many nodes we do a hubsize cluster
                 if (level % 3 === 0) {
-                  this.body.modules.clustering.clusterBridges();
+                  this.body.modules.clustering.clusterBridges(clusterOptions);
                 } else {
-                  this.body.modules.clustering.clusterOutliers();
+                  this.body.modules.clustering.clusterOutliers(clusterOptions);
                 }
                 var after = this.body.nodeIndices.length;
-                if (before == after && level % 3 !== 0 || level > MAX_LEVELS) {
+                if (before == after && level % 3 !== 0) {
                   this._declusterAll();
                   this.body.emitter.emit("_layoutFailed");
                   console.info("This network could not be positioned by this version of the improved layout algorithm. Please disable improvedLayout for better performance.");
@@ -45800,6 +46680,9 @@ return /******/ (function(modules) { // webpackBootstrap
               }
               // increase the size of the edges
               this.body.modules.kamadaKawai.setOptions({ springLength: Math.max(150, 2 * startLength) });
+            }
+            if (level > MAX_LEVELS) {
+              console.info("The clustering didn't succeed within the amount of interations allowed, progressing with partial result.");
             }
 
             // position the system for these nodes and edges
@@ -46009,6 +46892,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // get a map of all nodes in this branch
         var getBranchNodes = function getBranchNodes(source, map) {
+          if (map[source.id]) {
+            return;
+          }
           map[source.id] = true;
           if (_this2.hierarchicalChildrenReference[source.id]) {
             var children = _this2.hierarchicalChildrenReference[source.id];
@@ -46058,16 +46944,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // get the maximum level of a branch.
         var getMaxLevel = function getMaxLevel(nodeId) {
-          var level = _this2.hierarchicalLevels[nodeId];
-          if (_this2.hierarchicalChildrenReference[nodeId]) {
-            var children = _this2.hierarchicalChildrenReference[nodeId];
-            if (children.length > 0) {
-              for (var i = 0; i < children.length; i++) {
-                level = Math.max(level, getMaxLevel(children[i]));
+          var accumulator = {};
+          var _getMaxLevel = function _getMaxLevel(nodeId) {
+            if (accumulator[nodeId] !== undefined) {
+              return accumulator[nodeId];
+            }
+            var level = _this2.hierarchicalLevels[nodeId];
+            if (_this2.hierarchicalChildrenReference[nodeId]) {
+              var children = _this2.hierarchicalChildrenReference[nodeId];
+              if (children.length > 0) {
+                for (var i = 0; i < children.length; i++) {
+                  level = Math.max(level, _getMaxLevel(children[i]));
+                }
               }
             }
-          }
-          return level;
+            accumulator[nodeId] = level;
+            return level;
+          };
+          return _getMaxLevel(nodeId);
         };
 
         // check what the maximum level is these nodes have in common.
@@ -46122,8 +47016,8 @@ return /******/ (function(modules) { // webpackBootstrap
           var diffAbs = Math.abs(pos2 - pos1);
           //console.log("NOW CHEcKING:", node1.id, node2.id, diffAbs);
           if (diffAbs > _this2.options.hierarchical.nodeSpacing) {
-            var branchNodes1 = {};branchNodes1[node1.id] = true;
-            var branchNodes2 = {};branchNodes2[node2.id] = true;
+            var branchNodes1 = {};
+            var branchNodes2 = {};
 
             getBranchNodes(node1, branchNodes1);
             getBranchNodes(node2, branchNodes2);
@@ -46630,10 +47524,10 @@ return /******/ (function(modules) { // webpackBootstrap
             var level = this.hierarchicalLevels[nodeId] === undefined ? 0 : this.hierarchicalLevels[nodeId];
             if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
               node.y = this.options.hierarchical.levelSeparation * level;
-              node.options.fixed.y = true;
+              node.setFixed({ y: true });
             } else {
               node.x = this.options.hierarchical.levelSeparation * level;
-              node.options.fixed.x = true;
+              node.setFixed({ x: true });
             }
             if (distribution[level] === undefined) {
               distribution[level] = {};
@@ -46897,16 +47791,26 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_shiftBlock',
       value: function _shiftBlock(parentId, diff) {
-        if (this.options.hierarchical.direction === 'UD' || this.options.hierarchical.direction === 'DU') {
-          this.body.nodes[parentId].x += diff;
-        } else {
-          this.body.nodes[parentId].y += diff;
-        }
-        if (this.hierarchicalChildrenReference[parentId] !== undefined) {
-          for (var i = 0; i < this.hierarchicalChildrenReference[parentId].length; i++) {
-            this._shiftBlock(this.hierarchicalChildrenReference[parentId][i], diff);
+        var _this8 = this;
+
+        var progress = {};
+        var shifter = function shifter(parentId) {
+          if (progress[parentId]) {
+            return;
           }
-        }
+          progress[parentId] = true;
+          if (_this8.options.hierarchical.direction === 'UD' || _this8.options.hierarchical.direction === 'DU') {
+            _this8.body.nodes[parentId].x += diff;
+          } else {
+            _this8.body.nodes[parentId].y += diff;
+          }
+          if (_this8.hierarchicalChildrenReference[parentId] !== undefined) {
+            for (var i = 0; i < _this8.hierarchicalChildrenReference[parentId].length; i++) {
+              shifter(_this8.hierarchicalChildrenReference[parentId][i]);
+            }
+          }
+        };
+        shifter(parentId);
       }
 
       /**
@@ -46920,22 +47824,22 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: '_findCommonParent',
       value: function _findCommonParent(childA, childB) {
-        var _this8 = this;
+        var _this9 = this;
 
         var parents = {};
         var iterateParents = function iterateParents(parents, child) {
-          if (_this8.hierarchicalParentReference[child] !== undefined) {
-            for (var i = 0; i < _this8.hierarchicalParentReference[child].length; i++) {
-              var parent = _this8.hierarchicalParentReference[child][i];
+          if (_this9.hierarchicalParentReference[child] !== undefined) {
+            for (var i = 0; i < _this9.hierarchicalParentReference[child].length; i++) {
+              var parent = _this9.hierarchicalParentReference[child][i];
               parents[parent] = true;
               iterateParents(parents, parent);
             }
           }
         };
         var findParent = function findParent(parents, child) {
-          if (_this8.hierarchicalParentReference[child] !== undefined) {
-            for (var i = 0; i < _this8.hierarchicalParentReference[child].length; i++) {
-              var parent = _this8.hierarchicalParentReference[child][i];
+          if (_this9.hierarchicalParentReference[child] !== undefined) {
+            for (var i = 0; i < _this9.hierarchicalParentReference[child].length; i++) {
+              var parent = _this9.hierarchicalParentReference[child][i];
               if (parents[parent] !== undefined) {
                 return { foundParent: parent, withChild: child };
               }
@@ -47032,7 +47936,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = LayoutEngine;
 
 /***/ }),
-/* 119 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
   'use strict';
@@ -48279,7 +49183,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = ManipulationSystem;
 
 /***/ }),
-/* 120 */
+/* 124 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -48523,6 +49427,7 @@ return /******/ (function(modules) { // webpackBootstrap
     },
     physics: {
       enabled: { boolean: boolean },
+      useWorker: { boolean: boolean },
       barnesHut: {
         gravitationalConstant: { number: number },
         centralGravity: { number: number },
@@ -48798,7 +49703,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.configureOptions = configureOptions;
 
 /***/ }),
-/* 121 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
   "use strict";
@@ -48812,7 +49717,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // distance finding algorithm
 
 
-  var _FloydWarshall = __webpack_require__(122);
+  var _FloydWarshall = __webpack_require__(126);
 
   var _FloydWarshall2 = _interopRequireDefault(_FloydWarshall);
 
@@ -48876,6 +49781,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // get the K Matrix
         this._createK_matrix(D_matrix);
+
+        // initial E Matrix
+        this._createE_matrix();
 
         // calculate positions
         var threshold = 0.01;
@@ -48968,23 +49876,9 @@ return /******/ (function(modules) { // webpackBootstrap
     }, {
       key: "_getEnergy",
       value: function _getEnergy(m) {
-        var nodesArray = this.body.nodeIndices;
-        var nodes = this.body.nodes;
-
-        var x_m = nodes[m].x;
-        var y_m = nodes[m].y;
-        var dE_dx = 0;
-        var dE_dy = 0;
-        for (var iIdx = 0; iIdx < nodesArray.length; iIdx++) {
-          var i = nodesArray[iIdx];
-          if (i !== m) {
-            var x_i = nodes[i].x;
-            var y_i = nodes[i].y;
-            var denominator = 1.0 / Math.sqrt(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2));
-            dE_dx += this.K_matrix[m][i] * (x_m - x_i - this.L_matrix[m][i] * (x_m - x_i) * denominator);
-            dE_dy += this.K_matrix[m][i] * (y_m - y_i - this.L_matrix[m][i] * (y_m - y_i) * denominator);
-          }
-        }
+        var _E_sums$m = _slicedToArray(this.E_sums[m], 2),
+            dE_dx = _E_sums$m[0],
+            dE_dy = _E_sums$m[1];
 
         var delta_m = Math.sqrt(Math.pow(dE_dx, 2) + Math.pow(dE_dy, 2));
         return [delta_m, dE_dx, dE_dy];
@@ -49010,15 +49904,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
         var x_m = nodes[m].x;
         var y_m = nodes[m].y;
+        var km = this.K_matrix[m];
+        var lm = this.L_matrix[m];
+
         for (var iIdx = 0; iIdx < nodesArray.length; iIdx++) {
           var i = nodesArray[iIdx];
           if (i !== m) {
             var x_i = nodes[i].x;
             var y_i = nodes[i].y;
+            var kmat = km[i];
+            var lmat = lm[i];
             var denominator = 1.0 / Math.pow(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2), 1.5);
-            d2E_dx2 += this.K_matrix[m][i] * (1 - this.L_matrix[m][i] * Math.pow(y_m - y_i, 2) * denominator);
-            d2E_dxdy += this.K_matrix[m][i] * (this.L_matrix[m][i] * (x_m - x_i) * (y_m - y_i) * denominator);
-            d2E_dy2 += this.K_matrix[m][i] * (1 - this.L_matrix[m][i] * Math.pow(x_m - x_i, 2) * denominator);
+            d2E_dx2 += kmat * (1 - lmat * Math.pow(y_m - y_i, 2) * denominator);
+            d2E_dxdy += kmat * (lmat * (x_m - x_i) * (y_m - y_i) * denominator);
+            d2E_dy2 += kmat * (1 - lmat * Math.pow(x_m - x_i, 2) * denominator);
           }
         }
         // make the variable names easier to make the solving of the linear system easier to read
@@ -49035,6 +49934,9 @@ return /******/ (function(modules) { // webpackBootstrap
         // move the node
         nodes[m].x += dx;
         nodes[m].y += dy;
+
+        // Recalculate E_matrix (should be incremental)
+        this._updateE_matrix(m);
       }
 
       /**
@@ -49078,6 +49980,86 @@ return /******/ (function(modules) { // webpackBootstrap
           }
         }
       }
+
+      /**
+       *  Create matrix with all energies between nodes
+       *  @private
+       */
+
+    }, {
+      key: "_createE_matrix",
+      value: function _createE_matrix() {
+        var nodesArray = this.body.nodeIndices;
+        var nodes = this.body.nodes;
+        this.E_matrix = {};
+        this.E_sums = {};
+        for (var mIdx = 0; mIdx < nodesArray.length; mIdx++) {
+          this.E_matrix[nodesArray[mIdx]] = [];
+        }
+        for (var _mIdx = 0; _mIdx < nodesArray.length; _mIdx++) {
+          var m = nodesArray[_mIdx];
+          var x_m = nodes[m].x;
+          var y_m = nodes[m].y;
+          var dE_dx = 0;
+          var dE_dy = 0;
+          for (var iIdx = _mIdx; iIdx < nodesArray.length; iIdx++) {
+            var i = nodesArray[iIdx];
+            if (i !== m) {
+              var x_i = nodes[i].x;
+              var y_i = nodes[i].y;
+              var denominator = 1.0 / Math.sqrt(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2));
+              this.E_matrix[m][iIdx] = [this.K_matrix[m][i] * (x_m - x_i - this.L_matrix[m][i] * (x_m - x_i) * denominator), this.K_matrix[m][i] * (y_m - y_i - this.L_matrix[m][i] * (y_m - y_i) * denominator)];
+              this.E_matrix[i][_mIdx] = this.E_matrix[m][iIdx];
+              dE_dx += this.E_matrix[m][iIdx][0];
+              dE_dy += this.E_matrix[m][iIdx][1];
+            }
+          }
+          //Store sum
+          this.E_sums[m] = [dE_dx, dE_dy];
+        }
+      }
+
+      //Update method, just doing single column (rows are auto-updated) (update all sums)
+
+    }, {
+      key: "_updateE_matrix",
+      value: function _updateE_matrix(m) {
+        var nodesArray = this.body.nodeIndices;
+        var nodes = this.body.nodes;
+        var colm = this.E_matrix[m];
+        var kcolm = this.K_matrix[m];
+        var lcolm = this.L_matrix[m];
+        var x_m = nodes[m].x;
+        var y_m = nodes[m].y;
+        var dE_dx = 0;
+        var dE_dy = 0;
+        for (var iIdx = 0; iIdx < nodesArray.length; iIdx++) {
+          var i = nodesArray[iIdx];
+          if (i !== m) {
+            //Keep old energy value for sum modification below
+            var cell = colm[iIdx];
+            var oldDx = cell[0];
+            var oldDy = cell[1];
+
+            //Calc new energy:
+            var x_i = nodes[i].x;
+            var y_i = nodes[i].y;
+            var denominator = 1.0 / Math.sqrt(Math.pow(x_m - x_i, 2) + Math.pow(y_m - y_i, 2));
+            var dx = kcolm[i] * (x_m - x_i - lcolm[i] * (x_m - x_i) * denominator);
+            var dy = kcolm[i] * (y_m - y_i - lcolm[i] * (y_m - y_i) * denominator);
+            colm[iIdx] = [dx, dy];
+            dE_dx += dx;
+            dE_dy += dy;
+
+            //add new energy to sum of each column
+            var sum = this.E_sums[i];
+            sum[0] += dx - oldDx;
+            sum[1] += dy - oldDy;
+          }
+        }
+        //Store sum at -1 index
+        this.E_sums[m] = [dE_dx, dE_dy];
+      }
     }]);
 
     return KamadaKawai;
@@ -49086,7 +50068,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = KamadaKawai;
 
 /***/ }),
-/* 122 */
+/* 126 */
 /***/ (function(module, exports) {
 
   "use strict";
@@ -49116,11 +50098,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // prepare matrix with large numbers
         for (var i = 0; i < nodesArray.length; i++) {
-          D_matrix[nodesArray[i]] = {};
-          D_matrix[nodesArray[i]] = {};
+          var node = nodesArray[i];
+          var cell = {};
+          D_matrix[node] = cell;
           for (var j = 0; j < nodesArray.length; j++) {
-            D_matrix[nodesArray[i]][nodesArray[j]] = i == j ? 0 : 1e9;
-            D_matrix[nodesArray[i]][nodesArray[j]] = i == j ? 0 : 1e9;
+            cell[nodesArray[j]] = i == j ? 0 : 1e9;
           }
         }
 
@@ -49138,10 +50120,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // Adapted FloydWarshall based on unidirectionality to greatly reduce complexity.
         for (var k = 0; k < nodeCount; k++) {
+          var knode = nodesArray[k];
+          var kcolm = D_matrix[knode];
           for (var _i2 = 0; _i2 < nodeCount - 1; _i2++) {
+            var inode = nodesArray[_i2];
+            var icolm = D_matrix[inode];
             for (var _j = _i2 + 1; _j < nodeCount; _j++) {
-              D_matrix[nodesArray[_i2]][nodesArray[_j]] = Math.min(D_matrix[nodesArray[_i2]][nodesArray[_j]], D_matrix[nodesArray[_i2]][nodesArray[k]] + D_matrix[nodesArray[k]][nodesArray[_j]]);
-              D_matrix[nodesArray[_j]][nodesArray[_i2]] = D_matrix[nodesArray[_i2]][nodesArray[_j]];
+              var jnode = nodesArray[_j];
+              var jcolm = D_matrix[jnode];
+
+              var val = Math.min(icolm[jnode], icolm[knode] + kcolm[jnode]);
+              icolm[jnode] = val;
+              jcolm[inode] = val;
             }
           }
         }
@@ -49156,7 +50146,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.default = FloydWarshall;
 
 /***/ }),
-/* 123 */
+/* 127 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -49444,7 +50434,7 @@ return /******/ (function(modules) { // webpackBootstrap
   }
 
 /***/ }),
-/* 124 */
+/* 128 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -50342,7 +51332,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.DOTToGraph = DOTToGraph;
 
 /***/ }),
-/* 125 */
+/* 129 */
 /***/ (function(module, exports) {
 
   'use strict';
@@ -50420,7 +51410,7 @@ return /******/ (function(modules) { // webpackBootstrap
   exports.parseGephi = parseGephi;
 
 /***/ }),
-/* 126 */
+/* 130 */
 /***/ (function(module, exports) {
 
   'use strict';
