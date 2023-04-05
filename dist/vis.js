@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-04-04
+ * @date    2023-04-05
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -19627,18 +19627,21 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.backgroundHorizontal = document.createElement('div');
     this.dom.centerContainer = document.createElement('div');
     this.dom.leftContainer = document.createElement('div');
-    this.dom.rightContainer = document.createElement('div');
+    // Test Performance
+    // this.dom.rightContainer       = document.createElement('div');
     this.dom.center = document.createElement('div');
     this.dom.left = document.createElement('div');
     this.dom.right = document.createElement('div');
-    this.dom.top = document.createElement('div');
+    // Test Performance
+    // this.dom.top                  = document.createElement('div');
     this.dom.bottom = document.createElement('div');
-    this.dom.shadowTop = document.createElement('div');
-    this.dom.shadowBottom = document.createElement('div');
-    this.dom.shadowTopLeft = document.createElement('div');
-    this.dom.shadowBottomLeft = document.createElement('div');
-    this.dom.shadowTopRight = document.createElement('div');
-    this.dom.shadowBottomRight = document.createElement('div');
+    // Test Performance
+    // this.dom.shadowTop            = document.createElement('div');
+    // this.dom.shadowBottom         = document.createElement('div');
+    // this.dom.shadowTopLeft        = document.createElement('div');
+    // this.dom.shadowBottomLeft     = document.createElement('div');
+    // this.dom.shadowTopRight       = document.createElement('div');
+    // this.dom.shadowBottomRight    = document.createElement('div');
 
     this.dom.root.className = 'vis-timeline ' + this.rootClass;
     this.dom.background.className = 'vis-panel vis-background';
@@ -19646,38 +19649,43 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.backgroundHorizontal.className = 'vis-panel vis-background vis-horizontal';
     this.dom.centerContainer.className = 'vis-panel vis-center';
     this.dom.leftContainer.className = 'vis-panel vis-left';
-    this.dom.rightContainer.className = 'vis-panel vis-right';
-    this.dom.top.className = 'vis-panel vis-top';
+    // Test Performance
+    // this.dom.rightContainer.className       = 'vis-panel vis-right';
+    // this.dom.top.className                  = 'vis-panel vis-top';
     this.dom.bottom.className = 'vis-panel vis-bottom';
     this.dom.left.className = 'vis-content';
     this.dom.center.className = 'vis-content';
     this.dom.right.className = 'vis-content';
-    this.dom.shadowTop.className = 'vis-shadow vis-top';
-    this.dom.shadowBottom.className = 'vis-shadow vis-bottom';
-    this.dom.shadowTopLeft.className = 'vis-shadow vis-top';
-    this.dom.shadowBottomLeft.className = 'vis-shadow vis-bottom';
-    this.dom.shadowTopRight.className = 'vis-shadow vis-top';
-    this.dom.shadowBottomRight.className = 'vis-shadow vis-bottom';
+    // Test Performance
+    // this.dom.shadowTop.className            = 'vis-shadow vis-top';
+    // this.dom.shadowBottom.className         = 'vis-shadow vis-bottom';
+    // this.dom.shadowTopLeft.className        = 'vis-shadow vis-top';
+    // this.dom.shadowBottomLeft.className     = 'vis-shadow vis-bottom';
+    // this.dom.shadowTopRight.className       = 'vis-shadow vis-top';
+    // this.dom.shadowBottomRight.className    = 'vis-shadow vis-bottom';
 
     this.dom.root.appendChild(this.dom.background);
     this.dom.root.appendChild(this.dom.backgroundVertical);
     this.dom.root.appendChild(this.dom.backgroundHorizontal);
     this.dom.root.appendChild(this.dom.centerContainer);
     this.dom.root.appendChild(this.dom.leftContainer);
-    this.dom.root.appendChild(this.dom.rightContainer);
-    this.dom.root.appendChild(this.dom.top);
+    // Test Performance
+    // this.dom.root.appendChild(this.dom.rightContainer);
+    // this.dom.root.appendChild(this.dom.top);
     this.dom.root.appendChild(this.dom.bottom);
 
     this.dom.centerContainer.appendChild(this.dom.center);
     this.dom.leftContainer.appendChild(this.dom.left);
-    this.dom.rightContainer.appendChild(this.dom.right);
+    // Test Performance
+    // this.dom.rightContainer.appendChild(this.dom.right);
 
-    this.dom.centerContainer.appendChild(this.dom.shadowTop);
-    this.dom.centerContainer.appendChild(this.dom.shadowBottom);
-    this.dom.leftContainer.appendChild(this.dom.shadowTopLeft);
-    this.dom.leftContainer.appendChild(this.dom.shadowBottomLeft);
-    this.dom.rightContainer.appendChild(this.dom.shadowTopRight);
-    this.dom.rightContainer.appendChild(this.dom.shadowBottomRight);
+    // this.dom.centerContainer.appendChild(this.dom.shadowTop);
+    // this.dom.centerContainer.appendChild(this.dom.shadowBottom);
+    // this.dom.leftContainer.appendChild(this.dom.shadowTopLeft);
+    // this.dom.leftContainer.appendChild(this.dom.shadowBottomLeft);
+    // Test Performance
+    // this.dom.rightContainer.appendChild(this.dom.shadowTopRight);
+    // this.dom.rightContainer.appendChild(this.dom.shadowBottomRight);
 
     this.on('rangechange', function () {
       if (this.initialDrawDone === true) {
@@ -20251,6 +20259,12 @@ return /******/ (function(modules) { // webpackBootstrap
     var options = this.options;
     var props = this.props;
     var domRoot = dom.root;
+    var clientHeight = domRoot.clientHeight,
+        offsetHeight = domRoot.offsetHeight,
+        offsetWidth = domRoot.offsetWidth,
+        clientWidth = domRoot.clientWidth;
+
+    var centerContainerClientHeight = dom.centerContainer.clientHeight;
 
     DateUtil.updateHiddenDates(this.options.moment, this.body, this.options.hiddenDates);
 
@@ -20268,18 +20282,13 @@ return /******/ (function(modules) { // webpackBootstrap
     domRoot.style.minHeight = util.option.asSize(options.minHeight, '');
     domRoot.style.width = util.option.asSize(options.width, '');
 
-    var rootClientHeight = domRoot.clientHeight;
-    var rootOffsetHeight = domRoot.offsetHeight;
-    var rootOffsetWidth = domRoot.offsetWidth;
-    var centerContainerClientHeight = dom.centerContainer.clientHeight;
-
     // calculate border widths
     props.border.left = (dom.centerContainer.offsetWidth - dom.centerContainer.clientWidth) / 2;
     props.border.right = props.border.left;
     props.border.top = (dom.centerContainer.offsetHeight - centerContainerClientHeight) / 2;
     props.border.bottom = props.border.top;
-    props.borderRootHeight = rootOffsetHeight - rootClientHeight;
-    props.borderRootWidth = rootOffsetWidth - domRoot.clientWidth;
+    props.borderRootHeight = offsetHeight - clientHeight;
+    props.borderRootWidth = offsetWidth - clientWidth;
 
     // workaround for a bug in IE: the clientWidth of an element with
     // a height:0px and overflow:hidden is not calculated and always has value 0
@@ -20287,7 +20296,7 @@ return /******/ (function(modules) { // webpackBootstrap
       props.border.left = props.border.top;
       props.border.right = props.border.left;
     }
-    if (rootClientHeight === 0) {
+    if (clientHeight === 0) {
       props.borderRootWidth = props.borderRootHeight;
     }
 
@@ -20296,7 +20305,7 @@ return /******/ (function(modules) { // webpackBootstrap
     props.center.height = dom.center.offsetHeight;
     props.left.height = dom.left.offsetHeight;
     props.right.height = dom.right.offsetHeight;
-    props.top.height = dom.top.clientHeight || -props.border.top;
+    props.top.height = -props.border.top; // Test Performance -- dom.top.clientHeight    || -props.border.top;
     props.bottom.height = dom.bottom.clientHeight || -props.border.bottom;
 
     // TODO: compensate borders when any of the panels is empty.
@@ -20308,7 +20317,7 @@ return /******/ (function(modules) { // webpackBootstrap
     domRoot.style.height = util.option.asSize(options.height, autoHeight + 'px');
 
     // calculate heights of the content panels
-    props.root.height = rootOffsetHeight;
+    props.root.height = offsetHeight;
     props.background.height = props.root.height - props.borderRootHeight;
     var containerHeight = props.root.height - props.top.height - props.bottom.height - props.borderRootHeight;
     props.centerContainer.height = containerHeight;
@@ -20316,11 +20325,11 @@ return /******/ (function(modules) { // webpackBootstrap
     props.rightContainer.height = props.leftContainer.height;
 
     // calculate the widths of the panels
-    props.root.width = rootOffsetWidth;
+    props.root.width = offsetWidth;
     props.background.width = props.root.width - props.borderRootWidth;
     props.left.width = dom.leftContainer.clientWidth || -props.border.left;
     props.leftContainer.width = props.left.width;
-    props.right.width = dom.rightContainer.clientWidth || -props.border.right;
+    props.right.width = -props.border.right; // Test Performance -- dom.rightContainer.clientWidth || -props.border.right;
     props.rightContainer.width = props.right.width;
     var centerWidth = 0;
     if (this.body.origin === 'flowsheet') {
@@ -20342,13 +20351,15 @@ return /******/ (function(modules) { // webpackBootstrap
     dom.backgroundHorizontal.style.height = centerContainerHeight;
     dom.centerContainer.style.height = centerContainerHeight;
     dom.leftContainer.style.height = props.leftContainer.height + 'px';
-    dom.rightContainer.style.height = props.rightContainer.height + 'px';
+    // Test Performance
+    // dom.rightContainer.style.height       = `${props.rightContainer.height}px`;
 
     dom.background.style.width = props.background.width + 'px';
     dom.backgroundVertical.style.width = props.centerContainer.width + 'px';
     dom.backgroundHorizontal.style.width = props.background.width + 'px';
     dom.centerContainer.style.width = props.center.width + 'px';
-    dom.top.style.width = props.top.width + 'px';
+    // Test Performance
+    // dom.top.style.width                   = `${props.top.width}px`;
     dom.bottom.style.width = props.bottom.width + 'px';
 
     // reposition the panels
@@ -20362,10 +20373,11 @@ return /******/ (function(modules) { // webpackBootstrap
     dom.centerContainer.style.top = props.top.height + 'px';
     dom.leftContainer.style.left = '0';
     dom.leftContainer.style.top = props.top.height + 'px';
-    dom.rightContainer.style.left = props.left.width + props.center.width + 'px';
-    dom.rightContainer.style.top = props.top.height + 'px';
-    dom.top.style.left = props.left.width + 'px';
-    dom.top.style.top = '0';
+    // Test Performance
+    // dom.rightContainer.style.left       = `${(props.left.width + props.center.width)}px`;
+    // dom.rightContainer.style.top        = `${props.top.height}px`;
+    // dom.top.style.left                  = `${props.left.width}px`;
+    // dom.top.style.top                   = '0';
     dom.bottom.style.left = props.left.width + 'px';
     dom.bottom.style.top = props.top.height + props.centerContainer.height + 'px';
 
@@ -20383,14 +20395,14 @@ return /******/ (function(modules) { // webpackBootstrap
     dom.right.style.transform = 'translate(0px, ' + offset + 'px)';
 
     // show shadows when vertical scrolling is available
-    var visibilityTop = this.props.scrollTop == 0 ? 'hidden' : '';
-    var visibilityBottom = this.props.scrollTop == this.props.scrollTopMin ? 'hidden' : '';
-    dom.shadowTop.style.visibility = visibilityTop;
-    dom.shadowBottom.style.visibility = visibilityBottom;
-    dom.shadowTopLeft.style.visibility = visibilityTop;
-    dom.shadowBottomLeft.style.visibility = visibilityBottom;
-    dom.shadowTopRight.style.visibility = visibilityTop;
-    dom.shadowBottomRight.style.visibility = visibilityBottom;
+    // var visibilityTop = this.props.scrollTop == 0 ? 'hidden' : '';
+    // var visibilityBottom = this.props.scrollTop == this.props.scrollTopMin ? 'hidden' : '';
+    // dom.shadowTop.style.visibility          = visibilityTop;
+    // dom.shadowBottom.style.visibility       = visibilityBottom;
+    // dom.shadowTopLeft.style.visibility      = visibilityTop;
+    // dom.shadowBottomLeft.style.visibility   = visibilityBottom;
+    // dom.shadowTopRight.style.visibility     = visibilityTop;
+    // dom.shadowBottomRight.style.visibility  = visibilityBottom;
 
     // enable/disable vertical panning
     var contentsOverflow = this.props.center.height > this.props.centerContainer.height;
@@ -20562,8 +20574,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
     //Prevent initial unnecessary redraw
     if (me.dom && me.dom.root) {
-      me.props.lastWidth = me.dom.root.offsetWidth;
-      me.props.lastHeight = me.dom.root.offsetHeight;
+      var _me$dom$root = me.dom.root,
+          offsetWidth = _me$dom$root.offsetWidth,
+          offsetHeight = _me$dom$root.offsetHeight;
+
+      me.props.lastWidth = offsetWidth;
+      me.props.lastHeight = offsetHeight;
     }
 
     this.watchTimer = setInterval(this._onResize, 1000);
@@ -24198,9 +24214,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // update class
       var className = (this.data.className ? ' ' + this.data.className : '') + (this.selected ? ' vis-selected' : '') + (editable ? ' vis-editable' : ' vis-readonly');
-      dom.box.className = 'vis-item vis-box' + className;
-      dom.line.className = 'vis-item vis-line' + className;
-      dom.dot.className = 'vis-item vis-dot' + className;
+      dom.box.className = 'vis-item vis-box ' + className;
+      dom.line.className = 'vis-item vis-line ' + className;
+      dom.dot.className = 'vis-item vis-dot ' + className;
 
       // recalculate size
       this.props.dot.height = dom.dot.offsetHeight;
@@ -24274,7 +24290,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.left = domBoxStyleLeft;
     this.dom.box.style.transform = 'translateX(' + domBoxStyleLeft + 'px)';
     this.dom.line.style.transform = 'translateX(' + domLineStyleLeft + 'px)';
-    this.dom.dot.style.transform = 'translateX(' + domDotStyleLeft + 'px)';
+    this.dom.dot.style.transform = 'translateX(' + domDotStyleLeft + '\'px)';
   };
 
   /**
@@ -25684,7 +25700,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var width = 0;
     var line;
     var labelMinor;
-    var xFirstMajorLabel = undefined;
+    // var xFirstMajorLabel = undefined;
     var count = 0;
     var MAX = 1000;
     var className;
@@ -25692,6 +25708,10 @@ return /******/ (function(modules) { // webpackBootstrap
     // Calculation of the possibility of the vertical line taking into account the size of the header
     var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
     var elementHeaderWidth = document.querySelector('.tl-setting-bar');
+    if (elementHeaderWidthItem && elementHeaderWidth) {
+      // && elementHeaderWidth.offsetWidth
+      width = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+    }
     current = start;
     xNext = this.body.util.toScreen(current);
     for (var next = 0; next < columnCount; next++) {
@@ -25704,24 +25724,22 @@ return /******/ (function(modules) { // webpackBootstrap
       xNext = this.body.util.toScreen(current);
       width = xNext - x;
 
-      if (elementHeaderWidthItem && elementHeaderWidth) {
-        // && elementHeaderWidth.offsetWidth
-        width = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
-        if (width < 44) width = 44;
-      }
+      if (width < 44) width = 44;
 
-      if (this.options.showMinorLabels) {
-        var label = this._repaintMinorText(x, labelMinor, orientation, className);
-        label.style.width = width + 'px'; // set width to prevent overflow
-      }
+      // Test Performance
+      // if (this.options.showMinorLabels) {
+      //   // var label = this._repaintMinorText(x, labelMinor, orientation, className);
+      //   label.style.width = `${width}px`; // set width to prevent overflow
+      // }
 
       if (isMajor && this.options.showMajorLabels) {
-        if (x > 0) {
-          if (xFirstMajorLabel == undefined) {
-            xFirstMajorLabel = x;
-          }
-          label = this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
-        }
+        // Test Performance
+        // if (x > 0) {
+        //   if (xFirstMajorLabel == undefined) {
+        //     xFirstMajorLabel = x;
+        //   }
+        //   label = this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
+        // }
         line = this._repaintMajorLine(x, width, orientation, className);
       } else if (this.options['showMinorLines']) {
         line = this._repaintMinorLine(x, width, orientation, className, next);
@@ -25737,16 +25755,17 @@ return /******/ (function(modules) { // webpackBootstrap
       warnedForOverflow = true;
     }
 
+    // Test Performance
     // create a major label on the left when needed
-    if (this.options.showMajorLabels) {
-      var leftTime = this.body.util.toTime(0),
-          leftText = step.getLabelMajor(leftTime),
-          widthText = leftText.length * (this.props.majorCharWidth || 10) + 10; // upper bound estimation
+    // if (this.options.showMajorLabels) {
+    //   var leftTime = this.body.util.toTime(0),
+    //       leftText = step.getLabelMajor(leftTime),
+    //       widthText = leftText.length * (this.props.majorCharWidth || 10) + 10; // upper bound estimation
 
-      if (xFirstMajorLabel == undefined || widthText < xFirstMajorLabel) {
-        this._repaintMajorText(0, leftText, orientation, className);
-      }
-    }
+    //   if (xFirstMajorLabel == undefined || widthText < xFirstMajorLabel) {
+    //     this._repaintMajorText(0, leftText, orientation, className);
+    //   }
+    // }
 
     // Cleanup leftover DOM elements from the redundant list
     util.forEach(this.dom.redundant, function (arr) {
@@ -25798,7 +25817,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var y = orientation == 'top' ? this.props.majorLabelHeight : '0';
     this._setXY(label, x, y);
 
-    label.className = 'vis-text vis-minor ' + className;
+    // label.className = `vis-text vis-minor ${className}`;
     //label.title = title;  // TODO: this is a heavy operation
 
     return label;
@@ -25827,7 +25846,7 @@ return /******/ (function(modules) { // webpackBootstrap
     this.dom.majorTexts.push(label);
 
     label.childNodes[0].nodeValue = text;
-    label.className = 'vis-text vis-major ' + className;
+    // label.className = `vis-text vis-major ${className}`;
     //label.title = title; // TODO: this is a heavy operation
 
     var y = orientation == 'top' ? '0' : this.props.minorLabelHeight + 'px';
@@ -29216,7 +29235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // svg offsetheight did not work in firefox and explorer...
       this.dom.lineContainer.style.height = this.height + 'px';
-      this.width = this.options.visible === true ? Number(('' + this.options.width).replace("px", "")) : 0;
+      this.width = this.options.visible === true ? Number(this.options.width.toString().replace("px", "")) : 0;
 
       var props = this.props;
       var frame = this.dom.frame;
@@ -29250,7 +29269,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.style.left = '0';
         frame.style.bottom = '';
         frame.style.width = this.width + 'px';
-        frame.style.height = this.height + "px";
+        frame.style.height = this.height + 'px';
         this.props.width = this.body.domProps.left.width;
         this.props.height = this.body.domProps.left.height;
       } else {
@@ -29259,7 +29278,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame.style.bottom = '0';
         frame.style.left = '0';
         frame.style.width = this.width + 'px';
-        frame.style.height = this.height + "px";
+        frame.style.height = this.height + 'px';
         this.props.width = this.body.domProps.right.width;
         this.props.height = this.body.domProps.right.height;
       }
