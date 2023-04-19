@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-04-05
+ * @date    2023-04-19
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7725,33 +7725,33 @@ return /******/ (function(modules) { // webpackBootstrap
       case 'circle':
         if (!isNaN(y) && !isNaN(x)) {
           var circle = exports.getSVGElement('circle', JSONcontainer, svgContainer);
-          circle.setAttributeNS(null, "cx", x);
-          circle.setAttributeNS(null, "cy", y);
-          circle.setAttributeNS(null, "r", 0.5 * groupTemplate.size);
+          circle.setAttributeNS(null, 'cx', x);
+          circle.setAttributeNS(null, 'cy', y);
+          circle.setAttributeNS(null, 'r', 0.5 * groupTemplate.size);
           points.push(circle);
         }
         break;
       case 'square':
         if (!isNaN(y) && !isNaN(x)) {
           var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-          rect.setAttributeNS(null, "x", x - 0.5 * groupTemplate.size);
-          rect.setAttributeNS(null, "y", y - 0.5 * groupTemplate.size);
-          rect.setAttributeNS(null, "width", groupTemplate.size);
-          rect.setAttributeNS(null, "height", groupTemplate.size);
+          rect.setAttributeNS(null, 'x', x - 0.5 * groupTemplate.size);
+          rect.setAttributeNS(null, 'y', y - 0.5 * groupTemplate.size);
+          rect.setAttributeNS(null, 'width', groupTemplate.size);
+          rect.setAttributeNS(null, 'height', groupTemplate.size);
           points.push(rect);
         }
         break;
       case 'triangle-up':
         if (!isNaN(v.y) && !isNaN(v.x)) {
           var _polygonUp = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-          _polygonUp.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
+          _polygonUp.setAttributeNS(null, 'points', v.x - triangleBaseWidth + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + (v.y + groupTemplate.size) + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + v.y);
           points.push(_polygonUp);
         }
         break;
       case 'triangle-down':
         if (!isNaN(v.y) && !isNaN(v.x)) {
           var _polygonDown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-          _polygonDown.setAttributeNS(null, "points", v.x - triangleBaseWidth + ',' + v.y + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
+          _polygonDown.setAttributeNS(null, 'points', v.x - triangleBaseWidth + ',' + v.y + ' ' + (v.x + groupTemplate.size + triangleBaseWidth) + ',' + v.y + ' ' + (v.x + groupTemplate.size * 0.5) + ',' + (v.y + groupTemplate.size));
           points.push(_polygonDown);
         }
         break;
@@ -7831,49 +7831,49 @@ return /******/ (function(modules) { // webpackBootstrap
           upLineToCenterPt = x + ',' + (y + crossHalfSize + _Constants.CROSS.margin);
         }
 
-        var _polygonDown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        _polygonDown.setAttributeNS(null, 'points', downLeftPt + ' ' + downRightPt + ' ' + downBottomPt + ' ' + downLineToCenterPt + ' ' + downBottomPt + ' ' + downLeftPt);
-        _polygonDown.setAttributeNS(null, 'polygon-type', 'down');
+        var polygonDown = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygonDown.setAttributeNS(null, 'points', downLeftPt + ' ' + downRightPt + ' ' + downBottomPt + ' ' + downLineToCenterPt + ' ' + downBottomPt + ' ' + downLeftPt);
+        polygonDown.setAttributeNS(null, 'polygon-type', 'down');
 
         var polygonCross = exports.getSVGElement('path', JSONcontainer, svgContainer);
         polygonCross.setAttributeNS(null, 'd', crossVerticalLine + ' ' + crossHorizontalLine);
         polygonCross.setAttributeNS(null, 'polygon-type', 'cross');
 
-        var _polygonUp = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
-        _polygonUp.setAttributeNS(null, 'points', upLeftPt + ' ' + upRightPt + ' ' + upTopPt + ' ' + upLineToCenterPt + ' ' + upTopPt + ' ' + upLeftPt);
-        _polygonUp.setAttributeNS(null, 'polygon-type', 'up');
+        var polygonUp = exports.getSVGElement('polygon', JSONcontainer, svgContainer);
+        polygonUp.setAttributeNS(null, 'points', upLeftPt + ' ' + upRightPt + ' ' + upTopPt + ' ' + upLineToCenterPt + ' ' + upTopPt + ' ' + upLeftPt);
+        polygonUp.setAttributeNS(null, 'polygon-type', 'up');
 
         if (groupTemplate.styles !== undefined) {
-          _polygonDown.setAttributeNS(null, "style", groupTemplate.styles);
-          polygonCross.setAttributeNS(null, "style", groupTemplate.styles);
-          _polygonUp.setAttributeNS(null, "style", groupTemplate.styles);
+          polygonDown.setAttributeNS(null, 'style', groupTemplate.styles);
+          polygonCross.setAttributeNS(null, 'style', groupTemplate.styles);
+          polygonUp.setAttributeNS(null, 'style', groupTemplate.styles);
         }
 
         if (props.alertMin) {
-          _polygonUp.style.stroke = props.alertColor;
-          _polygonUp.style.fill = '#FFFFFF';
+          polygonUp.style.stroke = props.alertColor;
+          polygonUp.style.fill = '#FFFFFF';
         }
 
         if (props.alertMax) {
-          _polygonDown.style.stroke = props.alertColor;
-          _polygonDown.style.fill = '#FFFFFF';
+          polygonDown.style.stroke = props.alertColor;
+          polygonDown.style.fill = '#FFFFFF';
         }
 
         if (props.alertMed) {
           polygonCross.style.stroke = props.alertColor;
         }
 
-        points.push(_polygonDown);
+        points.push(polygonDown);
         points.push(polygonCross);
-        points.push(_polygonUp);
+        points.push(polygonUp);
         break;
       case 'rectangle':
         if (!isNaN(y) && !isNaN(x)) {
           var rectangle = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-          rectangle.setAttributeNS(null, "x", x - 0.5 * groupTemplate.width);
-          rectangle.setAttributeNS(null, "y", y - 0.5 * groupTemplate.height);
-          rectangle.setAttributeNS(null, "width", groupTemplate.width);
-          rectangle.setAttributeNS(null, "height", groupTemplate.height);
+          rectangle.setAttributeNS(null, 'x', x - 0.5 * groupTemplate.width);
+          rectangle.setAttributeNS(null, 'y', y - 0.5 * groupTemplate.height);
+          rectangle.setAttributeNS(null, 'width', groupTemplate.width);
+          rectangle.setAttributeNS(null, 'height', groupTemplate.height);
           points.push(rectangle);
         }
         break;
@@ -7901,24 +7901,24 @@ return /******/ (function(modules) { // webpackBootstrap
       }
 
       if (labelObj.className) {
-        label.setAttributeNS(null, "class", labelObj.className + " vis-label");
+        label.setAttributeNS(null, 'class', labelObj.className + ' vis-label');
       }
 
       if (!isNaN(y) && !isNaN(x)) {
-        label.setAttributeNS(null, "x", x);
-        label.setAttributeNS(null, "y", y);
+        label.setAttributeNS(null, 'x', x);
+        label.setAttributeNS(null, 'y', y);
       }
     }
 
     points.forEach(function (point) {
       if (groupTemplate.styles !== undefined && groupTemplate.style !== 'arrow-avg') {
-        point.setAttributeNS(null, "style", groupTemplate.styles);
+        point.setAttributeNS(null, 'style', groupTemplate.styles);
       }
 
-      point.setAttributeNS(null, "class", groupTemplate.className + " vis-point");
+      point.setAttributeNS(null, 'class', groupTemplate.className + ' vis-point');
 
       if (labelObj && labelObj.tooltip) {
-        point.setAttributeNS(null, "tooltip", labelObj.tooltip);
+        point.setAttributeNS(null, 'tooltip', labelObj.tooltip);
       }
       point.setAttributeNS(null, 'row-id', groupTemplate.rowId);
 
@@ -7926,7 +7926,7 @@ return /******/ (function(modules) { // webpackBootstrap
         var id = groupTemplate.rowId + '-' + groupTemplate.style + '-' + props.index;
         var polygonType = point.getAttribute('polygon-type');
         if (polygonType) {
-          id = id.concat('-' + polygonType); // without this we can't set the ID in the "use" tag
+          id = id.concat('-' + polygonType); // without this we can't set the ID in the 'use' tag
         }
         point.setAttributeNS(null, 'id', id);
       }
@@ -7971,13 +7971,13 @@ return /******/ (function(modules) { // webpackBootstrap
         y -= height;
       }
       var rect = exports.getSVGElement('rect', JSONcontainer, svgContainer);
-      rect.setAttributeNS(null, "x", x - 0.5 * width);
-      rect.setAttributeNS(null, "y", y);
-      rect.setAttributeNS(null, "width", width);
-      rect.setAttributeNS(null, "height", height);
-      rect.setAttributeNS(null, "class", className);
+      rect.setAttributeNS(null, 'x', x - 0.5 * width);
+      rect.setAttributeNS(null, 'y', y);
+      rect.setAttributeNS(null, 'width', width);
+      rect.setAttributeNS(null, 'height', height);
+      rect.setAttributeNS(null, 'class', className);
       if (style) {
-        rect.setAttributeNS(null, "style", style);
+        rect.setAttributeNS(null, 'style', style);
       }
     }
   };
@@ -18506,9 +18506,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
       return next();
     } else {
-      var changed = this._applyRange(finalStart, finalEnd);
+      var _changed = this._applyRange(finalStart, finalEnd);
       DateUtil.updateHiddenDates(this.options.moment, this.body, this.options.hiddenDates);
-      if (changed) {
+      if (_changed) {
         var params = { start: new Date(this.start), end: new Date(this.end), byUser: byUser };
         this.body.emitter.emit('rangechange', params);
         this.body.emitter.emit('rangechanged', params);
@@ -18541,7 +18541,7 @@ return /******/ (function(modules) { // webpackBootstrap
         newEnd = end != null ? util.convert(end, 'Date').valueOf() : this.end,
         max = this.options.max != null ? util.convert(this.options.max, 'Date').valueOf() : null,
         min = this.options.min != null ? util.convert(this.options.min, 'Date').valueOf() : null,
-        diff;
+        diff = null;
 
     // check for valid number
     if (isNaN(newStart) || newStart === null) {
@@ -19778,15 +19778,15 @@ return /******/ (function(modules) { // webpackBootstrap
       event.preventDefault();
     }
 
-    if (this.dom.root.addEventListener) {
-      // IE9, Chrome, Safari, Opera
-      this.dom.root.addEventListener("mousewheel", onMouseWheel, false);
-      // Firefox
-      this.dom.root.addEventListener("DOMMouseScroll", onMouseWheel, false);
-    } else {
-      // IE 6/7/8
-      this.dom.root.attachEvent("onmousewheel", onMouseWheel);
-    }
+    //  if (this.dom.root.addEventListener) {
+    //    // IE9, Chrome, Safari, Opera
+    //    this.dom.root.addEventListener("mousewheel", onMouseWheel, false);
+    //    // Firefox
+    //    this.dom.root.addEventListener("DOMMouseScroll", onMouseWheel, false);
+    //  } else {
+    //    // IE 6/7/8
+    //    this.dom.root.attachEvent("onmousewheel", onMouseWheel);
+    //  }
 
     this.dom.root.addEventListener('mousewheel', onMouseWheel);
     this.dom.root.addEventListener('DOMMouseScroll', onMouseWheel);
@@ -20582,7 +20582,7 @@ return /******/ (function(modules) { // webpackBootstrap
       me.props.lastHeight = offsetHeight;
     }
 
-    this.watchTimer = setInterval(this._onResize, 1000);
+    this.watchTimer = setInterval(this._onResize, 0);
   };
 
   /**
@@ -25700,17 +25700,18 @@ return /******/ (function(modules) { // webpackBootstrap
     var width = 0;
     var line;
     var labelMinor;
-    // var xFirstMajorLabel = undefined;
+    var xFirstMajorLabel = undefined;
     var count = 0;
     var MAX = 1000;
     var className;
+    var widthDefault = 0;
 
     // Calculation of the possibility of the vertical line taking into account the size of the header
-    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
     var elementHeaderWidth = document.querySelector('.tl-setting-bar');
+    var elementHeaderWidthItem = elementHeaderWidth.querySelectorAll('.tl-setting-bar__item');
     if (elementHeaderWidthItem && elementHeaderWidth) {
       // && elementHeaderWidth.offsetWidth
-      width = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+      widthDefault = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
     }
     current = start;
     xNext = this.body.util.toScreen(current);
@@ -25724,7 +25725,10 @@ return /******/ (function(modules) { // webpackBootstrap
       xNext = this.body.util.toScreen(current);
       width = xNext - x;
 
-      if (width < 44) width = 44;
+      if (widthDefault > 0) {
+        width = widthDefault;
+        if (width < 44) width = 44;
+      }
 
       // Test Performance
       // if (this.options.showMinorLabels) {
@@ -25734,12 +25738,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
       if (isMajor && this.options.showMajorLabels) {
         // Test Performance
-        // if (x > 0) {
-        //   if (xFirstMajorLabel == undefined) {
-        //     xFirstMajorLabel = x;
-        //   }
-        //   label = this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
-        // }
+        if (x > 0) {
+          if (xFirstMajorLabel == undefined) {
+            xFirstMajorLabel = x;
+          }
+          label = this._repaintMajorText(x, step.getLabelMajor(), orientation, className);
+        }
         line = this._repaintMajorLine(x, width, orientation, className);
       } else if (this.options['showMinorLines']) {
         line = this._repaintMinorLine(x, width, orientation, className, next);
