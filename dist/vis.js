@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-05-02
+ * @date    2023-05-03
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -20348,7 +20348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
       // enable/disable vertical panning
       var contentsOverflow = props.center.height > props.centerContainer.height;
-      _this.hammer.get('pan').set({
+      _this.hammer && _this.hammer.get('pan').set({
         direction: contentsOverflow ? Hammer.DIRECTION_ALL : Hammer.DIRECTION_HORIZONTAL
       });
 
@@ -21034,6 +21034,8 @@ return /******/ (function(modules) { // webpackBootstrap
    * @return {boolean} Returns true if the component is resized
    */
   TimeAxis.prototype.redraw = function () {
+    if (!this.body || !this.body.dom) return;
+
     var props = this.props;
     var foreground = this.dom.foreground;
     var background = this.dom.background;
@@ -23476,6 +23478,8 @@ return /******/ (function(modules) { // webpackBootstrap
    * @return {boolean} Returns true if the component is resized
    */
   ItemSet.prototype.redraw = function (timeline) {
+    if (!this.body || !this.body.range) return;
+
     var margin = this.options.margin,
         range = this.body.range,
         asSize = util.option.asSize,
@@ -28663,7 +28667,7 @@ return /******/ (function(modules) { // webpackBootstrap
         changed = true;
       }
     } else {
-      if (!axis.dom.frame.parentNode && axis.hidden === true) {
+      if (axis.dom.frame && !axis.dom.frame.parentNode && axis.hidden === true) {
         axis.show();
         changed = true;
       }
@@ -29203,10 +29207,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
   'use strict';
 
+  var _fastdom = __webpack_require__(32);
+
+  var _fastdom2 = _interopRequireDefault(_fastdom);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
   var util = __webpack_require__(1);
   var DOMutil = __webpack_require__(7);
   var Component = __webpack_require__(29);
   var DataScale = __webpack_require__(55);
+
 
   /**
    * A horizontal time axis
@@ -29347,23 +29358,32 @@ return /******/ (function(modules) { // webpackBootstrap
    * Create the HTML DOM for the DataAxis
    */
   DataAxis.prototype._create = function () {
-    this.dom.frame = document.createElement('div');
-    this.dom.frame.style.width = this.options.width;
-    this.dom.frame.style.height = this.height;
+    var dom = this.dom,
+        svg = this.svg,
+        height = this.height,
+        options = this.options;
 
-    this.dom.lineContainer = document.createElement('div');
-    this.dom.lineContainer.style.width = '100%';
-    this.dom.lineContainer.style.height = this.height;
-    this.dom.lineContainer.style.position = 'relative';
+    _fastdom2.default.measure(function () {
+      dom.frame = document.createElement('div');
+      dom.lineContainer = document.createElement('div');
+      svg = document.createElementNS('http://www.w3.org/2000/svg', "svg");
 
-    // create svg element for graph drawing.
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', "svg");
-    this.svg.style.position = "absolute";
-    this.svg.style.top = '0px';
-    this.svg.style.height = '100%';
-    this.svg.style.width = '100%';
-    this.svg.style.display = "block";
-    this.dom.frame.appendChild(this.svg);
+      _fastdom2.default.mutate(function () {
+        dom.frame.style.setProperty('width', options.width);
+        dom.frame.style.setProperty('height', height);
+
+        dom.lineContainer.style.setProperty('width', '100%');
+        dom.lineContainer.style.setProperty('height', height);
+        dom.lineContainer.style.setProperty('position', 'relative');
+
+        svg.style.setProperty('position', "absolute");
+        svg.style.setProperty('top', '0px');
+        svg.style.setProperty('height', '100%');
+        svg.style.setProperty('width', '100%');
+        svg.style.setProperty('display', "block");
+        dom.frame.appendChild(svg);
+      });
+    });
   };
 
   DataAxis.prototype._redrawGroupIcons = function () {
@@ -29454,6 +29474,8 @@ return /******/ (function(modules) { // webpackBootstrap
    * @return {boolean} Returns true if the component is resized
    */
   DataAxis.prototype.redraw = function (index, groupName) {
+    if (!this.dom || !this.dom.lineContainer) return;
+
     var resized = false;
     var activeGroups = 0;
     var id = void 0;
@@ -29700,30 +29722,40 @@ return /******/ (function(modules) { // webpackBootstrap
    * @param width
    */
   DataAxis.prototype._redrawLine = function (y, orientation, className, offset, width) {
-    if (this.master === true) {
-      var line = DOMutil.getDOMElement('div', this.DOMelements.lines, this.dom.lineContainer); //this.dom.redundant.lines.shift();
-      line.className = className;
-      line.innerHTML = '';
+    var DOMelements = this.DOMelements,
+        dom = this.dom,
+        body = this.body,
+        master = this.master;
 
-      if (this.body.origin === 'flowsheet') {
-        if (orientation === 'left') {
-          line.style.left = 0 - offset + 'px';
-        } else {
-          line.style.right = 0 - offset + 'px';
-        }
-        line.style.width = this.width + width + 'px';
-      } else {
-        if (orientation === 'left') {
-          line.style.left = this.width - offset + 'px';
-        } else {
-          line.style.right = this.width - offset + 'px';
-        }
+    var withThis = this.width;
+    _fastdom2.default.measure(function () {
+      if (master === true) {
+        var line = DOMutil.getDOMElement('div', DOMelements.lines, dom.lineContainer); //this.dom.redundant.lines.shift();
+        line.className = className;
+        line.innerHTML = '';
 
-        line.style.width = width + 'px';
+        _fastdom2.default.mutate(function () {
+          if (body.origin === 'flowsheet') {
+            if (orientation === 'left') {
+              line.style.left = 0 - offset + 'px';
+            } else {
+              line.style.right = 0 - offset + 'px';
+            }
+            line.style.width = withThis + width + 'px';
+          } else {
+            if (orientation === 'left') {
+              line.style.left = withThis - offset + 'px';
+            } else {
+              line.style.right = withThis - offset + 'px';
+            }
+
+            line.style.width = width + 'px';
+          }
+
+          line.style.top = y + 'px';
+        });
       }
-
-      line.style.top = y + 'px';
-    }
+    });
   };
 
   /**
@@ -32464,49 +32496,50 @@ return /******/ (function(modules) { // webpackBootstrap
         var range = this._calculateRange(group, datapoints);
 
         for (var i = 0; i < datapoints.length; i++) {
-          if (datapoints[i].referenceLine) {
+          var dataPonintI = datapoints[i];
+          if (dataPonintI.referenceLine) {
             var convertedValue = 0;
-            var maxValue = datapoints[i].y;
-            var minValue = datapoints[i].y;
+            var maxValue = dataPonintI.y;
+            var minValue = dataPonintI.y;
             var difference = maxValue - minValue;
             convertedValue = Math.round(baseScreenY * 50 / 100);
-            if (datapoints[i].referenceLine) {
-              convertedValue = Math.round(axis.convertValue(datapoints[i].y, range, baseScreenY));
+            if (dataPonintI.referenceLine) {
+              convertedValue = Math.round(axis.convertValue(dataPonintI.y, range, baseScreenY));
             }
             if (group.group.axisCustomLabel) {
               convertedValue = this._invertScale({ group: group, convertedValue: convertedValue, baseScreenY: baseScreenY });
             }
-            datapoints[i].screen_y = actualY - offset / 2 - convertedValue;
+            dataPonintI.screen_y = actualY - offset / 2 - convertedValue;
 
             var diffPercent = difference * 100 / (range.max - range.min);
             var proportionalSize = diffPercent * baseScreenY / 100 - offset;
-            datapoints[i].prop.size = proportionalSize <= 0 ? 0 : proportionalSize;
+            dataPonintI.prop.size = proportionalSize <= 0 ? 0 : proportionalSize;
           } else {
-            var _maxValue = datapoints[i].maxValue;
-            var _minValue = datapoints[i].minValue;
-            var avgValue = datapoints[i].avgValue;
+            var _maxValue = dataPonintI.maxValue;
+            var _minValue = dataPonintI.minValue;
+            var avgValue = dataPonintI.avgValue;
 
             var distance = _maxValue - _minValue;
             var graphScale = range.max - range.min;
 
             var availableGraphHeight = baseGraphHeight;
             if (avgValue) {
-              datapoints[i].calculateAllPoints = true;
-              datapoints[i].screen_yAvg = baseScreenY * ((avgValue - range.min) * 100 / graphScale) / 100;
-              datapoints[i].screen_yMin = baseScreenY * ((_minValue - range.min) * 100 / graphScale) / 100;
-              datapoints[i].screen_yMax = baseScreenY * ((_maxValue - range.min) * 100 / graphScale) / 100;
+              dataPonintI.calculateAllPoints = true;
+              dataPonintI.screen_yAvg = baseScreenY * ((avgValue - range.min) * 100 / graphScale) / 100;
+              dataPonintI.screen_yMin = baseScreenY * ((_minValue - range.min) * 100 / graphScale) / 100;
+              dataPonintI.screen_yMax = baseScreenY * ((_maxValue - range.min) * 100 / graphScale) / 100;
             } else {
               // if avgValue is not defined, it calculates de avg between min and max
-              datapoints[i].calculateAllPoints = false;
+              dataPonintI.calculateAllPoints = false;
               var middleValueInGraphScale = distance / 2 + _minValue - range.min;
               var middleValueInScreenPosition = middleValueInGraphScale / graphScale * availableGraphHeight;
-              datapoints[i].screen_y = actualY - middleValueInScreenPosition; // y positioning is calculated from the bottom (1600 - 280 - 60)
+              dataPonintI.screen_y = actualY - middleValueInScreenPosition; // y positioning is calculated from the bottom (1600 - 280 - 60)
             }
             var arrowAvgSizeScale = distance / graphScale;
             var arrowAvgSize = availableGraphHeight * arrowAvgSizeScale;
-            datapoints[i].prop.size = arrowAvgSize <= 0 ? 0 : arrowAvgSize;
-            datapoints[i].prop.baseY = actualY;
-            datapoints[i].prop.baseHeight = availableGraphHeight;
+            dataPonintI.prop.size = arrowAvgSize <= 0 ? 0 : arrowAvgSize;
+            dataPonintI.prop.baseY = actualY;
+            dataPonintI.prop.baseHeight = availableGraphHeight;
           }
         }
       }
