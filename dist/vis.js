@@ -21195,18 +21195,6 @@ return /******/ (function(modules) { // webpackBootstrap
       warnedForOverflow = true;
     }
 
-    // Test Performance
-    // create a major label on the left when needed
-    // if (this.options.showMajorLabels) {
-    //   var leftTime = this.body.util.toTime(0),
-    //       leftText = step.getLabelMajor(leftTime),
-    //       widthText = leftText.length * (this.props.majorCharWidth || 10) + 10; // upper bound estimation
-
-    //   if (xFirstMajorLabel == undefined || widthText < xFirstMajorLabel) {
-    //     this._repaintMajorText(0, leftText, orientation, className);
-    //   }
-    // }
-
     // Cleanup leftover DOM elements from the redundant list
     util.forEach(this.dom.redundant, function (arr) {
       while (arr.length) {
@@ -21227,10 +21215,8 @@ return /******/ (function(modules) { // webpackBootstrap
      * @private
      */
   TimeAxis.prototype._setXY = function (label, x, y) {
-    _fastdom2.default.measure(function () {
-      _fastdom2.default.mutate(function () {
-        label.style.setProperty('transform', 'translate(' + x + 'px, ' + y + 'px)');
-      });
+    _fastdom2.default.mutate(function () {
+      label.style.setProperty('transform', 'translate(' + x + 'px, ' + y + 'px)');
     });
   };
 
@@ -21325,15 +21311,15 @@ return /******/ (function(modules) { // webpackBootstrap
       _fastdom2.default.mutate(function () {
         line.style.setProperty('width', width + 'px');
         line.style.setProperty('height', props.minorLineHeight + 'px');
+
+        var y = orientation == 'top' ? props.majorLabelHeight : _this.body.domProps.top.height;
+        var x = indexColumn * width - width;
+        _this._setXY(line, x, y);
+
+        line.className = 'vis-grid vis-vertical vis-minor ' + className;
+
+        return line;
       });
-
-      var y = orientation == 'top' ? props.majorLabelHeight : _this.body.domProps.top.height;
-      var x = indexColumn * width - width;
-      _this._setXY(line, x, y);
-
-      line.className = 'vis-grid vis-vertical vis-minor ' + className;
-
-      return line;
     });
   };
 
@@ -26742,14 +26728,12 @@ return /******/ (function(modules) { // webpackBootstrap
         height = _top.height;
 
     var parentHeight = this.parent.height;
-    _fastdom2.default.measure(function () {
-      _fastdom2.default.mutate(function () {
-        if (orientation == 'top') {
-          box.style.setProperty('top', top + 'px');
-        } else {
-          box.style.setProperty('top', parentHeight - top - height + 'px');
-        }
-      });
+    _fastdom2.default.mutate(function () {
+      if (orientation == 'top') {
+        box.style.setProperty('top', top + 'px');
+      } else {
+        box.style.setProperty('top', parentHeight - top - height + 'px');
+      }
     });
   };
 
@@ -29738,22 +29722,21 @@ return /******/ (function(modules) { // webpackBootstrap
         _fastdom2.default.mutate(function () {
           if (body.origin === 'flowsheet') {
             if (orientation === 'left') {
-              line.style.left = 0 - offset + 'px';
+              line.style.setProperty('left', 0 - offset + 'px');
             } else {
-              line.style.right = 0 - offset + 'px';
+              line.style.setProperty('right', 0 - offset + 'px');
             }
-            line.style.width = withThis + width + 'px';
+            line.style.setProperty('width', withThis + width + 'px');
           } else {
             if (orientation === 'left') {
-              line.style.left = withThis - offset + 'px';
+              line.style.setProperty('left', withThis - offset + 'px');
             } else {
-              line.style.right = withThis - offset + 'px';
+              line.style.setProperty('right', withThis - offset + 'px');
             }
-
-            line.style.width = width + 'px';
+            line.style.setProperty('width', width + 'px');
           }
 
-          line.style.top = y + 'px';
+          line.style.setProperty('top', y + 'px');
         });
       }
     });
@@ -31379,16 +31362,14 @@ return /******/ (function(modules) { // webpackBootstrap
       key: '_drawBackgroundDiv',
       value: function _drawBackgroundDiv(y, width, height, groupId) {
         var _this = this;
-        _fastdom2.default.measure(function () {
-          _fastdom2.default.mutate(function () {
-            var background = DOMutil.getDOMElement('div', _this.DOMelements.backgrounds, _this.dom.lineContainer);
-            background.className = 'vis-timeline-chart-background tl-group__' + groupId;
-            background.setAttribute('row-id', groupId);
+        _fastdom2.default.mutate(function () {
+          var background = DOMutil.getDOMElement('div', _this.DOMelements.backgrounds, _this.dom.lineContainer);
+          background.className = 'vis-timeline-chart-background tl-group__' + groupId;
+          background.setAttribute('row-id', groupId);
 
-            background.style.setProperty('width', width + 'px');
-            background.style.setProperty('height', height + 'px');
-            background.style.setProperty('top', y + 'px');
-          });
+          background.style.setProperty('width', width + 'px');
+          background.style.setProperty('height', height + 'px');
+          background.style.setProperty('top', y + 'px');
         });
       }
     }]);
