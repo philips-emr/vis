@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-05-03
+ * @date    2023-05-04
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -25077,23 +25077,24 @@ return /******/ (function(modules) { // webpackBootstrap
           stack.nostack(this.visibleItems, margin, this.subgroups);
         }
       }
-      // apply new height
-      // recalculate the height of the group
-      var height = _this._calculateHeight(margin, timeline);
-      resized = util.updateProperty(_this, 'height', height) || resized;
 
       _fastdom2.default.mutate(function () {
+        // apply new height
+        // recalculate the height of the group
+        var height = _this._calculateHeight(margin, timeline);
+        resized = util.updateProperty(_this, 'height', height) || resized;
+
         boxDom.foreground.style.setProperty('height', height + 'px');
         boxDom.label.style.setProperty('height', height + 'px');
+
+        // update vertical position of items after they are re-stacked and the height of the group is calculated
+        for (var i = 0, ii = _this.visibleItems.length; i < ii; i++) {
+          var item = _this.visibleItems[i];
+          item.repositionY(margin);
+        }
+
+        return resized;
       });
-
-      // update vertical position of items after they are re-stacked and the height of the group is calculated
-      for (var i = 0, ii = _this.visibleItems.length; i < ii; i++) {
-        var item = _this.visibleItems[i];
-        item.repositionY(margin);
-      }
-
-      return resized;
     });
   };
 
