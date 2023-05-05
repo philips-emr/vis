@@ -26597,18 +26597,21 @@ return /******/ (function(modules) { // webpackBootstrap
         if (diffFunction < 1) diffNegative(dateStart.add(1, 'day'), dateEnd);
         return diffFunction;
       };
-      // scrolls through the items in the settingbar
-      elementHeaderWidthItem.forEach(function (item) {
-        var _currentDateItem = item.__time.toDate();
-        if (_dateElement > _currentDateItem) index++;
-        if (_dateElementEnd > _currentDateItem) indexEnd++;
-      });
 
-      //multiplies the index with the width of the settingbar item and adds half more width to align correctly
-      if (elementHeaderWidthItem.length > 0) {
-        start = widthElement * index;
-        end = widthElement * indexEnd;
-        this.dom.box.classList.add('tablemode-fit');
+      if (elementHeaderWidthItem) {
+        // scrolls through the items in the settingbar
+        elementHeaderWidthItem.forEach(function (item) {
+          var _currentDateItem = item.__time.toDate();
+          if (_dateElement > _currentDateItem) index++;
+          if (_dateElementEnd > _currentDateItem) indexEnd++;
+        });
+
+        //multiplies the index with the width of the settingbar item and adds half more width to align correctly
+        if (elementHeaderWidthItem.length > 0) {
+          start = widthElement * index;
+          end = widthElement * indexEnd;
+          this.dom.box.classList.add('tablemode-fit');
+        }
       }
       // Take element width 'tl-setting-bar__item' of the handler timeline and calculate width
     } else if (this.data.id && elementHeaderWidthItem && elementHeaderWidthItem.length > 0 && widthContainerVIS) {
