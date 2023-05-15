@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-05-05
+ * @date    2023-05-15
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -21135,7 +21135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // Calculation of the possibility of the vertical line taking into account the size of the header
     var elementHeaderWidth = document.querySelector('.tl-setting-bar');
-    var elementHeaderWidthItem = elementHeaderWidth.querySelectorAll('.tl-setting-bar__item');
+    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
     if (elementHeaderWidthItem && elementHeaderWidth) {
       // && elementHeaderWidth.offsetWidth
       widthDefault = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
