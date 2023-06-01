@@ -302,6 +302,18 @@ Then run the tests:
     $ npm test
 
 
+## Version
+
+To version this library it is necessary to create the tag and change the tag created within the framework's package.json:
+ For example:
+
+    Tag v5.0.0 was created
+
+It will be necessary to change the package.json of the framework:
+
+    "vis": "git+ssh://git@github.com/philips-emr/vis.git#v5.0.0",
+
+
 ## License
 
 Copyright (C) 2010-2015 Almende B.V.
