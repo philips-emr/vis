@@ -28146,7 +28146,7 @@ return /******/ (function(modules) { // webpackBootstrap
       this.svg.style.width = util.option.asSize(this.props.width);
 
       // if the height of the graph is set as proportional, change the height of the svg
-      if (this.options.height.toString().indexOf("%") !== -1 || this.updateSVGheightOnResize === true) {
+      if (String(this.options.height).indexOf("%") !== -1 || this.updateSVGheightOnResize === true) {
         this.updateSVGheight = true;
       }
     }
