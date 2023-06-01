@@ -302,7 +302,7 @@ Then run the tests:
     $ npm test
 
 
-## Test
+## Version
 
 To version this library it is necessary to create the tag and change the tag created within the framework's package.json:
  For example:
