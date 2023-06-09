@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-06-01
+ * @date    2023-06-06
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -21095,7 +21095,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var columnCount = rangeColumnCount ? rangeColumnCount : diffInHours / (gap ? gap : 1) + totalizersToAdd;
     var itemsFit = this.body.range.options.itemsFit;
 
-    if (gap == 0 && itemsFit && columnCount < itemsFit.length) {
+    if (itemsFit && columnCount < itemsFit.length) {
       columnCount = itemsFit.length;
     }
 
@@ -27610,7 +27610,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var util = __webpack_require__(1);
 
   var UNGROUPED = '__ungrouped__'; // reserved group id for ungrouped items
-
+  var GAPCHARTNOW = 'N';
   /**
    * This is the constructor of the LineGraph. It requires a Timeline body and options.
    *
@@ -28660,7 +28660,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
     var _loop = function _loop(i) {
       var dataPointItem = datapoints[i];
-      if (_this6.body.range.options.gap === 0) {
+      if (_this6.body.range.options.gap === 0 || _this6.body.range.options.itemsFit.some(function (x) {
+        return x.type == GAPCHARTNOW;
+      })) {
         dataPointItem.screen_x = _this6._calculateGapPositionVIS(dataPointItem.x, widthTimeline);
       } else {
         var factor = _this6.body.range.end - _this6.body.range.start;
@@ -28706,16 +28708,15 @@ return /******/ (function(modules) { // webpackBootstrap
       return diffFunction;
     };
 
-    // scrolls through the items in the settingbar
-    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
-    var elementHeaderWidth = document.querySelector('.tl-setting-bar');
-
-    Object.values(elementHeaderWidth.children).forEach(function (item) {
-      if (new Date(item.__time).getTime() == dateElement.getTime()) index = parseInt(item.children[0].attributes.index.value);
+    var endGap = this.body.range.options.itemsFit.find(function (time) {
+      return time.time.isSameOrAfter(moment(x));
     });
-
+    var startGap = this.body.range.options.itemsFit[this.body.range.options.itemsFit.indexOf(endGap) - 1];
+    var fator = endGap.time - startGap.time;
+    var percntOverIndex = (x - startGap.time) / fator;
+    index = this.body.range.options.itemsFit.indexOf(startGap) + percntOverIndex;
     //multiplies the index with the width of the settingbar item and adds half more width to align correctly
-    var widthElement = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
+    var widthElement = parseFloat(widthTimeline / this.body.range.options.itemsFit.length).toFixed(2);
     return widthElement * index;
   };
 
