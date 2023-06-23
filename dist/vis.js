@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-06-06
+ * @date    2023-06-22
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -18283,9 +18283,9 @@ return /******/ (function(modules) { // webpackBootstrap
       // http://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
       /*
        Copyright (c) 2011 Andrei Mackenzie
-        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+         Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+         The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        */
 
     }, {
@@ -25002,66 +25002,62 @@ return /******/ (function(modules) { // webpackBootstrap
     var boxDom = this.dom;
     var _this = this;
     var resized = false;
-    _fastdom2.default.measure(function () {
-      // recalculate the height of the subgroups
-      _this._calculateSubGroupHeights();
+    // recalculate the height of the subgroups
+    _this._calculateSubGroupHeights();
 
-      // reposition visible items vertically
-      if (typeof _this.itemSet.options.order === 'function') {
-        // a custom order function
+    // reposition visible items vertically
+    if (typeof _this.itemSet.options.order === 'function') {
+      // a custom order function
 
-        if (restack) {
-          // brute force restack of all items
-          // show all items
-          var me = _this;
-          var limitSize = false;
-          util.forEach(_this.items, function (item) {
-            if (!item.displayed) {
-              item.redraw();
-              me.visibleItems.push(item);
-            }
-            item.repositionX(limitSize);
-          });
+      if (restack) {
+        // brute force restack of all items
+        // show all items
+        var me = _this;
+        var limitSize = false;
+        util.forEach(_this.items, function (item) {
+          if (!item.displayed) {
+            item.redraw();
+            me.visibleItems.push(item);
+          }
+          item.repositionX(limitSize);
+        });
 
-          // order all items and force a restacking
-          var customOrderedItems = _this.orderedItems.byStart.slice().sort(function (a, b) {
-            return me.itemSet.options.order(a.data, b.data);
-          });
-          stack.stack(customOrderedItems, margin, true /* restack=true */);
-        }
-
-        _this.visibleItems = _this._updateVisibleItems(_this.orderedItems, _this.visibleItems, range, widthContainerVIS, elementHeaderWidthItem, widthElement);
-      } else {
-        // no custom order function, lazy stacking
-        _this.visibleItems = _this._updateVisibleItems(_this.orderedItems, _this.visibleItems, range, widthContainerVIS, elementHeaderWidthItem, widthElement);
-
-        if (_this.itemSet.options.stack) {
-          // TODO: ugly way to access options...
-          stack.stack(_this.visibleItems, margin, restack);
-        } else {
-          // no stacking
-          stack.nostack(this.visibleItems, margin, this.subgroups);
-        }
+        // order all items and force a restacking
+        var customOrderedItems = _this.orderedItems.byStart.slice().sort(function (a, b) {
+          return me.itemSet.options.order(a.data, b.data);
+        });
+        stack.stack(customOrderedItems, margin, true /* restack=true */);
       }
 
-      _fastdom2.default.mutate(function () {
-        // apply new height
-        // recalculate the height of the group
-        var height = _this._calculateHeight(margin, timeline);
-        resized = util.updateProperty(_this, 'height', height) || resized;
+      _this.visibleItems = _this._updateVisibleItems(_this.orderedItems, _this.visibleItems, range, widthContainerVIS, elementHeaderWidthItem, widthElement);
+    } else {
+      // no custom order function, lazy stacking
+      _this.visibleItems = _this._updateVisibleItems(_this.orderedItems, _this.visibleItems, range, widthContainerVIS, elementHeaderWidthItem, widthElement);
 
-        boxDom.foreground.style.setProperty('height', height + 'px');
-        boxDom.label.style.setProperty('height', height + 'px');
+      if (_this.itemSet.options.stack) {
+        // TODO: ugly way to access options...
+        stack.stack(_this.visibleItems, margin, restack);
+      } else {
+        // no stacking
+        stack.nostack(this.visibleItems, margin, this.subgroups);
+      }
+    }
 
-        // update vertical position of items after they are re-stacked and the height of the group is calculated
-        for (var i = 0, ii = _this.visibleItems.length; i < ii; i++) {
-          var item = _this.visibleItems[i];
-          item.repositionY(margin);
-        }
+    // apply new height
+    // recalculate the height of the group
+    var height = _this._calculateHeight(margin, timeline);
+    resized = util.updateProperty(_this, 'height', height) || resized;
 
-        return resized;
-      });
-    });
+    boxDom.foreground.style.setProperty('height', height + 'px');
+    boxDom.label.style.setProperty('height', height + 'px');
+
+    // update vertical position of items after they are re-stacked and the height of the group is calculated
+    for (var i = 0, ii = _this.visibleItems.length; i < ii; i++) {
+      var item = _this.visibleItems[i];
+      item.repositionY(margin);
+    }
+
+    return resized;
   };
 
   /**
