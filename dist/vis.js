@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-07-10
+ * @date    2023-07-20
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -20827,8 +20827,7 @@ return /******/ (function(modules) { // webpackBootstrap
     var diffInHours = (end - start) / (1000 * 60 * 60);
     var rangeColumnCount = this.body.range.props && this.body.range.props.columnCount ? this.body.range.props.columnCount : 0;
     var columnCount = rangeColumnCount ? rangeColumnCount : diffInHours / (gap ? gap : 1) + totalizersToAdd;
-    var itemsFit = this.body.range.options.itemsFit;
-
+    var itemsFit = this.body.range.options.itemsFit || [];
     if (itemsFit && columnCount < itemsFit.length) {
       columnCount = itemsFit.length;
     }
@@ -28369,9 +28368,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
     var _loop = function _loop(i) {
       var dataPointItem = datapoints[i];
-      if (_this6.body.range.options.gap === 0 || _this6.body.range.options.itemsFit.some(function (x) {
+      if (_this6.body.range.options && (_this6.body.range.options.gap === 0 || _this6.body.range.options.itemsFit && _this6.body.range.options.itemsFit.some(function (x) {
         return x.type == GAPCHARTNOW;
-      })) {
+      }))) {
         dataPointItem.screen_x = _this6._calculateGapPositionVIS(dataPointItem.x, widthTimeline);
       } else {
         var factor = _this6.body.range.end - _this6.body.range.start;
