@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-07-20
+ * @date    2023-09-13
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -30868,14 +30868,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
         var amountLabels = length;
         var position = lineHeight - this.props.minorCharHeight;
-        var internHeight = lineHeight - this.props.minorCharHeight * 2;
-        var amountLabelsToFit = Math.floor(internHeight / this.props.minorCharHeight);
+        var amountLabelsToFit = Math.floor(position / this.props.minorCharHeight);
 
         // Divides the number of labels to fit the available height
         while (amountLabels > amountLabelsToFit) {
           amountLabels = Math.floor((amountLabels - 2) / 2);
         }
-        var intervalHeight = Math.floor(internHeight / amountLabels);
+        var intervalHeight = Math.floor(position / (amountLabels - 1));
 
         // Print top and bottom labels
         var firstItem = group.group.axisCustomLabel[0];
@@ -30887,7 +30886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         // Print middle labels
         group.group.axisCustomLabel.slice().reverse().filter(function (a, i) {
-          return i > 0 && i % Math.floor(length / amountLabels) === 0;
+          return i > 0 && i < amountLabels - 1 && i % Math.floor(length / amountLabels) === 0;
         }).forEach(function (axisCustomLabel) {
           position = position - intervalHeight;
           var label = axisCustomLabel.alternativeLabel ? axisCustomLabel.alternativeLabel : axisCustomLabel.y;
