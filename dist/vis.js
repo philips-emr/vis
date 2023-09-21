@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-09-15
+ * @date    2023-09-21
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7881,6 +7881,33 @@ return /******/ (function(modules) { // webpackBootstrap
         if (props.partogramPosition) {
           var partogramPoint = getPartogramPoint({ x: x, y: y, JSONcontainer: JSONcontainer, svgContainer: svgContainer, props: props, groupTemplate: groupTemplate });
           points.push(partogramPoint);
+        }
+        break;
+      case 'partogram-contraction':
+        if (props.partogramContraction && !isNaN(y) && !isNaN(x)) {
+          var colorFill = '#3262DB';
+          if (props.partogramContraction == 'EMPTY_CIRCLE') {
+            colorFill = '#FFFFFF';
+          }
+
+          var sizeChart = 0.65 * groupTemplate.size;
+          var _circle = exports.getSVGElement('circle', JSONcontainer, svgContainer);
+          _circle.setAttributeNS(null, 'cx', x);
+          _circle.setAttributeNS(null, 'cy', y);
+          _circle.setAttributeNS(null, 'r', sizeChart);
+          _circle.setAttributeNS(null, 'stroke', '#3262DB');
+          _circle.setAttributeNS(null, 'fill', colorFill);
+          _circle.setAttributeNS(null, 'stroke-width', 1);
+          points.push(_circle);
+
+          if (props.partogramContraction == 'SEMI_CIRCLE') {
+            var path = exports.getSVGElement('path', JSONcontainer, svgContainer);
+            path.setAttributeNS(null, 'd', 'M' + (x - sizeChart) + ',' + y + ' a' + sizeChart + ',' + sizeChart + ' 0 0,1 ' + sizeChart * 2 + ',0');
+            path.setAttributeNS(null, 'stroke', '#3262DB');
+            path.setAttributeNS(null, 'fill', '#FFFFFF');
+            path.setAttributeNS(null, 'stroke-width', 1);
+            points.push(path);
+          }
         }
         break;
     }
@@ -28796,7 +28823,8 @@ return /******/ (function(modules) { // webpackBootstrap
           screen_yAvg = d.screen_yAvg,
           screen_yMax = d.screen_yMax,
           calculateAllPoints = d.calculateAllPoints,
-          partogramPosition = d.partogramPosition;
+          partogramPosition = d.partogramPosition,
+          partogramContraction = d.partogramContraction;
 
       var props = {
         maxValue: maxValue,
@@ -28814,7 +28842,8 @@ return /******/ (function(modules) { // webpackBootstrap
         screen_yAvg: screen_yAvg,
         screen_yMax: screen_yMax,
         calculateAllPoints: calculateAllPoints,
-        partogramPosition: partogramPosition
+        partogramPosition: partogramPosition,
+        partogramContraction: partogramContraction
       };
       if (d.referenceLine) continue;
       if (!callback) {
