@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2023-09-21
+ * @date    2024-05-16
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -7866,6 +7866,19 @@ return /******/ (function(modules) { // webpackBootstrap
         points.push(polygonDown);
         points.push(polygonCross);
         points.push(polygonUp);
+        break;
+      case 'rhombus':
+        if (!isNaN(y) && !isNaN(x)) {
+          var xRect = x - 0.5 * groupTemplate.size;
+          var yRect = y - 0.5 * groupTemplate.size;
+          var rhombus = exports.getSVGElement('rect', JSONcontainer, svgContainer);
+          rhombus.setAttributeNS(null, 'x', xRect + 1);
+          rhombus.setAttributeNS(null, 'y', yRect - 0.5 * groupTemplate.size);
+          rhombus.setAttributeNS(null, 'width', groupTemplate.size);
+          rhombus.setAttributeNS(null, 'height', groupTemplate.size);
+          rhombus.setAttributeNS(null, 'transform', 'rotate(45, ' + xRect + ', ' + yRect + ')');
+          points.push(rhombus);
+        }
         break;
       case 'rectangle':
         if (!isNaN(y) && !isNaN(x)) {
