@@ -7968,6 +7968,10 @@ return /******/ (function(modules) { // webpackBootstrap
         if (polygonType) {
           id = id.concat('-' + polygonType); // without this we can't set the ID in the 'use' tag
         }
+        if (props.stylePoint) {
+          point.removeAttribute('style');
+          point.setAttributeNS(null, 'style', props.stylePoint);
+        }
         point.setAttributeNS(null, 'id', id);
       }
     });
@@ -28837,7 +28841,8 @@ return /******/ (function(modules) { // webpackBootstrap
           screen_yMax = d.screen_yMax,
           calculateAllPoints = d.calculateAllPoints,
           partogramPosition = d.partogramPosition,
-          partogramContraction = d.partogramContraction;
+          partogramContraction = d.partogramContraction,
+          stylePoint = d.stylePoint;
 
       var props = {
         maxValue: maxValue,
@@ -28856,7 +28861,8 @@ return /******/ (function(modules) { // webpackBootstrap
         screen_yMax: screen_yMax,
         calculateAllPoints: calculateAllPoints,
         partogramPosition: partogramPosition,
-        partogramContraction: partogramContraction
+        partogramContraction: partogramContraction,
+        stylePoint: stylePoint
       };
       if (d.referenceLine) continue;
       if (!callback) {
