@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2024-12-26
+ * @date    2025-01-08
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -19966,9 +19966,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
     // remove from DOM
     var dom = this.dom;
-    var domRoot = dom.root;
-    if (dom && domRoot.parentNode) {
-      domRoot.parentNode.removeChild(domRoot);
+    if (dom) {
+      var domRoot = dom.root;
+      if (dom && domRoot.parentNode) {
+        domRoot.parentNode.removeChild(domRoot);
+      }
     }
     this.dom = null;
 
@@ -20511,6 +20513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this._onResize = function () {
       var meDom = me.dom;
+      if (!meDom) return;
       var meDomRoot = meDom.root;
       if (me.options.autoResize != true) {
         // stop watching when the option autoResize is changed to false
@@ -23689,7 +23692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
     this.markDirty();
 
-    this.body.emitter.emit('_change', { queue: true });
+    this.body && this.body.emitter.emit('_change', { queue: true });
   };
 
   /**
