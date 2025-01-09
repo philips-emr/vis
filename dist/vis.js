@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2025-01-08
+ * @date    2025-01-09
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -32420,7 +32420,7 @@ return /******/ (function(modules) { // webpackBootstrap
       var screen_x = subGroup[0].screen_x || subGroup[0].x;
       var screen_y = subGroup[0].screen_y || subGroup[0].y;
       var screen_x_end = subGroup[length - 1].screen_x || subGroup[length - 1].x;
-      if (isNaN(screen_x) && isNaN(zeroPosition - screen_y) && isNaN(screen_x_end)) {
+      if (!(isNaN(screen_x) && isNaN(zeroPosition - screen_y) && isNaN(screen_x_end))) {
           rectElement.setAttribute('id', subGroup[0].index);
           rectElement.setAttribute('x', screen_x);
           rectElement.setAttribute('y', screen_y);
