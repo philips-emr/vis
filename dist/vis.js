@@ -20914,8 +20914,9 @@ return /******/ (function(modules) { // webpackBootstrap
     var widthDefault = 0;
 
     // Calculation of the possibility of the vertical line taking into account the size of the header
-    var elementHeaderWidth = document.querySelector('.tl-setting-bar');
-    var elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar__item');
+    var containerMainTopArea = this.body.dom.container.closest('.main-area');
+    var elementHeaderWidth = containerMainTopArea.querySelector('.tl-setting-bar');
+    var elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar__item');
     if (elementHeaderWidthItem && elementHeaderWidth) {
       // && elementHeaderWidth.offsetWidth
       widthDefault = parseFloat(elementHeaderWidth.offsetWidth / elementHeaderWidthItem.length).toFixed(2);
