@@ -22833,6 +22833,17 @@ return /******/ (function(modules) { // webpackBootstrap
     this._create();
 
     this.setOptions(options);
+
+    this.getElementSettingBarItem = function () {
+      var containerMainTopArea = this.body.dom.container.closest('.main-area');
+      var elementHeaderWidthItem = null;
+      if (containerMainTopArea) {
+        elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
+      } else {
+        elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
+      }
+      return elementHeaderWidthItem;
+    };
   }
 
   ItemSet.prototype = new Component();
@@ -23229,13 +23240,7 @@ return /******/ (function(modules) { // webpackBootstrap
         frame = this.dom.frame;
 
     var widthContainerVIS = range.body.domProps.center.width;
-    var containerMainTopArea = this.body.dom.container.closest('.main-area');
-    var elementHeaderWidthItem = null;
-    if (containerMainTopArea) {
-      elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
-    } else {
-      elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
-    }
+    var elementHeaderWidthItem = this.getElementSettingBarItem();
     var widthElement = parseFloat(widthContainerVIS / elementHeaderWidthItem.length).toFixed(2);
 
     // recalculate absolute position (before redrawing groups)
@@ -23530,13 +23535,7 @@ return /******/ (function(modules) { // webpackBootstrap
   ItemSet.prototype._onUpdate = function (ids) {
     var me = this;
     var widthContainerVIS = this.body.range.body.domProps.center.width;
-    var containerMainTopArea = this.body.dom.container.closest('.main-area');
-    var elementHeaderWidthItem = null;
-    if (containerMainTopArea) {
-      elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
-    } else {
-      elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
-    }
+    var elementHeaderWidthItem = this.getElementSettingBarItem();
     var widthElement = parseFloat(widthContainerVIS / elementHeaderWidthItem.length).toFixed(2);
 
     ids.forEach(function (id) {
