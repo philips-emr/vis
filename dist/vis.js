@@ -5,7 +5,7 @@
  * A dynamic, browser-based visualization library.
  *
  * @version 4.15.4
- * @date    2025-04-25
+ * @date    2025-04-28
  *
  * @license
  * Copyright (C) 2011-2016 Almende B.V, http://almende.com
@@ -18464,7 +18464,7 @@ return /******/ (function(modules) { // webpackBootstrap
   Range.prototype.setOptions = function (options) {
     if (options) {
       // copy the options that we know
-      var fields = ['direction', 'min', 'max', 'zoomMin', 'zoomMax', 'moveable', 'zoomable', 'moment', 'activate', 'hiddenDates', 'zoomKey', 'gap', 'itemsFit', 'elementsTimelineSettingBarItem'];
+      var fields = ['direction', 'min', 'max', 'zoomMin', 'zoomMax', 'moveable', 'zoomable', 'moment', 'activate', 'hiddenDates', 'zoomKey', 'gap', 'itemsFit'];
       util.selectiveExtend(fields, this.options, options);
 
       if ('start' in options || 'end' in options) {
@@ -20724,8 +20724,7 @@ return /******/ (function(modules) { // webpackBootstrap
       moment: moment,
       timeAxis: null,
       gap: 1,
-      itemsFit: [],
-      elementsTimelineSettingBarItem: []
+      itemsFit: []
     };
     this.options = util.extend({}, this.defaultOptions);
 
@@ -20750,7 +20749,7 @@ return /******/ (function(modules) { // webpackBootstrap
   TimeAxis.prototype.setOptions = function (options) {
     if (options) {
       // copy all options that we know
-      util.selectiveExtend(['showMinorLabels', 'showMinorLines', 'showMajorLabels', 'maxMinorChars', 'hiddenDates', 'timeAxis', 'moment', 'gap', 'itemsFit', 'elementsTimelineSettingBarItem'], this.options, options);
+      util.selectiveExtend(['showMinorLabels', 'showMinorLines', 'showMajorLabels', 'maxMinorChars', 'hiddenDates', 'timeAxis', 'moment', 'gap', 'itemsFit'], this.options, options);
 
       // deep copy the format options
       util.selectiveDeepExtend(['format'], this.options, options);
@@ -23230,9 +23229,10 @@ return /******/ (function(modules) { // webpackBootstrap
         frame = this.dom.frame;
 
     var widthContainerVIS = range.body.domProps.center.width;
+    var containerMainTopArea = this.body.dom.container.closest('.main-area');
     var elementHeaderWidthItem = null;
-    if (range && range.options && range.options.elementsTimelineSettingBarItem) {
-      elementHeaderWidthItem = range.options.elementsTimelineSettingBarItem;
+    if (containerMainTopArea) {
+      elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
     } else {
       elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
     }
@@ -23530,9 +23530,10 @@ return /******/ (function(modules) { // webpackBootstrap
   ItemSet.prototype._onUpdate = function (ids) {
     var me = this;
     var widthContainerVIS = this.body.range.body.domProps.center.width;
+    var containerMainTopArea = this.body.dom.container.closest('.main-area');
     var elementHeaderWidthItem = null;
-    if (me.body && me.body.range && me.body.range.options && me.body.range.options.elementsTimelineSettingBarItem) {
-      elementHeaderWidthItem = me.body.range.options.elementsTimelineSettingBarItem;
+    if (containerMainTopArea) {
+      elementHeaderWidthItem = containerMainTopArea.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
     } else {
       elementHeaderWidthItem = document.querySelectorAll('.tl-setting-bar .tl-setting-bar__item');
     }
@@ -26862,7 +26863,6 @@ return /******/ (function(modules) { // webpackBootstrap
     maxMinorChars: { number: number },
     gap: { number: number },
     itemsFit: { array: array },
-    elementsTimelineSettingBarItem: { any: any, 'undefined': 'undefined' },
     min: { date: date, number: number, string: string, moment: moment },
     minHeight: { number: number, string: string },
     moveable: { boolean: boolean },
@@ -32696,7 +32696,6 @@ return /******/ (function(modules) { // webpackBootstrap
     maxMinorChars: { number: number },
     gap: { number: number },
     itemsFit: { array: array },
-    elementsTimelineSettingBarItem: { any: any, 'undefined': 'undefined' },
     min: { date: date, number: number, string: string, moment: moment },
     minHeight: { number: number, string: string },
     moveable: { boolean: boolean },
