@@ -124,8 +124,9 @@ of the project.
 
 To build the library from source, clone the project from github
 
-    $ git clone git://github.com/almende/vis.git
+    $ git clone git@github.com:philips-emr/vis.git
 
+To keep a default use node 8.15.1 for build.
 The source code uses the module style of node (require and module.exports) to
 organize dependencies. To install all dependencies and build the library, 
 run `npm install` in the root of the project.
