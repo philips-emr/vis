@@ -1,0 +1,13 @@
+# yamllint disable-file
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "emr-vis"
+  description: "Vis.js is a dynamic, browser based visualization library. The library is designed to be easy to use, handle large amounts of dynamic data, and enable manipulation of the data."
+  title: "vis"
+  tags:
+    - emr
+spec:
+  type: "library"
+  owner: "group:default/emr-tasy-framework-contributors"
+  lifecycle: "production"
