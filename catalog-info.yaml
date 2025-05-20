@@ -1,0 +1,13 @@
+# yamllint disable-file
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "vis"
+  description: "vis.js"
+  title: "vis"
+  tags:
+    - emr
+spec:
+  type: "library"
+  owner: "group:default/emr-tasy-framework-contributors"
+  lifecycle: "production"
