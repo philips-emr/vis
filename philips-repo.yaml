@@ -1,0 +1,10 @@
+# Business Category ID according to https://share.philips.com/sites/SWCoE/Lists/List%20of%20Business%20Categories/AllItems.aspx
+# Example for SWCoE: 62
+## PCI - Enterprise Informatics - Patient Care Informatics  (Earlier CVI+EMR&CM)
+business-category: 7
+# Direct link to details business-category. Change the ID in the URL below.
+business-category-details: https://share.philips.com/sites/SWCoE/Lists/List%20of%20Business%20Categories/DispForm.aspx?ID=7
+# All EMR repositories should be the default
+export-control-eccn: EAR99
+export-control-sgi: 3
+export-control-rationale: Based on export control screening questionnaire results
