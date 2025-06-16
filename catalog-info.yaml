@@ -7,6 +7,16 @@ metadata:
   title: "vis"
   tags:
     - emr
+  links:
+    - url: https://fortify.philips.com/ssc/html/ssc/version/18119/audit?filterset=69608e28-5b92-4f48-98c2-d9c6d91fa347&orderby=friority&viewTab=code
+      title: Fortify
+      icon: docs
+    - url: https://blackduck.philips.com/api/projects/28c5134a-5571-4796-9495-380f58af0010/versions/8c4da19c-523d-444e-913c-d3483a8e86fa/components?filter=bomInclusion%3Afalse&filter=bomMatchInclusion%3Afalse&filter=bomMatchReviewStatus%3Areviewed&limit=100&offset=0
+      title: BlackDuck
+      icon: docs          
+  annotations:
+    blackduck/project: EMR-CM-TasyFrameworkDependencies/vis
+    fortify/project: EMR/viw
 spec:
   type: "library"
   owner: "group:default/emr-tasy-framework-contributors"
