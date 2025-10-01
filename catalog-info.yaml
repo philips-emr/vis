@@ -7,7 +7,16 @@ metadata:
   title: "vis"
   tags:
     - emr
+    - vis
+    - graph
+    - timeline
+  annotations:
+    backstage.io/techdocs-ref: "dir:."
+    philips.com/techdocs-builder: "local"
+    github.com/project-slug: philips-internal/emr-vis
+    github.com/release: .
+    github.com/advanced-security: .
 spec:
   type: "library"
-  owner: "group:default/emr-tasy-framework-contributors"
+  owner: "group:default/emr-eisenbahn-contributors"
   lifecycle: "production"

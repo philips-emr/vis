@@ -1,0 +1,16 @@
+site_name: 'EMR Vis.js Library'
+docs_dir: docs_portal
+nav:
+    - 'Introduction': './index.md'
+    - 'Requirements': './requirements.md'
+    - 'Development':
+        - 'Quick Start': './development/quick-start.md'
+        - 'Requirements': './development/environment-requirements.md'
+        - 'Contributing': './development/contributing.md'
+        - 'Releasing': './development/releasing.md'
+        - 'Troubleshooting': './development/troubleshooting.md'
+    - 'Risks': './risks.md'
+    - 'FAQ': './FAQ/FAQ.md'
+plugins:
+    - techdocs-core
+    - awesome-pages
