@@ -16,6 +16,10 @@ metadata:
     github.com/project-slug: philips-internal/emr-vis
     github.com/release: .
     github.com/advanced-security: .
+  links:
+    -   url: https://github.com/almende/vis.git
+        title: Vis.js
+        icon: docs
 spec:
   type: "library"
   owner: "group:default/emr-eisenbahn-contributors"
